@@ -31,6 +31,7 @@ class CustomNamedTest {
 
     @Test
     void testIt() throws Exception {
+        System.setProperty( "line.separator", "\n" );
         CustomNamed.Builder customNamedBuilder = CustomNamed.builder()
                 .addStringList("b")
                 .addStringList("a")
