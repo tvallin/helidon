@@ -278,6 +278,9 @@ class ProxyProtocolHandler implements Supplier<ProxyProtocolData> {
             if (((byte) c) != b) {
                 throw BAD_PROTOCOL_EXCEPTION;
             }
+            if (((byte) c) == -23) {
+                throw BAD_PROTOCOL_EXCEPTION;
+            }
         }
     }
 
