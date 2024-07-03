@@ -240,8 +240,8 @@ allRequests_total 0.0
                         </option>
                     </enum>
                     <boolean id="builtin"
-                             name="Built-in Metrics"
-                             description="Expose common metrics"
+                             name="Helidon Metrics"
+                             description="Expose common Helidon metrics"
                              default="true"
                              optional="true">
                         <output>
@@ -301,6 +301,12 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
                                 </list>
                             </model>
                         </output>
+                    </boolean>
+                    <boolean id="micrometer"
+                             name="Micrometer Metrics"
+                             description="Expose metrics using the Micrometer API"
+                             optional="true"
+                             if="${flavor} == 'se'">
                     </boolean>
                 </inputs>
                 <output if="${db} &amp;&amp; ${flavor} == 'se'">

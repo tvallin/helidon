@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2024 Oracle and/or its affiliates.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<archetype-script xmlns="https://helidon.io/archetype/2.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+    <output if="${metrics}">
+        <templates engine="mustache" transformations="mustache,packaged" if="${metrics.micrometer}">
+            <directory>files</directory>
+            <includes>
+                <include>**/MicrometerService.java.mustache</include>
+            </includes>
+        </templates>
+        <model if="${metrics.micrometer}">
+            <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.integrations.micrometer</value>
+                    <value key="artifactId">helidon-integrations-micrometer</value>
+                </map>
+            </list>
+            <list key="Main-helidon-imports">
+                <value>io.helidon.integrations.micrometer.MicrometerSupport</value>
+            </list>
+            <list key="Main-createRouting">
+                <value><![CDATA[        MicrometerSupport micrometerSupport = MicrometerSupport.create();]]></value>
+            </list>
+            <list key="Main-routingBuilder">
+                <value><![CDATA[                .register(micrometerSupport)
+                .register("/micrometerservice", new MicrometerService(micrometerSupport.registry()))]]>
+                </value>
+            </list>
+            <list key="MainTest-static-imports">
+                <value>static org.hamcrest.CoreMatchers.containsString</value>
+            </list>
+            <list key="MainTest-helidon-imports">
+                <value>io.helidon.common.http.Http</value>
+            </list>
+            <list key="MainTest-java-imports">
+                <value>java.time.Duration</value>
+            </list>
+            <list key="MainTest-methods">
+                <value><![CDATA[
+    @Test
+    void testMicrometer() {
+        Duration timeout = Duration.ofSeconds(3);
+        WebClientResponse response;
+
+        response = webClient.get()
+                .path("/micrometer")
+                .request()
+                .await(timeout);
+
+        assertThat(response.status(), is(Http.Status.OK_200));
+
+        String hello = webClient.get()
+                .path("micrometerservice")
+                .request(String.class)
+                .await(timeout);
+
+        assertThat(hello, is(MicrometerService.DEFAULT_RESPONSE_CONTENT));
+
+        response = webClient.get()
+                .path("/micrometer")
+                .request()
+                .await(timeout);
+
+        String content = response.content()
+                .as(String.class)
+                .await(timeout);
+
+        assertThat(content, containsString(MicrometerService.CUSTOM_COUNTER_NAME + "_total 1.0"));
+    }
+]]>
+                </value>
+            </list>
+            <list key="module-requires">
+                <value>io.helidon.integrations.micrometer</value>
+            </list>
+        </model>
+    </output>
+</archetype-script>

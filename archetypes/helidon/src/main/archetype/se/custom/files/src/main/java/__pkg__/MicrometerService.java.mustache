@@ -1,0 +1,44 @@
+package {{package}};
+
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.ServerRequest;
+import io.helidon.webserver.ServerResponse;
+import io.helidon.webserver.Service;
+
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+
+/**
+* Micrometer service.
+*/
+public class MicrometerService implements Service {
+
+    final static String DEFAULT_RESPONSE_CONTENT = "Hello from MicrometerService";
+    final static String CUSTOM_COUNTER_NAME = "allRequests";
+    private final Counter requestCounter;
+
+    /**
+    * Create a new {@link MicrometerService} instance.
+    *
+    * @param registry micrometer MeterRegistry
+    */
+    public MicrometerService(MeterRegistry registry) {
+        requestCounter = registry.counter(CUSTOM_COUNTER_NAME);
+    }
+
+    @Override
+    public void update(Routing.Rules rules) {
+        rules
+            .any(this::countRequests)
+            .get("/", this::myGet);
+    }
+
+    private void countRequests(ServerRequest request, ServerResponse response) {
+        requestCounter.increment();
+        request.next();
+    }
+
+    private void myGet(ServerRequest serverRequest, ServerResponse serverResponse) {
+        serverResponse.send(DEFAULT_RESPONSE_CONTENT);
+    }
+}
