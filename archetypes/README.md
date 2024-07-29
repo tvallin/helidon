@@ -1,7 +1,7 @@
 # Archetypes Development
 
 Helidon provides a set of archetypes to bootstrap end user's application development journey. They are implemented here based on 
-[Archetype V2 engine] (https://github.com/helidon-io/helidon-build-tools/wiki/Archetype-Engine-V2)
+[Archetype V2 engine](https://github.com/helidon-io/helidon-build-tools/wiki/Archetype-Engine-V2).
 
 ## Build
 
@@ -32,3 +32,5 @@ cd `artifactId`
 ```
 
 Now, just follow instructions in the generated README file.
+
+[//]: # (TODO - Add description of the new archetype rules)
