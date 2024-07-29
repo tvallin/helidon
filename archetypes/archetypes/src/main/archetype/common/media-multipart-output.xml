@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2024 Oracle and/or its affiliates.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<archetype-script xmlns="https://helidon.io/archetype/2.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <output>
+        <model>
+            <list key="dependencies">
+                <map order="500" if="${flavor} == 'mp'">
+                    <value key="groupId">org.glassfish.jersey.media</value>
+                    <value key="artifactId">jersey-media-multipart</value>
+                </map>
+                <map order="500" if="${flavor} == 'se'">
+                    <value key="groupId">io.helidon.http.media</value>
+                    <value key="artifactId">helidon-http-media-multipart</value>
+                </map>
+                <map order="500" if="${flavor} == 'se'">
+                    <value key="groupId">io.helidon.webserver</value>
+                    <value key="artifactId">helidon-webserver-static-content</value>
+                </map>
+            </list>
+            <list key="module-requires" if="${flavor} == 'se'">
+                <value>io.helidon.http.media.multipart</value>
+                <value>io.helidon.webserver.staticcontent</value>
+            </list>
+            <list key="module-requires" if="${flavor} == 'mp'">
+                <value>jersey.media.multipart</value>
+            </list>
+            <list key="module-opens" if="${flavor} == 'se'">
+                <value>WEB</value>
+            </list>
+            <list key="Main-helidon-imports" if="${flavor} == 'se'">
+                <value>io.helidon.http.Status</value>
+                <value>io.helidon.http.HeaderNames</value>
+                <value>io.helidon.http.HeaderValues</value>
+                <value>io.helidon.webserver.staticcontent.StaticContentService</value>
+            </list>
+            <list key="Main-routing-builder" if="${flavor} == 'se'">
+                <value order="1"><![CDATA[.any("/", (req, res) -> {
+                    res.status(Status.MOVED_PERMANENTLY_301);
+                    res.header(HeaderValues.createCached(HeaderNames.LOCATION, "/ui"));
+                    res.send();
+                })
+                .register("/ui", StaticContentService.builder("WEB")
+                        .welcomeFileName("index.html")
+                        .build())
+                .register("/api", new FileService())]]>
+                </value>
+            </list>
+            <list key="Abstract-tests">
+                <value><![CDATA[
+    @Test
+    void testFileService() {
+        try (Http1ClientResponse response = client.get("/api").request()) {
+            assertThat(response.status(), is(Status.OK_200));
+        }
+    }
+]]>
+                </value>
+            </list>
+            <list key="module-requires">
+                <value if="${flavor} == 'mp'">org.jvnet.mimepull</value>
+            </list>
+        </model>
+    </output>
+</archetype-script>
