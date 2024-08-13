@@ -36,7 +36,8 @@
                     <list key="db-connection">
                         <value><![CDATA[    url: "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"
     username: sa
-    password:]]></value>
+    password:]]>
+                        </value>
                     </list>
                     <value key="start-db" template="mustache"><![CDATA[
 H2:
@@ -44,7 +45,8 @@ H2:
 docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
 ```
 For details, see https://www.h2database.com/html/cheatSheet.html
-]]></value>
+]]>
+                    </value>
                 </model>
             </output>
         </method>
@@ -69,7 +71,8 @@ For details, see https://www.h2database.com/html/cheatSheet.html
                     <list key="db-connection">
                         <value><![CDATA[    url: jdbc:mysql://127.0.0.1:3306/pokemon?useSSL=false
     username: user
-    password: changeit]]></value>
+    password: changeit]]>
+                        </value>
                     </list>
                     <value key="start-db" template="mustache"><![CDATA[
 MySQL:
@@ -81,7 +84,8 @@ docker run --rm --name mysql -p 3306:3306 \
     -e MYSQL_PASSWORD=changeit \
     mysql:5.7
 ```
-]]></value>
+]]>
+                    </value>
                 </model>
             </output>
         </method>
@@ -102,7 +106,8 @@ docker run --rm --name mysql -p 3306:3306 \
                     <list key="db-connection">
                         <value><![CDATA[    url: jdbc:oracle:thin:@localhost:1521/XE
     username: system
-    password: oracle]]></value>
+    password: oracle]]>
+                        </value>
                     </list>
                     <value key="start-db"><![CDATA[
 Oracle:
@@ -110,7 +115,8 @@ Oracle:
 docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
 ```
 For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
-]]></value>
+]]>
+                    </value>
                 </model>
             </output>
         </method>
@@ -145,17 +151,18 @@ For details on an Oracle Docker image, see https://github.com/oracle/docker-imag
                         <value>io.helidon.dbclient.DbClient</value>
                     </list>
                     <list key="application-yaml-entries">
-                        <value file="../../../database/files/application-mongo.yaml.mustache" template="mustache"/>
+                        <value file="files/application-mongo.yaml.mustache" template="mustache"/>
                     </list>
                     <list key="application-test-yaml-entries">
-                        <value file="../../../database/files/application-test-mongo.yaml.mustache" template="mustache"/>
+                        <value file="files/application-test-mongo.yaml.mustache" template="mustache"/>
                     </list>
                     <value key="start-db" template="mustache"><![CDATA[
 Mongodb:
 ```
 docker run --rm --name mongo -p 27017:27017 mongo
 ```
-]]></value>
+]]>
+                    </value>
                 </model>
             </output>
         </method>
@@ -177,10 +184,10 @@ docker run --rm --name mongo -p 27017:27017 mongo
                         </map>
                     </list>
                     <list key="application-yaml-entries">
-                        <value file="../../../database/files/application-jdbc.yaml.mustache" template="mustache"/>
+                        <value file="files/application-jdbc.yaml.mustache" template="mustache"/>
                     </list>
                     <list key="application-test-yaml-entries">
-                        <value file="../../../database/files/application-test-jdbc.yaml.mustache" template="mustache"/>
+                        <value file="files/application-test-jdbc.yaml.mustache" template="mustache"/>
                     </list>
                 </model>
             </output>
@@ -223,7 +230,7 @@ docker run --rm --name mongo -p 27017:27017 mongo
     <call method="health" />
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
-            <directory>../../../database/files</directory>
+            <directory>files</directory>
             <includes>
                 <include>src/main/**</include>
             </includes>

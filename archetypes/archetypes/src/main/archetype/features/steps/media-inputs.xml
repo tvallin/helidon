@@ -32,25 +32,25 @@
                     <inputs>
                         <enum id="json-lib" name="Select a JSON library" default="${default-json-lib}" optional="true">
                             <option value="jsonp" name="JSON-P" description="Jakarta JSON Processing" if="${flavor} == 'se'">
-                                <exec src="/features/media/media-jsonp-output.xml"/>
+                                <exec src="/features/media/jsonp-output.xml"/>
                             </option>
                             <option value="jackson" name="Jackson" description="Popular JSON library">
-                                <exec src="/features/media/media-jackson-output.xml"/>
+                                <exec src="/features/media/jackson-output.xml"/>
                             </option>
                             <option value="jsonb" name="JSON-B" description="Jakarta JSON Binding">
-                                <exec src="/features/media/media-jsonb-output.xml"/>
+                                <exec src="/features/media/jsonb-output.xml"/>
                             </option>
                         </enum>
                     </inputs>
                 </option>
                 <option value="multipart" name="MultiPart" description="Handle 'multipart/form-data' payloads">
-                    <exec src="/features/media/media-multipart-output.xml"/>
+                    <exec src="/features/media/multipart-output.xml"/>
                 </option>
             </list>
         </inputs>
         <variables>
             <text path="media.json-lib" if="!(${media} contains 'json')"/>
         </variables>
-        <exec src="/features/media/media-output.xml"/>
+        <exec src="/features/media/output.xml"/>
     </step>
 </archetype-script>

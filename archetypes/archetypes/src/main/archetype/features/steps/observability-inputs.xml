@@ -45,7 +45,7 @@
                              description="Expose common metrics"
                              default="true"
                              optional="true">
-                        <exec src="/features/metrics/observability-metrics-builtin-output.xml"/>
+                        <exec src="/features/metrics/output.xml"/>
                     </boolean>
                 </inputs>
             </boolean>
@@ -60,7 +60,7 @@
                              description="Report common health check statuses"
                              default="true"
                              optional="true">
-                        <exec src="/features/health/observability-health-builtin-output.xml"/>
+                        <exec src="/features/health/output.xml"/>
                     </boolean>
                 </inputs>
             </boolean>
@@ -77,12 +77,12 @@
                         <option value="jaeger"
                                 name="Jaeger"
                                 description="Send traces to a Jaeger backend">
-                            <exec src="/features/tracing/observability-tracing-jaeger-output.xml"/>
+                            <exec src="/features/tracing/jaeger-output.xml"/>
                         </option>
                         <option value="zipkin"
                                 name="Zipkin"
                                 description="Send traces to a Zipkin backend">
-                            <exec src="/features/tracing/observability-tracing-zipkin-output.xml"/>
+                            <exec src="/features/tracing/zipkin-output.xml"/>
                         </option>
                     </enum>
                 </inputs>

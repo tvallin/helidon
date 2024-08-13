@@ -33,9 +33,9 @@
     <exec src="features/cors/output.xml"/>
     <source src="/features/steps/observability-inputs.xml"/>
     <exec src="/features/steps/packaging-inputs.xml"/>
-    <exec src="features/observability-output.xml"/>
-    <exec src="features/database/database-output.xml" if="${db}"/>
-    <exec src="features/security/security-output.xml" if="${security}"/>
+    <exec src="features/output.xml"/>
+    <exec src="features/database/output.xml" if="${db}"/>
+    <exec src="features/security/output.xml" if="${security}"/>
     <exec src="output.xml"/>
 </archetype-script>
 

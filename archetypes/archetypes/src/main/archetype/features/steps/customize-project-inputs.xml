@@ -32,6 +32,6 @@
             <text id="version" name="Project version" optional="true" default="1.0-SNAPSHOT"/>
             <text id="package" name="Java package name" optional="true" default="com.example.myproject"/>
         </inputs>
-        <exec src="../customize-project/customize-project-output.xml"/>
+        <exec src="../customize-project/output.xml"/>
     </step>
 </archetype-script>

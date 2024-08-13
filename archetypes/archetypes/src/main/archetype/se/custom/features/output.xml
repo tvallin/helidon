@@ -19,7 +19,12 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <exec src="tracing/tracing-output.xml" if="${tracing}"/>
-    <exec src="metrics/metrics-microprofile-output.xml" if="${metrics}"/>
-    <exec src="metrics/metrics-micrometer-output.xml" if="${metrics}"/>
+    <exec src="tracing/output.xml" if="${tracing}" />
+    <output>
+        <model if="${health} || ${metrics} || ${tracing}">
+            <list key="module-requires">
+                <value>io.helidon.webserver.observe</value>
+            </list>
+        </model>
+    </output>
 </archetype-script>

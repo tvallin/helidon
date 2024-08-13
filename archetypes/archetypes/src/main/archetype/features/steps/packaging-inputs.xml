@@ -21,28 +21,28 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Packaging and Deployment" optional="true">
-        <exec src="../docker/docker-inputs.xml"/>
+        <exec src="../docker/inputs.xml"/>
         <inputs>
             <boolean id="k8s"
                      name="Kubernetes Support"
                      description="Add Kubernetes manifests to your project"
                      default="false"
                      optional="true">
-                <exec src="/features/kubernetes/packaging-k8s-output.xml"/>
+                <exec src="/features/kubernetes/output.xml"/>
             </boolean>
             <boolean id="v8o"
                      name="Verrazzano Support"
                      description="Add Verrazzano manifests to your project"
                      default="false"
                      optional="true">
-                <exec src="/features/verrazzano/packaging-v8o-output.xml"/>
+                <exec src="/features/verrazzano/output.xml"/>
             </boolean>
             <boolean id="jpms"
                      name="Module support (JPMS)"
                      description="Add a module-info to your project"
                      default="false"
                      optional="true">
-                <exec src="/features/jpms/packaging-jpms-output.xml"/>
+                <exec src="/features/jpms/output.xml"/>
             </boolean>
         </inputs>
     </step>

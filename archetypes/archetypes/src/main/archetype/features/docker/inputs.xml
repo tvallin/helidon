@@ -32,14 +32,14 @@
                          description="Add a native-image capable Dockerfile to your project"
                          default="false"
                          optional="true">
-                    <exec src="/features/native-image/native-image-output.xml"/>
+                    <exec src="/features/native-image/output.xml"/>
                 </boolean>
                 <boolean id="jlink-image" name="JLink Support"
                          description="Add a JLink capable Dockerfile to your project"
                          default="false"
                          optional="true"/>
             </inputs>
-            <exec src="docker-output.xml"/>
+            <exec src="output.xml"/>
         </boolean>
     </inputs>
 </archetype-script>
