@@ -27,6 +27,7 @@
                      description="Manage data in your application"
                      default="false"
                      optional="true">
+                <!--  TODO - Relative path from the app-type directory (Remove me)  -->
                 <exec src="features/database/inputs.xml"/>
             </boolean>
         </inputs>

@@ -23,15 +23,9 @@
     <step name="Extra" optional="true">
         <inputs>
             <list id="extra" name="Select Additional Components" optional="true">
-                <option value="webclient" name="WebClient" description="Nima HTTP client" if="${flavor} == 'se'">
-                    <exec src="features/webclient/output.xml"/>
-                </option>
-                <option value="fault-tolerance" name="Fault Tolerance" description="System for building resilient applications">
-                    <source src="/features/fault-tolerance/output.xml"/>
-                </option>
-                <option value="cors" name="CORS" description="Cross-Origin Resource Sharing utilities">
-                    <source src="/features/cors/output.xml"/>
-                </option>
+                <option value="webclient" name="WebClient" description="Nima HTTP client" if="${flavor} == 'se'"/>
+                <option value="fault-tolerance" name="Fault Tolerance" description="System for building resilient applications"/>
+                <option value="cors" name="CORS" description="Cross-Origin Resource Sharing utilities"/>
             </list>
         </inputs>
     </step>

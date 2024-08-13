@@ -50,5 +50,4 @@
             </enum>
         </inputs>
     </step>
-    <exec src="output.xml"/>
 </archetype-script>

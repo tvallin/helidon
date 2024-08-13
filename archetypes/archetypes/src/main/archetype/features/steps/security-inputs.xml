@@ -30,27 +30,15 @@
                 <inputs>
                     <list id="atn" name="Select Authentication Providers" optional="true">
                         <option value="oidc" name="OIDC" description="OpenID Connect"/>
-                        <option value="jwt" name="JWT" description="JSON Web Token">
-                            <exec src="/features/security/jwt-output.xml"/>
-                        </option>
-                        <option value="google" name="Google Login" description="Google identity">
-                            <exec src="/features/security/google-output.xml"/>
-                        </option>
-                        <option value="http-signature" name="HTTP Signature" description="Service to service authentication">
-                            <exec src="/features/security/http-signature-output.xml"/>
-                        </option>
+                        <option value="jwt" name="JWT" description="JSON Web Token"/>
+                        <option value="google" name="Google Login" description="Google identity"/>
+                        <option value="http-signature" name="HTTP Signature" description="Service to service authentication"/>
                     </list>
                     <list id="atz" name="Select Authorization Providers" optional="true">
-                        <option value="abac" name="ABAC" description="Attribute Based Access Control">
-                            <exec src="/features/security/abac-output.xml"/>
-                        </option>
+                        <option value="abac" name="ABAC" description="Attribute Based Access Control"/>
                     </list>
                 </inputs>
-                <exec src="/features/security/output.xml"/>
             </boolean>
         </inputs>
-        <variables>
-            <boolean path="application-yaml" if="${security}">true</boolean>
-        </variables>
     </step>
 </archetype-script>

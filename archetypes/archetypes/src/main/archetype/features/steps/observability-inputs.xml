@@ -44,9 +44,7 @@
                              name="Built-in Metrics"
                              description="Expose common metrics"
                              default="true"
-                             optional="true">
-                        <exec src="/features/metrics/output.xml"/>
-                    </boolean>
+                             optional="true"/>
                 </inputs>
             </boolean>
             <boolean id="health"
@@ -59,9 +57,7 @@
                              name="Built-in Health Checks"
                              description="Report common health check statuses"
                              default="true"
-                             optional="true">
-                        <exec src="/features/health/output.xml"/>
-                    </boolean>
+                             optional="true"/>
                 </inputs>
             </boolean>
             <boolean id="tracing"
@@ -76,19 +72,13 @@
                           optional="true">
                         <option value="jaeger"
                                 name="Jaeger"
-                                description="Send traces to a Jaeger backend">
-                            <exec src="/features/tracing/jaeger-output.xml"/>
-                        </option>
+                                description="Send traces to a Jaeger backend"/>
                         <option value="zipkin"
                                 name="Zipkin"
-                                description="Send traces to a Zipkin backend">
-                            <exec src="/features/tracing/zipkin-output.xml"/>
-                        </option>
+                                description="Send traces to a Zipkin backend"/>
                     </enum>
                 </inputs>
             </boolean>
         </inputs>
-        <!-- TODO - remove it and split into proper features output -->
-        <exec src="/features/steps/observability-output.xml"/>
     </step>
 </archetype-script>

@@ -20,15 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
-        <templates engine="mustache" transformations="mustache,packaged">
-            <directory>files</directory>
-            <includes>
-                <include if="${flavor} == 'mp'">src/*/java/**/FtResource.java.mustache</include>
-                <include if="${flavor} == 'mp'">src/*/java/**/FtResourceTest.java.mustache</include>
-                <include if="${flavor} == 'se'">src/*/java/**/FtService.java.mustache</include>
-            </includes>
-        </templates>
+    <output if="${extra} contains 'fault-tolerance'">
         <model>
             <value key="fault-tolerance" if="${extra} contains 'fault-tolerance'">true</value>
             <list key="dependencies" if="${flavor} == 'mp'">

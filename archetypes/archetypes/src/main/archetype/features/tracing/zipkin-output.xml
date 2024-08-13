@@ -20,8 +20,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
-        <model>
+    <output if="${tracing}">
+        <model if="${tracing.provider} == 'zipkin'">
             <list key="readme-sections">
                 <value file="files/README.zipkin.md"/>
             </list>

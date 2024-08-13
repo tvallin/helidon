@@ -23,15 +23,12 @@
     <step name="Customize Project" optional="true">
         <inputs>
             <enum id="build-system" name="Select a Build System" default="maven" optional="true">
-                <option value="maven" name="Apache Maven">
-                    <exec src="../maven/output.xml"/>
-                </option>
+                <option value="maven" name="Apache Maven"/>
             </enum>
             <text id="groupId" name="Project groupId" optional="true" default="com.examples"/>
             <text id="artifactId" name="Project artifactId" optional="true" default="myproject"/>
             <text id="version" name="Project version" optional="true" default="1.0-SNAPSHOT"/>
             <text id="package" name="Java package name" optional="true" default="com.example.myproject"/>
         </inputs>
-        <exec src="../customize-project/output.xml"/>
     </step>
 </archetype-script>

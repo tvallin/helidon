@@ -20,14 +20,14 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
-        <files>
+    <output if="${security}">
+        <files if="${security.atn} contains 'http-signature'">
             <directory>files</directory>
             <includes>
                 <include>src/main/resources/keystore.p12</include>
             </includes>
         </files>
-        <model>
+        <model if="${security.atn} contains 'http-signature'">
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.security.providers</value>

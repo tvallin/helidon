@@ -20,36 +20,53 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <variables>
-        <boolean path="application-yaml">false</boolean>
-    </variables>
-    <exec src="features/common/output.xml"/>
+    <!--  MEDIA  -->
     <exec src="/features/steps/media-inputs.xml"/>
-    <exec src="features/media/output.xml"/>
+    <!--  SECURITY  -->
     <exec src="/features/steps/security-inputs.xml"/>
+    <!--  DATABASE  -->
     <source src="/features/steps/database-inputs.xml"/>
+    <!--  EXTRA  -->
     <source src="/features/steps/extra-inputs.xml"/>
+    <!--  OBSERVABILITY  -->
+    <source src="/features/steps/observability-inputs.xml"/>
+    <!--  PACKAGING  -->
+    <exec src="/features/steps/packaging-inputs.xml"/>
+    <!--  CUSTOMIZE PROJECT  -->
+    <exec src="/features/steps/customize-project-inputs.xml"/>
+    <!-- OUTPUT -->
+    <exec src="features/common/output.xml"/>
+    <exec src="/features/media/jsonp-output.xml"/>
+    <exec src="/features/media/jackson-output.xml"/>
+    <exec src="/features/media/jsonb-output.xml"/>
+    <exec src="/features/media/multipart-output.xml"/>
+    <exec src="/features/media/output.xml"/>
+    <exec src="features/media/output.xml"/>
+    <exec src="/features/security/jwt-output.xml"/>
+    <exec src="/features/security/google-output.xml"/>
+    <exec src="/features/security/http-signature-output.xml"/>
+    <exec src="/features/security/abac-output.xml"/>
+    <exec src="/features/security/output.xml"/>
+    <source src="/features/fault-tolerance/output.xml"/>
+    <source src="/features/cors/output.xml"/>
     <exec src="features/fault-tolerance/output.xml"/>
     <exec src="features/cors/output.xml"/>
-    <source src="/features/steps/observability-inputs.xml"/>
-    <exec src="/features/steps/packaging-inputs.xml"/>
+    <exec src="/features/metrics/output.xml"/>
+    <exec src="/features/health/output.xml"/>
+    <exec src="/features/tracing/jaeger-output.xml"/>
+    <exec src="/features/tracing/zipkin-output.xml"/>
+    <exec src="/features/steps/observability-output.xml"/>
+    <exec src="/features/native-image/output.xml"/>
+    <exec src="/features/docker/output.xml"/>
+    <exec src="/features/kubernetes/output.xml"/>
+    <exec src="/features/verrazzano/output.xml"/>
+    <exec src="/features/jpms/output.xml"/>
     <exec src="features/output.xml"/>
     <exec src="features/database/output.xml" if="${db}"/>
     <exec src="features/security/output.xml" if="${security}"/>
     <exec src="output.xml"/>
+    <exec src="/mp/output.xml"/>
+    <exec src="/features/maven/output.xml"/>
+    <exec src="/features/customize-project/output.xml"/>
+    <exec src="/output.xml"/>
 </archetype-script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

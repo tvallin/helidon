@@ -27,22 +27,18 @@
                      name="Kubernetes Support"
                      description="Add Kubernetes manifests to your project"
                      default="false"
-                     optional="true">
-                <exec src="/features/kubernetes/output.xml"/>
-            </boolean>
+                     optional="true"/>
             <boolean id="v8o"
                      name="Verrazzano Support"
                      description="Add Verrazzano manifests to your project"
                      default="false"
-                     optional="true">
-                <exec src="/features/verrazzano/output.xml"/>
-            </boolean>
+                     optional="true"/>
             <boolean id="jpms"
                      name="Module support (JPMS)"
                      description="Add a module-info to your project"
                      default="false"
                      optional="true">
-                <exec src="/features/jpms/output.xml"/>
+
             </boolean>
         </inputs>
     </step>

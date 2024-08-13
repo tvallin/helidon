@@ -44,6 +44,4 @@
             </enum>
         </inputs>
     </step>
-    <exec src="/features/steps/customize-project-inputs.xml"/>
-    <exec src="output.xml"/>
 </archetype-script>

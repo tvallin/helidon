@@ -20,8 +20,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
-        <model>
+    <output if="${security}">
+        <model if="${security.atn} contains 'google'">
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.security.providers</value>
