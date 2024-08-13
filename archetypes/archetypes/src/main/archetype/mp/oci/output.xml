@@ -22,7 +22,7 @@
 
     <output>
         <templates engine="mustache" transformations="mustache,module-dir">
-            <directory>../custom/files</directory>
+            <directory>../custom/features/security/files</directory>
             <includes>
                 <include>src/*/resources/**/application.yaml.mustache</include>
             </includes>
@@ -34,7 +34,7 @@
             </includes>
         </templates>
         <templates engine="mustache" transformations="mustache,packaged,module-dir">
-            <directory>../common/files</directory>
+            <directory>../custom/features/common/files</directory>
             <includes>
                 <include>src/main/resources/**</include>
             </includes>
@@ -95,7 +95,7 @@ ocimetrics:
                 </list>
             </model>
         </templates>
-        <file source="../common/files/src/main/resources/META-INF/beans.xml"
+        <file source="../custom/features/common/files/src/main/resources/META-INF/beans.xml"
               target="client/src/main/resources/META-INF/beans.xml" />
         <files>
             <directory>files</directory>

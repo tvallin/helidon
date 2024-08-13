@@ -48,7 +48,7 @@ This will mount `~/.oci` as a volume in the running docker container.
         <boolean path="jpms">false</boolean>
     </presets>
     <call method="pre-processed-models"/>
-    <exec src="/common/common-output.xml"/>
-    <exec src="/common/packaging-inputs.xml"/>
+    <exec src="/features/common/common-output.xml"/>
+    <exec src="/features/steps/packaging-inputs.xml"/>
     <exec src="output.xml"/>
 </archetype-script>

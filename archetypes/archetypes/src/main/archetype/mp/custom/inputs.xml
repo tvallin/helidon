@@ -23,16 +23,33 @@
     <variables>
         <boolean path="application-yaml">false</boolean>
     </variables>
-    <exec src="/mp/common/output.xml"/>
-    <exec src="/common/media-inputs.xml"/>
-    <source src="/common/media-sources.xml"/>
-    <exec src="/common/security-inputs.xml"/>
-    <exec src="database-inputs.xml"/>
-    <source src="/common/extra-inputs.xml"/>
-    <source src="/common/observability-inputs.xml"/>
-    <exec src="/common/packaging-inputs.xml"/>
-    <source src="observability-output.xml"/>
-    <exec src="database-output.xml" if="${db}"/>
-    <source src="security-output.xml" if="${security}"/>
+    <exec src="features/common/output.xml"/>
+    <exec src="/features/steps/media-inputs.xml"/>
+    <exec src="features/media/output.xml"/>
+    <exec src="/features/steps/security-inputs.xml"/>
+    <source src="/features/steps/database-inputs.xml"/>
+    <source src="/features/steps/extra-inputs.xml"/>
+    <exec src="features/fault-tolerance/output.xml"/>
+    <exec src="features/cors/output.xml"/>
+    <source src="/features/steps/observability-inputs.xml"/>
+    <exec src="/features/steps/packaging-inputs.xml"/>
+    <exec src="features/observability-output.xml"/>
+    <exec src="features/database/database-output.xml" if="${db}"/>
+    <exec src="features/security/security-output.xml" if="${security}"/>
     <exec src="output.xml"/>
 </archetype-script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,17 +21,14 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
-        <templates engine="mustache" transformations="mustache" if="${application-yaml}">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/resources/**/application.yaml.mustache</include>
-            </includes>
-        </templates>
         <model>
             <value key="helidon-test">true</value>
             <value key="mainClass" if="${jpms}">${package}.Main</value>
             <list key="microprofile-config-entries">
-                <value file="files/microprofile-config.properties"/>
+                <value><![CDATA[# Application properties. This is the default greeting
+app.greeting=Hello
+]]>
+                </value>
             </list>
             <list key="MainTest-java-imports" if="${media.json-lib} == 'jsonp'">
                 <value>jakarta.json.JsonObject</value>

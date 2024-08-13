@@ -21,13 +21,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <output>
-        <file source="files/src/main/resources/WEB/index.html" target="src/main/resources/WEB/index.html" if="${media} contains 'multipart'"/>
         <model>
-            <list key="native-sections" if="${docker}">
-                <value file="files/README.md.native.mustache"
-                       if="${docker.native-image} &amp;&amp; !(${db})"
-                       template="mustache"/>
-            </list>
             <list key="Main-routing-builder">
                 <value><![CDATA[.get("/simple-greet", (req, res) -> res.send("Hello World!"))]]></value>
             </list>

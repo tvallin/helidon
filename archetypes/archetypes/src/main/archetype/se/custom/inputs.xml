@@ -19,18 +19,18 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <exec src="/se/common/output.xml"/>
-    <exec src="/common/media-inputs.xml"/>
-    <source src="/common/media-sources.xml"/>
-    <exec src="/common/security-inputs.xml"/>
-    <source src="database-inputs.xml"/>
-    <source src="/common/extra-inputs.xml"/>
-    <source src="extra-output.xml"/>
-    <source src="/common/observability-inputs.xml"/>
-    <source src="observability-output.xml"/>
-    <exec src="/common/packaging-inputs.xml"/>
-    <exec src="database-output.xml" if="${db}"/>
-    <source src="security-output.xml" if="${security}"/>
-
+    <exec src="/se/features/common/output.xml"/>
+    <exec src="/features/steps/media-inputs.xml"/>
+    <exec src="features/media/output.xml"/>
+    <exec src="/features/steps/security-inputs.xml"/>
+    <source src="/features/steps/database-inputs.xml"/>
+    <source src="/features/steps/extra-inputs.xml"/>
+    <exec src="features/fault-tolerance/extra-output.xml"/>
+    <source src="/features/steps/observability-inputs.xml"/>
+    <exec src="features/observability-output.xml"/>
+    <exec src="/features/steps/packaging-inputs.xml"/>
+    <exec src="features/database/database-output.xml" if="${db}"/>
+    <exec src="features/security/security-output.xml" if="${security}"/>
+    <exec src="features/native-image/output.xml"/>
     <exec src="output.xml"/>
 </archetype-script>
