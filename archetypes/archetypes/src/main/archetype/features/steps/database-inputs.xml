@@ -28,7 +28,7 @@
                      default="false"
                      optional="true">
                 <!--  TODO - Relative path from the app-type directory (Remove me)  -->
-                <exec src="features/database/inputs.xml"/>
+                <exec src="../features/database/inputs.xml"/>
             </boolean>
         </inputs>
     </step>
