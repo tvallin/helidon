@@ -115,6 +115,7 @@
     <call method="metric-microprofile"/>
     <output if="${metrics.provider} == 'microprofile'">
         <model>
+            <value key="metrics.provider">${metrics.provider}</value>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Try metrics
@@ -131,7 +132,8 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
 . . .
 ```
 
-]]></value>
+]]>
+                </value>
             </list>
             <list key="dependencies">
                 <map>
@@ -154,7 +156,8 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
     private static final String PERSONALIZED_GETS_COUNTER_NAME = "personalizedGets";
     private static final String PERSONALIZED_GETS_COUNTER_DESCRIPTION = "Counts personalized GET operations";
     private static final String GETS_TIMER_NAME = "allGets";
-    private static final String GETS_TIMER_DESCRIPTION = "Tracks all GET operations";]]></value>
+    private static final String GETS_TIMER_DESCRIPTION = "Tracks all GET operations";]]>
+                </value>
             </list>
             <list key="MainTest-java-imports">
                 <value>org.eclipse.microprofile.metrics.Counter</value>
@@ -175,12 +178,14 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
     static void clear() {
         MetricsFactory.closeAll();
     }
-]]></value>
+]]>
+                </value>
             </list>
             <list key="MainTest-static-fields">
                 <value><![CDATA[
     @Inject
-    private MetricRegistry registry;]]></value>
+    private MetricRegistry registry;]]>
+                </value>
             </list>
             <list key="module-requires">
                 <value>io.helidon.microprofile.metrics</value>

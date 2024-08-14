@@ -22,6 +22,7 @@
 
     <output if="${health}">
         <model if="${health.builtin}">
+            <value key="health.builtin" if="${health}">${health.builtin}</value>
             <list key="dependencies" if="${flavor} == 'mp'">
                 <map order="800">
                     <value key="groupId">io.helidon.microprofile.health</value>

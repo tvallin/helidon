@@ -22,6 +22,7 @@
 
     <output if="${metrics}">
         <model if="${metrics.builtin}">
+            <value key="metrics.builtin" if="${metrics}">${metrics.builtin}</value>
             <list key="dependencies">
                 <map if="${flavor} == 'se'">
                     <value key="groupId">io.helidon.webserver.observe</value>
