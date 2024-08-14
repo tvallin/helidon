@@ -61,7 +61,9 @@
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/features/jpms/output.xml"/>
-    <exec src="/mp/features/output.xml"/>
+    <exec src="/mp/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
+    <exec src="/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
     <exec src="/mp/features/database/output.xml" if="${db}"/>
     <exec src="/mp/features/security/output.xml" if="${security}"/>
     <exec src="/mp/custom/output.xml"/>
