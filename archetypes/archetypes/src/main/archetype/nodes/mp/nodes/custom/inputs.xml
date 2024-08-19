@@ -35,13 +35,13 @@
     <!--  CUSTOMIZE PROJECT  -->
     <exec src="/features/steps/customize-project-inputs.xml"/>
     <!-- OUTPUT -->
-    <exec src="/mp/features/common/output.xml"/>
+    <exec src="/nodes/mp/features/common/output.xml"/>
     <exec src="/features/media/jsonp-output.xml"/>
     <exec src="/features/media/jackson-output.xml"/>
     <exec src="/features/media/jsonb-output.xml"/>
     <exec src="/features/media/multipart-output.xml"/>
     <exec src="/features/media/output.xml"/>
-    <exec src="/mp/features/media/output.xml"/>
+    <exec src="/nodes/mp/features/media/output.xml"/>
     <exec src="/features/security/jwt-output.xml"/>
     <exec src="/features/security/google-output.xml"/>
     <exec src="/features/security/http-signature-output.xml"/>
@@ -49,8 +49,8 @@
     <exec src="/features/security/output.xml"/>
     <source src="/features/fault-tolerance/output.xml"/>
     <source src="/features/cors/output.xml"/>
-    <exec src="/mp/features/fault-tolerance/output.xml"/>
-    <exec src="/mp/features/cors/output.xml"/>
+    <exec src="/nodes/mp/features/fault-tolerance/output.xml"/>
+    <exec src="/nodes/mp/features/cors/output.xml"/>
     <exec src="/features/metrics/output.xml"/>
     <exec src="/features/health/output.xml"/>
     <exec src="/features/tracing/jaeger-output.xml"/>
@@ -61,13 +61,13 @@
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/features/jpms/output.xml"/>
-    <exec src="/mp/features/tracing/output.xml" if="${tracing}"/>
-    <exec src="/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
-    <exec src="/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
-    <exec src="/mp/features/database/output.xml" if="${db}"/>
-    <exec src="/mp/features/security/output.xml" if="${security}"/>
-    <exec src="/mp/custom/output.xml"/>
-    <exec src="/mp/output.xml"/>
+    <exec src="/nodes/mp/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/mp/features/security/output.xml" if="${security}"/>
+    <exec src="/nodes/mp/nodes/custom/output.xml"/>
+    <exec src="/nodes/mp/output.xml"/>
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <exec src="/output.xml"/>

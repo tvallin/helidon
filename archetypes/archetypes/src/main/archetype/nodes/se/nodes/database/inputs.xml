@@ -24,6 +24,6 @@
     <presets>
         <boolean path="db">true</boolean>
     </presets>
-    <exec src="/se/custom/inputs.xml"/>
+    <exec src="/nodes/se/nodes/custom/inputs.xml"/>
     <exec src="output.xml"/>
 </archetype-script>

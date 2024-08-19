@@ -34,38 +34,38 @@
     <!--  CUSTOMIZE PROJECT  -->
     <exec src="/features/steps/customize-project-inputs.xml"/>
     <!-- OUTPUT -->
-    <exec src="/se/features/common/output.xml"/>
+    <exec src="/nodes/se/features/common/output.xml"/>
     <exec src="/features/media/jsonp-output.xml"/>
     <exec src="/features/media/jackson-output.xml"/>
     <exec src="/features/media/jsonb-output.xml"/>
     <exec src="/features/media/multipart-output.xml"/>
     <exec src="/features/media/output.xml"/>
-    <exec src="/se/features/media/output.xml"/>
+    <exec src="/nodes/se/features/media/output.xml"/>
     <exec src="/features/security/jwt-output.xml"/>
     <exec src="/features/security/google-output.xml"/>
     <exec src="/features/security/http-signature-output.xml"/>
     <exec src="/features/security/abac-output.xml"/>
     <exec src="/features/security/output.xml"/>
-    <exec src="/se/features/webclient/output.xml"/>
+    <exec src="/nodes/se/features/webclient/output.xml"/>
     <source src="/features/fault-tolerance/output.xml"/>
     <source src="/features/cors/output.xml"/>
-    <exec src="/se/features/fault-tolerance/output.xml"/>
+    <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
     <exec src="/features/metrics/output.xml"/>
     <exec src="/features/health/output.xml"/>
     <exec src="/features/tracing/jaeger-output.xml"/>
     <exec src="/features/tracing/zipkin-output.xml"/>
     <exec src="/features/steps/observability-output.xml"/>
-    <exec src="/se/features/output.xml"/>
+    <exec src="/nodes/se/features/output.xml"/>
     <exec src="/features/native-image/output.xml"/>
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/features/jpms/output.xml"/>
-    <exec src="/se/features/database/output.xml" if="${db}"/>
-    <exec src="/se/features/security/output.xml" if="${security}"/>
-    <exec src="/se/features/native-image/output.xml"/>
-    <exec src="/se/custom/output.xml"/>
-    <exec src="/mp/output.xml"/>
+    <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
+    <exec src="/nodes/se/features/native-image/output.xml"/>
+    <exec src="/nodes/se/nodes/custom/output.xml"/>
+    <exec src="/nodes/se/output.xml"/>
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <exec src="/output.xml"/>
