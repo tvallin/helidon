@@ -31,8 +31,7 @@
                     <enum id="provider"
                           name="Select a Metrics Provider"
                           default="microprofile"
-                          optional="true"
-                          if="${flavor} == 'mp'">
+                          optional="true">
                         <option value="microprofile"
                                 name="MicroProfile"
                                 description="Expose metrics using the MicroProfile API"/>

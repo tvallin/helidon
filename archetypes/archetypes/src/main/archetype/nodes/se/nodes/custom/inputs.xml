@@ -20,19 +20,19 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <!--  MEDIA  -->
-    <exec src="/features/steps/media-inputs.xml"/>
+    <exec src="/nodes/se/steps/media-inputs.xml"/>
     <!--  SECURITY  -->
-    <exec src="/features/steps/security-inputs.xml"/>
+    <exec src="/nodes/se/steps/security-inputs.xml"/>
     <!--  DATABASE  -->
-    <source src="/features/steps/database-inputs.xml"/>
+    <source src="/nodes/se/steps/database-inputs.xml"/>
     <!--  EXTRA  -->
-    <source src="/features/steps/extra-inputs.xml"/>
+    <source src="/nodes/se/steps/extra-inputs.xml"/>
     <!--  OBSERVABILITY  -->
-    <source src="/features/steps/observability-inputs.xml"/>
+    <source src="/nodes/se/steps/observability-inputs.xml"/>
     <!--  PACKAGING  -->
-    <exec src="/features/steps/packaging-inputs.xml"/>
+    <exec src="/nodes/se/steps/packaging-inputs.xml"/>
     <!--  CUSTOMIZE PROJECT  -->
-    <exec src="/features/steps/customize-project-inputs.xml"/>
+    <exec src="/nodes/se/steps/customize-project-inputs.xml"/>
     <!-- OUTPUT -->
     <exec src="/nodes/se/features/common/output.xml"/>
     <exec src="/features/media/jsonp-output.xml"/>
@@ -54,7 +54,7 @@
     <exec src="/features/health/output.xml"/>
     <exec src="/features/tracing/jaeger-output.xml"/>
     <exec src="/features/tracing/zipkin-output.xml"/>
-    <exec src="/features/steps/observability-output.xml"/>
+    <exec src="/nodes/se/steps/observability-output.xml"/>
     <exec src="/nodes/se/features/output.xml"/>
     <exec src="/features/native-image/output.xml"/>
     <exec src="/features/docker/output.xml"/>

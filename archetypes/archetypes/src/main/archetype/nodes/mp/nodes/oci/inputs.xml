@@ -49,14 +49,14 @@ This will mount `~/.oci` as a volume in the running docker container.
     </presets>
     <call method="pre-processed-models"/>
     <exec src="/features/common/output.xml"/>
-    <exec src="/features/steps/packaging-inputs.xml"/>
+    <exec src="/nodes/mp/steps/packaging-inputs.xml"/>
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/features/jpms/output.xml"/>
     <exec src="output.xml"/>
     <exec src="/nodes/mp/output.xml"/>
-    <exec src="/features/steps/customize-project-inputs.xml"/>
+    <exec src="/nodes/se/steps/customize-project-inputs.xml"/>
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <exec src="/output.xml"/>
