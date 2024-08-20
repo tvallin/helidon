@@ -44,7 +44,7 @@
     <exec src="/nodes/se/features/webclient/output.xml"/>
     <source src="/nodes/se/features/cors/output.xml"/>
     <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
-    <exec src="/features/metrics/output.xml"/>
+    <exec src="/nodes/se/features/metrics/output.xml"/>
     <exec src="/nodes/se/features/health/output.xml"/>
     <exec src="/features/tracing/jaeger-output.xml"/>
     <exec src="/features/tracing/zipkin-output.xml"/>
