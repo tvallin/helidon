@@ -313,12 +313,14 @@ Update the following files with your client id (it should support http://localho
                         <value><![CDATA[
         Config clientConfig = Config.create(ConfigSources.classpath("client-service-jwt.yaml"));
         Config backendConfig = Config.create(ConfigSources.classpath("backend-service-jwt.yaml"));
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-after-server">
                         <value><![CDATA[
         server.context().register(server);
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-server-builder">
                         <value><![CDATA[// backend that prints the current user
@@ -340,12 +342,14 @@ Update the following files with your client id (it should support http://localho
 
                                     res.send(username);
                                 })))
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-routing-builder">
                         <value><![CDATA[.addFeature(SecurityHttpFeature.create(clientConfig.get("security.web-server")))
                 .register(new JwtOverrideService())
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-routing">
                         <value><![CDATA[        Config clientConfig = Config.create(ConfigSources.classpath("client-service-jwt.yaml"));]]></value>
@@ -365,7 +369,8 @@ curl -u "jack:changeit" http://localhost:8080/override
 curl -u "jill:changeit" http://localhost:8080/propagate
 curl -u "jill:changeit" http://localhost:8080/override
 ```
-]]></value>
+]]>
+                        </value>
                     </list>
                 </model>
             </output>
@@ -379,6 +384,12 @@ curl -u "jill:changeit" http://localhost:8080/override
                         <include>src/*/java/**/Service2.java.mustache</include>
                     </includes>
                 </templates>
+                <files>
+                    <directory>files</directory>
+                    <includes>
+                        <include>src/main/resources/keystore.p12</include>
+                    </includes>
+                </files>
                 <model>
                     <list key="dependencies">
                         <map>
@@ -450,19 +461,22 @@ curl -u "jill:changeit" http://localhost:8080/override
             }
         });
     }
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-routing">
                         <value><![CDATA[
         SecurityHttpFeature security = SecurityHttpFeature.create(security1())
                 .securityDefaults(SecurityFeature.authenticate());
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-routing-builder">
                         <value><![CDATA[.addFeature(security)
                 .get("/service1*", SecurityFeature.rolesAllowed("user"))
                 .register(new Service1())
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="main-class-content">
                         <value><![CDATA[
@@ -565,11 +579,13 @@ private static void routing2(HttpRouting.Builder routing) {
     private static SecureUserStore users() {
         return login -> Optional.ofNullable(USERS.get(login));
     }
-]]></value>
+]]>
+                        </value>
                     </list>
                     <list key="Main-server-builder">
                         <value><![CDATA[.putSocket("service2", socket -> socket
-                        .routing(Main::routing2))]]></value>
+                        .routing(Main::routing2))]]>
+                        </value>
                     </list>
                     <list key="Main-after-server">
                         <value><![CDATA[server.context().register(server);]]></value>
@@ -591,7 +607,8 @@ curl -u "jack:changeit" http://localhost:8080/service1
 curl -u "jill:changeit" http://localhost:8080/service1-rsa
 curl -v -u "john:changeit" http://localhost:8080/service1
 ```
-]]></value>
+]]>
+                        </value>
                     </list>
                 </model>
             </output>
@@ -614,7 +631,8 @@ curl -v -u "john:changeit" http://localhost:8080/service1
   - abac:
       fail-on-unvalidated: true
       fail-if-none-validated: true
-]]></value>
+]]>
+                        </value>
                     </list>
                 </model>
             </output>
@@ -637,7 +655,8 @@ curl -v -u "john:changeit" http://localhost:8080/service1
                 <value><![CDATA[
 security:
   enabled: false
-]]></value>
+]]>
+                </value>
             </list>
             <list key="module-requires">
                 <value>io.helidon.security.integration.common</value>

@@ -36,11 +36,7 @@
     <!-- OUTPUT -->
     <exec src="/nodes/se/features/common/output.xml"/>
     <exec src="/nodes/se/features/media/output.xml"/>
-    <exec src="/features/security/jwt-output.xml"/>
-    <exec src="/features/security/google-output.xml"/>
-    <exec src="/features/security/http-signature-output.xml"/>
-    <exec src="/features/security/abac-output.xml"/>
-    <exec src="/features/security/output.xml"/>
+    <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
     <exec src="/nodes/se/features/webclient/output.xml"/>
     <source src="/nodes/se/features/cors/output.xml"/>
     <exec src="/nodes/se/features/fault-tolerance/output.xml"/>

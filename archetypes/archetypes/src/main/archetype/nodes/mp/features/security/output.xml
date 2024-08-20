@@ -93,6 +93,12 @@ to your tenant and application configuration.
         </method>
         <method name="security-signature">
             <output if="${security.atn} contains ['http-signature']">
+                <files>
+                    <directory>files</directory>
+                    <includes>
+                        <include>src/main/resources/keystore.p12</include>
+                    </includes>
+                </files>
                 <model>
                     <list key="providers-config-entries">
                         <value file="files/application.http-signature.yaml"/>
