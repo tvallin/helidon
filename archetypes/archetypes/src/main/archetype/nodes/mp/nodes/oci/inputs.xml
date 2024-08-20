@@ -33,6 +33,47 @@ This will mount `~/.oci` as a volume in the running docker container.
                 </model>
             </output>
         </method>
+        <method name="common">
+            <output>
+                <transformation id="mustache">
+                    <replace regex="\.mustache$" replacement=""/>
+                </transformation>
+                <transformation id="packaged">
+                    <replace regex="__pkg__" replacement="${package/\./\/}"/>
+                </transformation>
+                <transformation id="json-mustache">
+                    <replace regex="\.json.mustache$" replacement=""/>
+                </transformation>
+                <transformation id="jsonp-mustache">
+                    <replace regex="\.jsonp.mustache$" replacement=""/>
+                </transformation>
+                <transformation id="multipart-mustache">
+                    <replace regex="\.multipart.mustache$" replacement=""/>
+                </transformation>
+                <transformation id="native-image">
+                    <replace regex="groupid" replacement="${groupId/\./\/}"/>
+                    <replace regex="artifactid" replacement="${artifactId/\./\/}"/>
+                </transformation>
+                <templates engine="mustache" transformations="mustache,packaged">
+                    <directory>/nodes/mp/features/common/files</directory>
+                    <includes>
+                        <include>.helidon.mustache</include>
+                        <include>README.md.mustache</include>
+                        <include>.gitignore.mustache</include>
+                    </includes>
+                </templates>
+                <model>
+                    <value key="dot-helidon-schema-version">1.1.0</value>
+                    <list key="dependencies">
+                        <map>
+                            <value key="groupId">io.helidon.logging</value>
+                            <value key="artifactId">helidon-logging-jul</value>
+                            <value key="scope">runtime</value>
+                        </map>
+                    </list>
+                </model>
+            </output>
+        </method>
     </methods>
     <variables>
         <text path="module-dir">server</text>
@@ -48,7 +89,8 @@ This will mount `~/.oci` as a volume in the running docker container.
         <boolean path="jpms">false</boolean>
     </presets>
     <call method="pre-processed-models"/>
-    <exec src="/features/common/output.xml"/>
+    <call method="common"/>
+    <exec src="/features/includes/multi-module-output.xml"/>
     <exec src="/nodes/mp/steps/packaging-inputs.xml"/>
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>

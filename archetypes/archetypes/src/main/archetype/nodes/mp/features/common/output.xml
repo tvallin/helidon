@@ -20,19 +20,66 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
-    <exec src="/features/common/output.xml"/>
-    <source src="/features/includes/sources.xml"/>
+    <exec src="/features/includes/multi-module-output.xml"/>
     <output>
+        <transformation id="mustache">
+            <replace regex="\.mustache$" replacement=""/>
+        </transformation>
+        <transformation id="packaged">
+            <replace regex="__pkg__" replacement="${package/\./\/}"/>
+        </transformation>
+        <transformation id="json-mustache">
+            <replace regex="\.json.mustache$" replacement=""/>
+        </transformation>
+        <transformation id="jsonp-mustache">
+            <replace regex="\.jsonp.mustache$" replacement=""/>
+        </transformation>
+        <transformation id="multipart-mustache">
+            <replace regex="\.multipart.mustache$" replacement=""/>
+        </transformation>
+        <transformation id="native-image">
+            <replace regex="groupid" replacement="${groupId/\./\/}"/>
+            <replace regex="artifactid" replacement="${artifactId/\./\/}"/>
+        </transformation>
+        <templates engine="mustache" transformations="mustache,packaged">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/*.java.mustache</include>
+            </includes>
+        </templates>
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
+                <include>src/*/resources/**/*.mustache</include>
+            </includes>
+        </templates>
+        <files>
+            <directory>files</directory>
+            <includes>
+                <include>src/*/resources/**</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.mustache</exclude>
+            </excludes>
+        </files>
+        <templates engine="mustache" transformations="mustache,packaged">
+            <directory>files</directory>
+            <includes>
+                <include>.helidon.mustache</include>
+                <include>README.md.mustache</include>
+                <include>.gitignore.mustache</include>
                 <include>.idea/runConfigurations/configuration.xml.mustache</include>
             </includes>
         </templates>
         <model>
             <value key="parent-artifactId">helidon-mp</value>
+            <value key="dot-helidon-schema-version">1.1.0</value>
             <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.logging</value>
+                    <value key="artifactId">helidon-logging-jul</value>
+                    <value key="scope">runtime</value>
+                </map>
                 <map>
                     <value key="groupId">io.smallrye</value>
                     <value key="artifactId">jandex</value>
