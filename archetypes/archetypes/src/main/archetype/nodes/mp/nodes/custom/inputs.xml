@@ -36,11 +36,6 @@
     <exec src="/nodes/mp/steps/customize-project-inputs.xml"/>
     <!-- OUTPUT -->
     <exec src="/nodes/mp/features/common/output.xml"/>
-    <exec src="/features/media/jsonp-output.xml"/>
-    <exec src="/features/media/jackson-output.xml"/>
-    <exec src="/features/media/jsonb-output.xml"/>
-    <exec src="/features/media/multipart-output.xml"/>
-    <exec src="/features/media/output.xml"/>
     <exec src="/nodes/mp/features/media/output.xml"/>
     <exec src="/features/security/jwt-output.xml"/>
     <exec src="/features/security/google-output.xml"/>

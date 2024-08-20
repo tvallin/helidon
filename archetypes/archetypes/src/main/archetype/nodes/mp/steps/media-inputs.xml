@@ -21,17 +21,12 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Media Support" optional="true">
-        <variables>
-            <text path="media.default-json-lib" if="${flavor} == 'mp'">jsonb</text>
-            <text path="media.default-json-lib" if="${flavor} == 'se'">jsonp</text>
-        </variables>
         <inputs>
             <!-- TODO https://github.com/oracle/helidon-build-tools/issues/699 -->
             <list id="media" name="Select Media Support" default="json" optional="true">
                 <option value="json" name="JSON" description="Handle 'application/json' payloads">
                     <inputs>
-                        <enum id="json-lib" name="Select a JSON library" default="${default-json-lib}" optional="true">
-                            <option value="jsonp" name="JSON-P" description="Jakarta JSON Processing" if="${flavor} == 'se'"/>
+                        <enum id="json-lib" name="Select a JSON library" default="jsonb" optional="true">
                             <option value="jackson" name="Jackson" description="Popular JSON library"/>
                             <option value="jsonb" name="JSON-B" description="Jakarta JSON Binding"/>
                         </enum>
