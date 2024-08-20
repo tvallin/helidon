@@ -24,7 +24,7 @@
             <directory>files</directory>
             <includes>
                 <include>src/main/java/**/module-info.java.mustache</include>
-                <include if="${flavor} == 'mp'">src/main/java/**/Main.java.mustache</include>
+                <include>src/main/java/**/Main.java.mustache</include>
             </includes>
         </templates>
     </output>

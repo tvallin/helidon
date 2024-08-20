@@ -53,7 +53,7 @@ This will mount `~/.oci` as a volume in the running docker container.
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
-    <exec src="/features/jpms/output.xml"/>
+    <exec src="/nodes/mp/features/jpms/output.xml"/>
     <exec src="output.xml"/>
     <exec src="/nodes/mp/output.xml"/>
     <exec src="/nodes/se/steps/customize-project-inputs.xml"/>
