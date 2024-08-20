@@ -28,6 +28,7 @@
             </includes>
         </templates>
         <model>
+            <value key="fault-tolerance">true</value>
             <list key="dependencies">
                 <map if="${extra} contains 'fault-tolerance'">
                     <value key="groupId">io.helidon.fault-tolerance</value>

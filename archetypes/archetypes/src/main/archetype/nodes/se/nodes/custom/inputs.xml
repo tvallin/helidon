@@ -47,11 +47,10 @@
     <exec src="/features/security/abac-output.xml"/>
     <exec src="/features/security/output.xml"/>
     <exec src="/nodes/se/features/webclient/output.xml"/>
-    <source src="/features/fault-tolerance/output.xml"/>
     <source src="/nodes/se/features/cors/output.xml"/>
     <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
     <exec src="/features/metrics/output.xml"/>
-    <exec src="/features/health/output.xml"/>
+    <exec src="/nodes/se/features/health/output.xml"/>
     <exec src="/features/tracing/jaeger-output.xml"/>
     <exec src="/features/tracing/zipkin-output.xml"/>
     <exec src="/nodes/se/steps/observability-output.xml"/>

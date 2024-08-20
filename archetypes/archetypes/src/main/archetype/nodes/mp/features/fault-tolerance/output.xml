@@ -28,5 +28,31 @@
                 <include>src/*/java/**/FtResourceTest.java.mustache</include>
             </includes>
         </templates>
+        <model>
+            <value key="fault-tolerance">true</value>
+            <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.microprofile</value>
+                    <value key="artifactId">helidon-microprofile-fault-tolerance</value>
+                </map>
+            </list>
+            <list key="module-requires">
+                <value>io.helidon.microprofile.faulttolerance</value>
+            </list>
+            <list key="maven-plugins">
+                <value><![CDATA[
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <sun.net.http.allowRestrictedHeaders>true</sun.net.http.allowRestrictedHeaders>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+]]>
+                </value>
+            </list>
+        </model>
     </output>
 </archetype-script>

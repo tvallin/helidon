@@ -22,37 +22,7 @@
 
     <output if="${health}">
         <model if="${health.builtin}">
-            <value key="health.builtin" if="${health}">${health.builtin}</value>
-            <list key="dependencies" if="${flavor} == 'mp'">
-                <map order="800">
-                    <value key="groupId">io.helidon.microprofile.health</value>
-                    <value key="artifactId">helidon-microprofile-health</value>
-                </map>
-            </list>
-            <list key="MainTest-methods" if="${flavor} == 'mp'">
-                <value><![CDATA[
-    @Test
-    void testHealth() {
-        Response response = target
-                .path("health")
-                .request()
-                .get();
-        assertThat(response.getStatus(), is(200));
-    }]]>
-                </value>
-            </list>
-            <list key="readme-sections" if="${flavor} == 'mp'">
-                <value><![CDATA[
-## Try health
-
-```
-curl -s -X GET http://localhost:8080/health
-{"outcome":"UP",...
-
-```
-]]>
-                </value>
-            </list>
+            <value key="health.builtin">${health.builtin}</value>
             <list key="dependencies" if="${flavor} == 'se'">
                 <map order="800">
                     <value key="groupId">io.helidon.webserver.observe</value>
