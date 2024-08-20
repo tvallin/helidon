@@ -19,13 +19,26 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <output if="${tracing}">
-        <model if="${tracing.provider} == 'jaeger'">
-            <value key="tracing" if="${tracing}">true</value>
-            <value key="tracing.provider">${tracing.provider}</value>
-            <list key="readme-sections">
-                <value file="files/README.jaeger.md"/>
-            </list>
-        </model>
-    </output>
+    <methods>
+        <method name="tracing-jaeger">
+            <output if="${tracing.provider} == 'jaeger'">
+                <model>
+                    <list key="readme-sections">
+                        <value file="../files/README.jaeger.md"/>
+                    </list>
+                </model>
+            </output>
+        </method>
+        <method name="tracing-zipkin">
+            <output if="${tracing.provider} == 'zipkin'">
+                <model>
+                    <list key="readme-sections">
+                        <value file="../files/README.zipkin.md"/>
+                    </list>
+                </model>
+            </output>
+        </method>
+    </methods>
+    <call method="tracing-jaeger"/>
+    <call method="tracing-zipkin"/>
 </archetype-script>

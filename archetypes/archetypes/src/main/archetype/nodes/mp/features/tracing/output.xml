@@ -23,6 +23,8 @@
         <method name="tracing-jaeger">
             <output if="${tracing.provider} == 'jaeger'">
                 <model>
+                    <value key="tracing" if="${tracing}">true</value>
+                    <value key="tracing.provider">${tracing.provider}</value>
                     <list key="dependencies">
                         <map order="800">
                             <value key="groupId">io.opentelemetry</value>
@@ -35,6 +37,8 @@
         <method name="tracing-zipkin">
             <output if="${tracing.provider} == 'zipkin'">
                 <model>
+                    <value key="tracing">true</value>
+                    <value key="tracing.provider">${tracing.provider}</value>
                     <list key="dependencies">
                         <map order="800">
                             <value key="groupId">io.opentelemetry</value>

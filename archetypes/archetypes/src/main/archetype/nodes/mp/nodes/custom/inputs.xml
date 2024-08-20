@@ -41,8 +41,7 @@
     <exec src="/nodes/mp/features/fault-tolerance/output.xml"/>
     <exec src="/nodes/mp/features/cors/output.xml"/>
     <exec src="/nodes/mp/features/health/output.xml"/>
-    <exec src="/features/tracing/jaeger-output.xml"/>
-    <exec src="/features/tracing/zipkin-output.xml"/>
+    <exec src="/nodes/mp/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/mp/steps/observability-output.xml"/>
     <exec src="/features/native-image/output.xml"/>
     <exec src="/features/docker/output.xml"/>
