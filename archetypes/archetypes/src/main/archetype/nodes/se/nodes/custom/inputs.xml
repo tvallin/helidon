@@ -46,7 +46,6 @@
     <exec src="/nodes/se/steps/observability-output.xml"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/output.xml"/>
-    <exec src="/features/native-image/output.xml"/>
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>

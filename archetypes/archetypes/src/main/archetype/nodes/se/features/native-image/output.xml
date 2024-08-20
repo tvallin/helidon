@@ -20,9 +20,15 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
+    <output if="${docker}">
+        <templates engine="mustache" transformations="mustache,native-image" if="${docker.native-image}">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/resources/META-INF/**/*.mustache</include>
+            </includes>
+        </templates>
         <model>
-            <list key="native-sections" if="${docker}">
+            <list key="native-sections">
                 <value file="files/README.md.native.mustache"
                        if="${docker.native-image} &amp;&amp; !(${db})"
                        template="mustache"/>

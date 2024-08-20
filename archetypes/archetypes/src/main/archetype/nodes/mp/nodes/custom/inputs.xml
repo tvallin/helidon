@@ -43,7 +43,7 @@
     <exec src="/nodes/mp/features/health/output.xml"/>
     <exec src="/nodes/mp/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/mp/steps/observability-output.xml"/>
-    <exec src="/features/native-image/output.xml"/>
+    <exec src="/nodes/mp/features/native-image/output.xml"/>
     <exec src="/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>

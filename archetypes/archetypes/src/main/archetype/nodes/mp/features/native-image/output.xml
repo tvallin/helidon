@@ -19,5 +19,18 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
+    <output if="${docker}">
+        <templates engine="mustache" transformations="mustache,native-image" if="${docker.native-image}">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/resources/META-INF/**/*.mustache</include>
+            </includes>
+        </templates>
+        <files if= "${media.json-lib} == 'jackson' &amp;&amp; ${docker.native-image}">
+            <directory>files</directory>
+            <includes>
+                <include>src/**/native-image/**/resource-config.json</include>
+            </includes>
+        </files>
+    </output>
 </archetype-script>
