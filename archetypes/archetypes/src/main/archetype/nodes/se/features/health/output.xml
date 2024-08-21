@@ -19,7 +19,16 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
+    <methods>
+        <method name="health">
+            <output>
+                <model>
+                    <value key="health" if="${health}">true</value>
+                </model>
+            </output>
+        </method>
+    </methods>
+    <call method="health"/>
     <output if="${health}">
         <model if="${health.builtin}">
             <value key="health.builtin">${health.builtin}</value>

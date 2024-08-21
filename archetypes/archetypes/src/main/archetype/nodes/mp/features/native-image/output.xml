@@ -20,6 +20,12 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output if="${docker}">
+<!--        <templates engine="mustache" transformations="mustache" if="${docker.native-image}">-->
+<!--            <directory>files</directory>-->
+<!--            <includes>-->
+<!--                <include>Dockerfile.native.mustache</include>-->
+<!--            </includes>-->
+<!--        </templates>-->
         <templates engine="mustache" transformations="mustache,native-image" if="${docker.native-image}">
             <directory>files</directory>
             <includes>
@@ -32,5 +38,21 @@
                 <include>src/**/native-image/**/resource-config.json</include>
             </includes>
         </files>
+<!--        <model if="${docker.native-image}">-->
+<!--            <list key="native-sections">-->
+<!--                <value file="files/README.native.md"/>-->
+<!--            </list>-->
+<!--            <list key="readme-sections">-->
+<!--                <value template="mustache">-->
+<!--                    <![CDATA[-->
+<!--## Building a Native Image-->
+
+<!--{{#native-sections}}-->
+<!--{{.}}-->
+<!--{{/native-sections}}-->
+<!--]]>-->
+<!--                </value>-->
+<!--            </list>-->
+<!--        </model>-->
     </output>
 </archetype-script>

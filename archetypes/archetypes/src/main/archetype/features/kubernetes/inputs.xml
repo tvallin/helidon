@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Oracle and/or its affiliates.
+    Copyright (c) 2024 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,15 +20,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <step name="Customize Project" optional="true">
-        <inputs>
-            <enum id="build-system" name="Select a Build System" default="maven" optional="true">
-                <option value="maven" name="Apache Maven"/>
-            </enum>
-            <text id="groupId" name="Project groupId" optional="true" default="com.examples"/>
-            <text id="artifactId" name="Project artifactId" optional="true" default="myproject"/>
-            <text id="version" name="Project version" optional="true" default="1.0-SNAPSHOT"/>
-            <text id="package" name="Java package name" optional="true" default="com.example.myproject"/>
-        </inputs>
-    </step>
+    <inputs>
+        <boolean id="k8s"
+                 name="Kubernetes Support"
+                 description="Add Kubernetes manifests to your project"
+                 default="false"
+                 optional="true"/>
+    </inputs>
 </archetype-script>

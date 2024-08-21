@@ -20,24 +20,25 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <step name="Packaging and Deployment" optional="true">
-        <exec src="/features/docker/inputs.xml"/>
-        <inputs>
-            <boolean id="k8s"
-                     name="Kubernetes Support"
-                     description="Add Kubernetes manifests to your project"
-                     default="false"
-                     optional="true"/>
-            <boolean id="v8o"
-                     name="Verrazzano Support"
-                     description="Add Verrazzano manifests to your project"
-                     default="false"
-                     optional="true"/>
-            <boolean id="jpms"
-                     name="Module support (JPMS)"
-                     description="Add a module-info to your project"
-                     default="false"
-                     optional="true"/>
-        </inputs>
-    </step>
+    <inputs>
+        <boolean id="tracing"
+                 name="Tracing"
+                 description="Distributed tracing system"
+                 default="false"
+                 optional="true">
+            <inputs>
+                <enum id="provider"
+                      name="Select a Tracing Provider"
+                      default="jaeger"
+                      optional="true">
+                    <option value="jaeger"
+                            name="Jaeger"
+                            description="Send traces to a Jaeger backend"/>
+                    <option value="zipkin"
+                            name="Zipkin"
+                            description="Send traces to a Zipkin backend"/>
+                </enum>
+            </inputs>
+        </boolean>
+    </inputs>
 </archetype-script>

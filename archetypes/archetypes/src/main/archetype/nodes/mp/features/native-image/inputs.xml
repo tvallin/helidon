@@ -19,17 +19,11 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
-    <step name="Database" optional="true">
-        <inputs>
-            <boolean id="db"
-                     name="Database Support"
-                     description="Manage data in your application"
-                     default="false"
-                     optional="true">
-                <!--  TODO - Relative path from the app-type directory (Remove me)  -->
-                <exec src="../../features/database/inputs.xml"/>
-            </boolean>
-        </inputs>
-    </step>
+    <inputs>
+        <boolean id="native-image"
+                 name="GraalVM Native Image Support"
+                 description="Add a native-image capable Dockerfile to your project"
+                 default="false"
+                 optional="true"/>
+    </inputs>
 </archetype-script>

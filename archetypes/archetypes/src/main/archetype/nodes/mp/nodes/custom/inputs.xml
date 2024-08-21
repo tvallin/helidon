@@ -20,20 +20,7 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <!--  MEDIA  -->
-    <exec src="/nodes/mp/steps/media-inputs.xml"/>
-    <!--  SECURITY  -->
-    <exec src="/nodes/mp/steps/security-inputs.xml"/>
-    <!--  DATABASE  -->
-    <source src="/nodes/mp/steps/database-inputs.xml"/>
-    <!--  EXTRA  -->
-    <source src="/nodes/mp/steps/extra-inputs.xml"/>
-    <!--  OBSERVABILITY  -->
-    <source src="/nodes/mp/steps/observability-inputs.xml"/>
-    <!--  PACKAGING  -->
-    <exec src="/nodes/mp/steps/packaging-inputs.xml"/>
-    <!--  CUSTOMIZE PROJECT  -->
-    <exec src="/nodes/mp/steps/customize-project-inputs.xml"/>
+    <exec src="/nodes/mp/steps/steps.xml"/>
     <!-- OUTPUT -->
     <exec src="/nodes/mp/features/common/output.xml"/>
     <exec src="/nodes/mp/features/media/output.xml"/>
@@ -44,7 +31,7 @@
     <exec src="/nodes/mp/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/mp/steps/observability-output.xml"/>
     <exec src="/nodes/mp/features/native-image/output.xml"/>
-    <exec src="/features/docker/output.xml"/>
+    <exec src="/nodes/mp/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/nodes/mp/features/jpms/output.xml"/>

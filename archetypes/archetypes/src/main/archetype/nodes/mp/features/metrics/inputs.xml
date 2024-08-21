@@ -21,20 +21,27 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <inputs>
-        <boolean id="docker"
-                 name="Docker support"
-                 description="Add a Dockerfile to your project"
+        <boolean id="metrics"
+                 name="Metrics"
+                 description="Collect application metrics"
                  default="false"
                  optional="true">
             <inputs>
-                <boolean id="native-image"
-                         name="GraalVM Native Image Support"
-                         description="Add a native-image capable Dockerfile to your project"
-                         default="false"
-                         optional="true"/>
-                <boolean id="jlink-image" name="JLink Support"
-                         description="Add a JLink capable Dockerfile to your project"
-                         default="false"
+                <enum id="provider"
+                      name="Select a Metrics Provider"
+                      default="microprofile"
+                      optional="true">
+                    <option value="microprofile"
+                            name="MicroProfile"
+                            description="Expose metrics using the MicroProfile API"/>
+                    <option value="micrometer"
+                            name="Micrometer"
+                            description="Expose metrics using the Micrometer API"/>
+                </enum>
+                <boolean id="builtin"
+                         name="Built-in Metrics"
+                         description="Expose common metrics"
+                         default="true"
                          optional="true"/>
             </inputs>
         </boolean>

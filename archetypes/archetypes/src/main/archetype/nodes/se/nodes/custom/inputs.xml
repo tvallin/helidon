@@ -19,21 +19,8 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <!--  MEDIA  -->
-    <exec src="/nodes/se/steps/media-inputs.xml"/>
-    <!--  SECURITY  -->
-    <exec src="/nodes/se/steps/security-inputs.xml"/>
-    <!--  DATABASE  -->
-    <source src="/nodes/se/steps/database-inputs.xml"/>
-    <!--  EXTRA  -->
-    <source src="/nodes/se/steps/extra-inputs.xml"/>
-    <!--  OBSERVABILITY  -->
-    <source src="/nodes/se/steps/observability-inputs.xml"/>
-    <!--  PACKAGING  -->
-    <exec src="/nodes/se/steps/packaging-inputs.xml"/>
-    <!--  CUSTOMIZE PROJECT  -->
-    <exec src="/nodes/se/steps/customize-project-inputs.xml"/>
-    <!-- OUTPUT -->
+    <exec src="/nodes/se/steps/steps.xml"/>
+
     <exec src="/nodes/se/features/common/output.xml"/>
     <exec src="/nodes/se/features/media/output.xml"/>
     <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
@@ -43,10 +30,9 @@
     <exec src="/nodes/se/features/metrics/output.xml"/>
     <exec src="/nodes/se/features/health/output.xml"/>
     <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
-    <exec src="/nodes/se/steps/observability-output.xml"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/output.xml"/>
-    <exec src="/features/docker/output.xml"/>
+    <exec src="/nodes/se/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/nodes/se/features/jpms/output.xml"/>

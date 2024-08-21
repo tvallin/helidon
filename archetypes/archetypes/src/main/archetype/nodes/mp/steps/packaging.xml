@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Oracle and/or its affiliates.
+    Copyright (c) 2022, 2024 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,16 +20,12 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <step name="Database" optional="true">
+    <step name="Packaging and Deployment" optional="true">
+        <exec src="/nodes/mp/features/docker/inputs.xml"/>
         <inputs>
-            <boolean id="db"
-                     name="Database Support"
-                     description="Manage data in your application"
-                     default="false"
-                     optional="true">
-                <!--  TODO - Relative path from the app-type directory (Remove me)  -->
-                <exec src="../../features/database/inputs.xml"/>
-            </boolean>
+            <exec src="/features/kubernetes/inputs.xml"/>
+            <exec src="/features/verrazzano/inputs.xml"/>
+            <exec src="/nodes/mp/features/jpms/inputs.xml"/>
         </inputs>
     </step>
 </archetype-script>
