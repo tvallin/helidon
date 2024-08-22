@@ -19,7 +19,26 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
+    <exec src="/nodes/se/features/common/output.xml"/>
+    <exec src="/nodes/se/features/media/output.xml"/>
+    <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
+    <exec src="/nodes/se/features/webclient/output.xml"/>
+    <source src="/nodes/se/features/cors/output.xml"/>
+    <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
+    <exec src="/nodes/se/features/metrics/output.xml"/>
+    <exec src="/nodes/se/features/health/output.xml"/>
+    <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
+    <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/se/features/output.xml"/>
+    <exec src="/nodes/se/features/docker/output.xml"/>
+    <exec src="/features/kubernetes/output.xml"/>
+    <exec src="/features/verrazzano/output.xml"/>
+    <exec src="/nodes/se/features/jpms/output.xml"/>
+    <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
+    <exec src="/nodes/se/features/native-image/output.xml"/>
+    <exec src="/features/maven/output.xml"/>
+    <exec src="/features/customize-project/output.xml"/>
     <output>
         <model>
             <list key="Main-routing-builder">

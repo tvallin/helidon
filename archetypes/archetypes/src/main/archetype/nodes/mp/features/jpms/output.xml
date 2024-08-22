@@ -27,5 +27,8 @@
                 <include>src/main/java/**/Main.java.mustache</include>
             </includes>
         </templates>
+        <model>
+            <value key="mainClass">${package}.Main</value>
+        </model>
     </output>
 </archetype-script>

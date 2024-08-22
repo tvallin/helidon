@@ -20,10 +20,29 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+    <exec src="/nodes/mp/features/common/output.xml"/>
+    <exec src="/nodes/mp/features/media/output.xml"/>
+    <exec src="/nodes/mp/features/security/legacy/legacy.xml"/>
+    <exec src="/nodes/mp/features/fault-tolerance/output.xml"/>
+    <exec src="/nodes/mp/features/cors/output.xml"/>
+    <exec src="/nodes/mp/features/health/output.xml"/>
+    <exec src="/nodes/mp/features/tracing/legacy/legacy.xml" if="${tracing}"/>
+    <exec src="/nodes/mp/steps/observability-output.xml"/>
+    <exec src="/nodes/mp/features/native-image/output.xml"/>
+    <exec src="/nodes/mp/features/docker/output.xml"/>
+    <exec src="/features/kubernetes/output.xml"/>
+    <exec src="/features/verrazzano/output.xml"/>
+    <exec src="/nodes/mp/features/jpms/output.xml"/>
+    <exec src="/nodes/mp/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/mp/features/security/output.xml" if="${security}"/>
+    <exec src="/features/maven/output.xml"/>
+    <exec src="/features/customize-project/output.xml"/>
     <output>
         <model>
             <value key="helidon-test">true</value>
-            <value key="mainClass" if="${jpms}">${package}.Main</value>
             <list key="microprofile-config-entries">
                 <value><![CDATA[# Application properties. This is the default greeting
 app.greeting=Hello

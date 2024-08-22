@@ -25,6 +25,4 @@
         <boolean path="db">false</boolean>
     </presets>
     <exec src="/nodes/mp/nodes/custom/inputs.xml"/>
-    <exec src="features/media/output.xml"/>
-    <exec src="output.xml"/>
 </archetype-script>
