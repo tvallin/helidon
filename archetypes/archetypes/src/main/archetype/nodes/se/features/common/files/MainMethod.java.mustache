@@ -1,0 +1,29 @@
+
+        // load logging configuration
+        LogConfig.configureRuntime();
+
+        // initialize global config from default configuration
+        Config config = Config.create();
+        Config.global(config);
+
+        {{#Main-main}}
+        {{.}}
+        {{/Main-main}}
+
+        WebServer server = WebServer.builder()
+                .config(config.get("server"))
+                {{#Main-server-builder}}
+                {{.}}
+                {{/Main-server-builder}}
+                .routing(Main::routing)
+                .build()
+                .start();
+
+        {{#Main-after-server}}
+        {{.}}
+        {{/Main-after-server}}
+
+        System.out.println("WEB server is up! http://localhost:" + server.port() + "/simple-greet");
+        {{#Main-logging}}
+        {{.}}
+        {{/Main-logging}}

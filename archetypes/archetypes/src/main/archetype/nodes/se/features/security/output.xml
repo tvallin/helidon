@@ -247,7 +247,7 @@ Build and run the application and then try the endpoints:
                         </value>
                     </list>
                     <list key="readme-sections" >
-                        <value template="mustache"><![CDATA[
+                        <value><![CDATA[
 ## Try Google login
 
 There is a static web page in src/main/resources/WEB with a page to login to Google.
@@ -257,7 +257,8 @@ Update the following files with your client id (it should support http://localho
 1. src/main/resources/application.yaml - set security.properties.google-client-id or override it in a file in ~/helidon/examples.yaml
 2. src/main/resources/WEB/index.html - update the meta tag in header with name "google-signin-client_id"
 3. src/main/java/io/helidon/security/examples/google/GoogleMain.java - update the client id in builder of provider
-]]></value>
+]]>
+                        </value>
                     </list>
                 </model>
             </output>
@@ -360,7 +361,7 @@ Update the following files with your client id (it should support http://localho
                         <value>io.helidon.webclient.http1</value>
                     </list>
                     <list key="readme-sections">
-                        <value template="mustache"><![CDATA[
+                        <value><![CDATA[
 ## Try JWT
 
 ```bash
@@ -599,7 +600,7 @@ private static void routing2(HttpRouting.Builder routing) {
                         <value>io.helidon.security.providers.httpsign</value>
                     </list>
                     <list key="readme-sections">
-                        <value template="mustache"><![CDATA[
+                        <value><![CDATA[
 ## Try Signature
 
 ```bash
@@ -664,20 +665,7 @@ security:
             </list>
             <list key="application-yaml-entries"
                   if="!(${security.atn} contains 'http-signature' || ${security.atn} contains 'jwt')">
-                <value template="mustache"><![CDATA[
-{{#security}}
-
-security:
-  config.require-encryption: false
-  properties:
-{{#security-properties}}
-{{.}}
-{{/security-properties}}
-  providers:
-{{#providers-config-entries}}
-{{.}}
-{{/providers-config-entries}}
-{{/security}}]]></value>
+                <value template="mustache" file="files/application.yaml.mustache"/>
             </list>
         </model>
     </output>

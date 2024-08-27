@@ -25,18 +25,7 @@
             <value key="security">true</value>
             <value key="features">true</value>
             <list key="server-features">
-                <value template="mustache"><![CDATA[
-    security:
-      defaults:
-        authenticate: true
-      web-server:
-        # protected paths on the web server - do not include paths served by Jersey, as those are protected directly
-        paths:
-        {{#paths-config-entries}}
-        {{.}}
-        {{/paths-config-entries}}
-]]>
-                </value>
+                <value template="mustache" file="files/config.yaml.mustache"/>
             </list>
         </model>
     </output>

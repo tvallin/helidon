@@ -39,7 +39,7 @@
     password:]]>
                         </value>
                     </list>
-                    <value key="start-db" template="mustache"><![CDATA[
+                    <value key="start-db"><![CDATA[
 H2:
 ```
 docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
@@ -74,7 +74,7 @@ For details, see https://www.h2database.com/html/cheatSheet.html
     password: changeit]]>
                         </value>
                     </list>
-                    <value key="start-db" template="mustache"><![CDATA[
+                    <value key="start-db"><![CDATA[
 MySQL:
 ```
 docker run --rm --name mysql -p 3306:3306 \
@@ -156,7 +156,7 @@ For details on an Oracle Docker image, see https://github.com/oracle/docker-imag
                     <list key="application-test-yaml-entries">
                         <value file="files/application-test-mongo.yaml.mustache" template="mustache"/>
                     </list>
-                    <value key="start-db" template="mustache"><![CDATA[
+                    <value key="start-db"><![CDATA[
 Mongodb:
 ```
 docker run --rm --name mongo -p 27017:27017 mongo
@@ -427,16 +427,7 @@ This example requires a database, see [Database Setup](#database-setup).
                 </value>
             </list>
             <list key="readme-sections">
-                <value template="mustache"><![CDATA[
-### Database Setup
-
-In the `pom.xml` and `application.yaml` we provide configuration needed for {{server}} database.
-Start your database before running this example.
-
-Example docker commands to start databases in temporary containers:
-{{start-db}}
-]]>
-                </value>
+                <value template="mustache" file="files/README.md.mustache"/>
             </list>
             <list key="gitignore">
                 <value>ObjectStore/</value>

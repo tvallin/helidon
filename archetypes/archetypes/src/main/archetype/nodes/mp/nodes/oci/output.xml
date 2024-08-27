@@ -32,6 +32,10 @@
             <includes>
                 <include>**/*.mustache</include>
             </includes>
+            <excludes>
+                <exclude>README*.mustache</exclude>
+                <exclude>maven-*.mustache</exclude>
+            </excludes>
         </templates>
         <templates engine="mustache" transformations="mustache,packaged,module-dir">
             <directory>../../features/common/files</directory>
@@ -46,7 +50,7 @@
                     </map>
                 </list>
                 <list key="microprofile-config-entries">
-                    <value template="mustache"><![CDATA[
+                    <value><![CDATA[
 # Application properties. This is the default greeting
 app.greeting=Hello
 
@@ -62,7 +66,7 @@ oci.auth-strategy=config-file,instance-principals,resource-principal
 ]]></value>
                 </list>
                 <list key="yaml-config-entries">
-                    <value template="mustache"><![CDATA[
+                    <value><![CDATA[
 # Helidon Metrics to OCI parameters
 ocimetrics:
   # OCI compartment ID where the metrics will be sent
@@ -204,133 +208,17 @@ ocimetrics:
                 </map>
             </list>
             <list key="maven-plugins">
-                <value template="mustache"><![CDATA[            <plugin>
-                <groupId>io.smallrye</groupId>
-                <artifactId>jandex-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-index</id>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-server</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skipOpenApiGenerate}</skip>
-                            <inputSpec>${project.basedir}/../spec/api.yaml</inputSpec>
-                            <generatorName>java-helidon-server</generatorName>
-                            <generateModelTests>false</generateModelTests>
-                            <generateModelDocumentation>false</generateModelDocumentation>
-                            <generateApiTests>false</generateApiTests>
-                            <generateApiDocumentation>false</generateApiDocumentation>
-                            <output>${project.build.directory}/generated-sources/server</output>
-                            <configOptions>
-                                <apiPackage>{{package}}.server.api</apiPackage>
-                                <fullProject>false</fullProject>
-                                <helidonVersion>{{helidon-version}}</helidonVersion>
-                                <library>mp</library>
-                                <modelPackage>{{package}}.server.model</modelPackage>
-                                <serializationLibrary>jackson</serializationLibrary>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/*MockedTest</include>
-                    </includes>
-                </configuration>
-            </plugin>]]>
-                </value>
+                <value template="mustache" file="files/maven-plugins.xml.mustache"/>
             </list>
             <list key="maven-profiles">
-                <value template="mustache"><![CDATA[
-    <profiles>
-        <profile>
-            <id>test</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <includes>
-                                <include>**/*ConfigFileTest</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <includes>
-                                <include>**/*InstancePrincipalTest</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>]]>
-                </value>
+                <value template="mustache" file="files/maven-profiles.xml.mustache"/>
             </list>
             <value key="readme-description" file="files/README-Description.md"/>
-            <value key="readme-run-commands" template="mustache"><![CDATA[
-### Build the application
-
-1. Build without running a test
-   ```bash
-   mvn clean package -DskipTests
-   ```
-2. Build with run default test profile using mocked unit tests
-   ```bash
-   mvn clean package
-   ```
-3. Build and run `test` test profile that performs authentication for OCI services via .oci config file
-   ```bash
-   mvn clean package -Ptest
-   ```
-4. Build and execute `prod` test profile that performs OCI services authentication via instance
-principal when running it in an oci compute instance.
-   ```bash
-   mvn clean package -Pprod
-
-### Run the application
-
-1. Default with no profile will use `config-file,instance-principals,resource-principal` authentication strategy
-     ```bash
-     java -jar server/target/{{artifactId}}.jar
-     ```
-2. `test` profile will use user principal via oci config file authentication
-     ```bash
-     java -Dconfig.profile=test -jar server/target/{{artifactId}}.jar
-     ```
-3. `prod` profile will use instance principal authentication
-     ```bash
-     java -Dconfig.profile=prod -jar server/target/{{artifactId}}.jar
-     ```
-]]>
-            </value>
+            <value key="readme-run-commands"
+                   template="mustache"
+                   file="files/README.md.run-commands.mustache"/>
             <list key="readme-exercise-the-application">
-                <value template="mustache"><![CDATA[
+                <value><![CDATA[
 1. Use curl to access the client application
    ```
    curl -X GET http://localhost:8080/greet
@@ -354,7 +242,7 @@ principal when running it in an oci compute instance.
                 </value>
             </list>
             <list key="k8s-readme-sections">
-                <value template="mustache"><![CDATA[
+                <value><![CDATA[
 ### Configure the application
 
 Make sure, your application has access to your OCI setup. One way, you can do so, if your kubernetes cluster is running locally, is by volume.

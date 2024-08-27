@@ -27,15 +27,8 @@
                 <include>src/*/resources/META-INF/**/*.mustache</include>
             </includes>
         </templates>
-<!--        <templates engine="mustache" transformations="mustache" if="${docker.native-image}">-->
-<!--            <directory>files</directory>-->
-<!--            <includes>-->
-<!--                <include>Dockerfile.native.mustache</include>-->
-<!--            </includes>-->
-<!--        </templates>-->
         <model if="${docker.native-image}">
             <list key="native-sections">
-<!--                <value file="files/README.native.md"/>-->
                 <value file="files/README.md.native.mustache"
                        if="!(${db})"
                        template="mustache"/>

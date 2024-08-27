@@ -66,12 +66,7 @@
                 </map>
             </list>
             <list key="microprofile-config-entries">
-                <value template="mustache"><![CDATA[
-#OpenTelemetry
-otel.sdk.disabled=false
-otel.traces.exporter={{tracing.provider}}
-otel.service.name=helidon-tracing-service]]>
-                </value>
+                <value template="mustache" file="files/microprofile-config.properties.mustache"/>
             </list>
             <list key="module-requires">
                 <value>io.helidon.microprofile.telemetry</value>

@@ -28,7 +28,7 @@
             </includes>
         </templates>
         <model>
-            <value key="webclient" if="${extra} contains 'webclient'">true</value>
+            <value key="webclient">true</value>
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.webclient</value>
@@ -49,32 +49,10 @@
                 </value>
             </list>
             <list key="MainTest-static-imports">
-                <value if="${flavor} == 'se'">org.hamcrest.CoreMatchers.containsString</value>
+                <value>org.hamcrest.CoreMatchers.containsString</value>
             </list>
-            <list key="readme-sections" if="${flavor} == 'se'">
-                <value template="mustache"><![CDATA[
-## Exercise Webclient
-
-First, start the server:
-
-```
-java -jar target/{{artifactId}}.jar
-```
-
-Note the port number that it displays. For example:
-
-```
-WEB server is up! http://localhost:8080/simple-greet
-```
-
-Then run the client, passing the port number. It will connect
-to the server:
-
-```
-java -cp "target/classes:target/libs/*" {{package}}.WebClientMain PORT
-```
-]]>
-                </value>
+            <list key="readme-sections">
+                <value template="mustache" file="files/README.md.mustache"/>
             </list>
         </model>
     </output>
