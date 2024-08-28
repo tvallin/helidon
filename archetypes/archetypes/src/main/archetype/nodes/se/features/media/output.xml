@@ -152,9 +152,33 @@
     <call method="jackson"/>
     <call method="jsonb"/>
     <call method="multipart"/>
-    <source src="/features/includes/media-sources.xml"/>
 
     <output>
+        <templates engine="mustache" transformations="mustache,packaged" if="!(${media} contains 'json')">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/SimpleGreetResource.java.mustache</include>
+                <include>src/*/java/**/GreetService.java.mustache</include>
+            </includes>
+        </templates>
+        <templates engine="mustache" transformations="jsonp-mustache,packaged" if="${media.json-lib} == 'jsonp'">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/*.java.jsonp.mustache</include>
+            </includes>
+        </templates>
+        <templates engine="mustache" transformations="json-mustache,packaged" if="['jsonb', 'jackson'] contains ${media.json-lib}">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/*.json.mustache</include>
+            </includes>
+        </templates>
+        <templates engine="mustache" transformations="multipart-mustache,packaged" if="${media} contains 'multipart'">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/*.multipart.mustache</include>
+            </includes>
+        </templates>
         <file source="files/src/main/resources/WEB/index.html" target="src/main/resources/WEB/index.html" if="${media} contains 'multipart'"/>
         <model>
             <value key="media-json" if="${media} contains 'json'">true</value>
