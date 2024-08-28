@@ -161,12 +161,6 @@
 ]]>
                 </value>
             </list>
-            <list key="main-method-content">
-                <value template="mustache" file="files/MainMethod.java.mustache"/>
-            </list>
-            <list key="main-class-content">
-                <value template="mustache" file="files/MainClass.java.mustache"/>
-            </list>
         </model>
     </output>
 </archetype-script>
