@@ -19,6 +19,17 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+    <methods>
+        <method name="module-observe">
+            <output if="${health} || ${metrics} || ${tracing}">
+                <model>
+                    <list key="module-requires">
+                        <value>io.helidon.webserver.observe</value>
+                    </list>
+                </model>
+            </output>
+        </method>
+    </methods>
     <exec src="/nodes/se/features/common/output.xml"/>
     <exec src="/nodes/se/features/media/output.xml"/>
     <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
@@ -29,7 +40,7 @@
     <exec src="/nodes/se/features/health/output.xml"/>
     <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
-    <exec src="/nodes/se/features/output.xml"/>
+    <call method="module-observe"/>
     <exec src="/nodes/se/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
