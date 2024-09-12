@@ -87,7 +87,7 @@
     <call method="pre-processed-models"/>
     <call method="common"/>
     <exec src="/features/includes/multi-module-output.xml"/>
-    <exec src="/nodes/mp/steps/packaging.xml"/>
+    <exec src="/steps/packaging.xml"/>
     <exec src="/nodes/mp/features/docker/output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>

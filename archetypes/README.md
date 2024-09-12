@@ -32,3 +32,5 @@ cd `artifactId`
 ```
 
 Now, just follow instructions in the generated README file.
+
+[//]: # (TODO - Add description of the new archetype rules)

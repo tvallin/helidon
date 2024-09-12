@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Oracle and/or its affiliates.
+    Copyright (c) 2021, 2024 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,20 +19,24 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-
-    <output if="${docker}">
-        <templates engine="mustache" transformations="mustache,native-image" if="${docker.native-image}">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/resources/META-INF/**/*.mustache</include>
-            </includes>
-        </templates>
-        <model if="${docker.native-image}">
-            <list key="native-sections">
-                <value file="files/README.md.native.mustache"
-                       if="!(${db})"
-                       template="mustache"/>
-            </list>
-        </model>
-    </output>
+    <step name="Helidon Flavor" optional="true">
+        <inputs>
+            <enum id="flavor"
+                  name="Select a Flavor"
+                  default="se"
+                  global="true"
+                  optional="true">
+                <option value="se"
+                        name="Helidon SE"
+                        description="Programmatic, lean &amp; fast">
+                    <exec src="/nodes/se/inputs.xml"/>
+                </option>
+                <option value="mp"
+                        name="Helidon MP"
+                        description="Declarative, MicroProfile compliant">
+                    <exec src="/nodes/mp/inputs.xml"/>
+                </option>
+            </enum>
+        </inputs>
+    </step>
 </archetype-script>

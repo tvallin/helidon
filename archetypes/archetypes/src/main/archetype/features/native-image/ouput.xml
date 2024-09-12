@@ -19,11 +19,26 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <inputs>
-        <boolean id="native-image"
-                 name="GraalVM Native Image Support"
-                 description="Add a native-image capable Dockerfile to your project"
-                 default="false"
-                 optional="true"/>
-    </inputs>
+
+    <output>
+        <templates engine="mustache" transformations="mustache,native-image">
+            <directory>files</directory>
+            <includes>
+                <include>**/native-image.properties.mustache</include>
+            </includes>
+        </templates>
+        <template source="files/Dockerfile.native.mustache" target="Dockerfile.native" engine="mustache"/>
+        <model>
+            <list key="readme-sections">
+                <value template="mustache" file="files/README.md.mustache"/>
+            </list>
+            <list key="native-sections">
+                <!--
+                    We don't need to templatize the native image section.
+                    TODO - Remove and inline the extended readme.
+                -->
+                <value file="files/README-ext.md.mustache" if="!${db}" template="mustache"/>
+            </list>
+        </model>
+    </output>
 </archetype-script>

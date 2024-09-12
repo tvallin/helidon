@@ -30,26 +30,43 @@
             </output>
         </method>
     </methods>
+
     <exec src="/nodes/se/features/common/output.xml"/>
+
+    <!-- media step -->
     <exec src="/nodes/se/features/media/output.xml"/>
+
+    <!-- security step -->
     <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
+
+    <!--  extra step  -->
     <exec src="/nodes/se/features/webclient/output.xml"/>
-    <source src="/nodes/se/features/cors/output.xml"/>
+    <exec src="/nodes/se/features/cors/output.xml"/>
     <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
+
+    <!-- observability step -->
     <exec src="/nodes/se/features/metrics/output.xml"/>
     <exec src="/nodes/se/features/health/output.xml"/>
     <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
     <call method="module-observe"/>
-    <exec src="/nodes/se/features/docker/output.xml"/>
-    <exec src="/features/kubernetes/output.xml"/>
-    <exec src="/features/verrazzano/output.xml"/>
-    <exec src="/nodes/se/features/jpms/output.xml"/>
+
+    <!-- packaging step -->
+    <exec src="/features/docker/output.xml" if="${docker}"/>
+    <exec src="/features/kubernetes/output.xml" if="${k8s}"/>
+    <exec src="/features/verrazzano/output.xml" if="${v8o}"/>
+    <exec src="/features/jpms/output.xml" if="${jpms}"/>
+
+    <!-- database step -->
     <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
+
+    <!-- security step -->
     <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
-    <exec src="/nodes/se/features/native-image/output.xml"/>
+
+    <!-- customize project step -->
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
+
     <output>
         <model>
             <list key="Main-routing-builder">

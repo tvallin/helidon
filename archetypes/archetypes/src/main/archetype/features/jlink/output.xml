@@ -20,18 +20,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output if="${docker}">
-        <templates engine="mustache" transformations="mustache" if="${docker.jlink-image}">
-            <directory>files</directory>
-            <includes>
-                <include>Dockerfile.jlink.mustache</include>
-            </includes>
-        </templates>
-        <model if="${docker.jlink-image}">
+    <output>
+        <template source="files/Dockerfile.jlink.mustache" target="Dockerfile.jlink" engine="mustache"/>
+        <model>
             <list key="readme-sections">
-                <value order="40"
-                       template="mustache"
-                       file="files/README.md.mustache"/>
+                <value order="40" template="mustache" file="files/README.md.mustache"/>
             </list>
         </model>
     </output>

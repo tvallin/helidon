@@ -46,19 +46,7 @@
                 <value>java.util.logging.Logger</value>
             </list>
             <list key="application-yaml-entries">
-                <value><![CDATA[
-restrictive-cors:
-  allow-origins: ["http://foo.com", "http://there.com"]
-  allow-methods: ["PUT", "DELETE"]
-
-# The example app uses the following for overriding other settings.
-#cors:
-#  paths:
-#    - path-pattern: /greeting
-#      allow-origins: ["http://foo.com", "http://there.com", "http://other.com"]
-#      allow-methods: ["PUT", "DELETE"]
-]]>
-                </value>
+                <value file="files/application.yaml"/>
             </list>
             <list key="Main-routing-builder">
                 <value><![CDATA[        .register("/cors-greet", corsSupportForGreeting(), new GreetService())
@@ -129,30 +117,7 @@ restrictive-cors:
                 </value>
             </list>
             <list key="readme-sections">
-                <value><![CDATA[
-## Using CORS
-
-The following requests illustrate the CORS protocol with the example app.
-
-By setting `Origin` and `Host` headers that do not indicate the same system we trigger CORS processing in the
- server:
-
-```bash
-# Follow the CORS protocol for GET
-curl -i -X GET -H "Origin: http://foo.com" -H "Host: here.com" http://localhost:8080/cors-greet
-
-HTTP/1.1 200 OK
-Access-Control-Allow-Origin: *
-Content-Type: application/json
-Date: Thu, 30 Apr 2020 17:25:51 -0500
-Vary: Origin
-connection: keep-alive
-content-length: 27
-
-Hello World
-```
-]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>
