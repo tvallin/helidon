@@ -11,3 +11,6 @@ Mp common is not finished, has to call top level common
 
 MEDIA -> sub directory for each media
 
+Rename .mustache to .hbl
+
+Change to relative path when layout is final

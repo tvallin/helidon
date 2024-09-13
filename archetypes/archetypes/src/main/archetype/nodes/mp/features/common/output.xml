@@ -22,31 +22,6 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <exec src="/features/includes/multi-module-output.xml"/>
     <output>
-        <transformation id="mustache">
-            <replace regex="\.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="packaged">
-            <replace regex="__pkg__" replacement="${package/\./\/}"/>
-        </transformation>
-        <transformation id="json-mustache">
-            <replace regex="\.json.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="jsonp-mustache">
-            <replace regex="\.jsonp.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="multipart-mustache">
-            <replace regex="\.multipart.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="native-image">
-            <replace regex="groupid" replacement="${groupId/\./\/}"/>
-            <replace regex="artifactid" replacement="${artifactId/\./\/}"/>
-        </transformation>
-        <templates engine="mustache" transformations="mustache,packaged">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.java.mustache</include>
-            </includes>
-        </templates>
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
@@ -62,15 +37,10 @@
                 <exclude>**/*.mustache</exclude>
             </excludes>
         </files>
-        <templates engine="mustache" transformations="mustache,packaged">
-            <directory>files</directory>
-            <includes>
-                <include>.helidon.mustache</include>
-                <include>README.md.mustache</include>
-                <include>.gitignore.mustache</include>
-                <include>.idea/runConfigurations/configuration.xml.mustache</include>
-            </includes>
-        </templates>
+
+        <template source="files/.idea/runConfigurations/configuration.xml.mustache"
+                  target=".idea/runConfigurations/configuration.xml"/>
+
         <model>
             <value key="parent-artifactId">helidon-mp</value>
             <value key="dot-helidon-schema-version">1.1.0</value>
@@ -128,6 +98,65 @@
                 <value>static org.hamcrest.MatcherAssert.assertThat</value>
                 <value>static org.hamcrest.Matchers.is</value>
             </list>
+            <value key="helidon-test">true</value>
+            <list key="microprofile-config-entries">
+                <value><![CDATA[# Application properties. This is the default greeting
+app.greeting=Hello
+]]>
+                </value>
+            </list>
+            <list key="MainTest-java-imports" if="${media.json-lib} == 'jsonp'">
+                <value>jakarta.json.JsonObject</value>
+            </list>
+            <list key="MainTest-methods" if="${media.json-lib} == 'jsonp'">
+                <value><![CDATA[
+    @Test
+    void testGreet() {
+        JsonObject jsonObject = target
+                .path("simple-greet")
+                .request()
+                .get(JsonObject.class);
+        assertThat(jsonObject.getString("message"), is("Hello World!"));
+    }]]>
+                </value>
+            </list>
+            <list key="MainTest-methods" if="['jsonb', 'jackson'] contains ${media.json-lib}">
+                <value><![CDATA[
+    @Test
+    void testGreet() {
+        Message message = target
+                .path("simple-greet")
+                .request()
+                .get(Message.class);
+        assertThat(message.getMessage(), is("Hello World!"));
+    }]]>
+                </value>
+            </list>
+            <list key="dependencies">
+                <map order="1000">
+                    <value key="groupId">io.helidon.microprofile.bundles</value>
+                    <value key="artifactId">helidon-microprofile-core</value>
+                </map>
+            </list>
+            <list key="readme-exercise-the-application">
+                <value order="999"><![CDATA[
+Basic:
+```
+curl -X GET http://localhost:8080/simple-greet
+Hello World!
+```
+]]>
+                </value>
+            </list>
+            <map key="module-requires">
+                <value key="jakarta.cdi">true</value>
+                <value key="jakarta.inject">true</value>
+                <value key="jakarta.ws.rs">true</value>
+                <value key="io.helidon">true</value>
+                <value key="io.helidon.microprofile.config">true</value>
+                <value key="io.helidon.microprofile.server">true</value>
+            </map>
+            <value key="module-opens-package">true</value>
         </model>
     </output>
 </archetype-script>

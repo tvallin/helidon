@@ -28,15 +28,6 @@
         <transformation id="packaged">
             <replace regex="__pkg__" replacement="${package/\./\/}"/>
         </transformation>
-        <transformation id="json-mustache">
-            <replace regex="\.json.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="jsonp-mustache">
-            <replace regex="\.jsonp.mustache$" replacement=""/>
-        </transformation>
-        <transformation id="multipart-mustache">
-            <replace regex="\.multipart.mustache$" replacement=""/>
-        </transformation>
         <transformation id="gav">
             <replace regex="groupid" replacement="${groupId/\./\/}"/>
             <replace regex="artifactid" replacement="${artifactId}"/>

@@ -31,6 +31,5 @@
                 <exec src="/features/jlink/inputs.xml"/>
             </inputs>
         </boolean>
-
     </inputs>
 </archetype-script>

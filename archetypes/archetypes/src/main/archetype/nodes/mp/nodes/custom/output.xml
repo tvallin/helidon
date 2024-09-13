@@ -27,17 +27,20 @@
     <exec src="/nodes/mp/features/media/output.xml"/>
 
     <!-- security step -->
-    <exec src="/nodes/mp/features/security/legacy/legacy.xml"/>
     <exec src="/nodes/mp/features/security/output.xml" if="${security}"/>
 
     <!-- extra step -->
-    <exec src="/nodes/mp/features/fault-tolerance/output.xml"/>
-    <exec src="/nodes/mp/features/cors/output.xml"/>
+    <exec src="/nodes/mp/features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
+    <exec src="/nodes/mp/features/cors/output.xml" if="${extra} contains 'cors'"/>
 
     <!-- observability step -->
     <exec src="/nodes/mp/features/health/output.xml" if="${health}"/>
     <exec src="/nodes/mp/features/tracing/legacy/legacy.xml" if="${tracing}"/>
+    <!-- reproduce a permutation issue -->
     <exec src="/nodes/mp/steps/observability-output.xml"/>
+    <exec src="/nodes/mp/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
 
     <!-- packaging step -->
     <exec src="/nodes/mp/features/native-image/output.xml"/>
@@ -47,77 +50,13 @@
     <exec src="/nodes/mp/features/jpms/output.xml" if="${jpms}"/>
 
     <!-- observability step -->
-    <exec src="/nodes/mp/features/tracing/output.xml" if="${tracing}"/>
-    <exec src="/nodes/mp/features/metrics/microprofile-output.xml" if="${metrics}"/>
-    <exec src="/nodes/mp/features/metrics/micrometer-output.xml" if="${metrics}"/>
+
 
     <!-- database step -->
     <exec src="/nodes/mp/features/database/output.xml" if="${db}"/>
 
-
     <!-- customize project -->
-    <exec src="/features/maven/output.xml"/>
+    <exec src="/features/maven/output.xml" if="${build-system}"/>
     <exec src="/features/customize-project/output.xml"/>
 
-    <output>
-        <model>
-            <value key="helidon-test">true</value>
-            <list key="microprofile-config-entries">
-                <value><![CDATA[# Application properties. This is the default greeting
-app.greeting=Hello
-]]>
-                </value>
-            </list>
-            <list key="MainTest-java-imports" if="${media.json-lib} == 'jsonp'">
-                <value>jakarta.json.JsonObject</value>
-            </list>
-            <list key="MainTest-methods" if="${media.json-lib} == 'jsonp'">
-                <value><![CDATA[
-    @Test
-    void testGreet() {
-        JsonObject jsonObject = target
-                .path("simple-greet")
-                .request()
-                .get(JsonObject.class);
-        assertThat(jsonObject.getString("message"), is("Hello World!"));
-    }]]>
-                </value>
-            </list>
-            <list key="MainTest-methods" if="['jsonb', 'jackson'] contains ${media.json-lib}">
-                <value><![CDATA[
-    @Test
-    void testGreet() {
-        Message message = target
-                .path("simple-greet")
-                .request()
-                .get(Message.class);
-        assertThat(message.getMessage(), is("Hello World!"));
-    }]]>
-                </value>
-            </list>
-            <list key="dependencies">
-                <map order="1000">
-                    <value key="groupId">io.helidon.microprofile.bundles</value>
-                    <value key="artifactId">helidon-microprofile-core</value>
-                </map>
-            </list>
-            <list key="readme-exercise-the-application">
-                <value order="999"><![CDATA[
-Basic:
-```
-curl -X GET http://localhost:8080/simple-greet
-Hello World!
-```
-]]>
-                </value>
-            </list>
-            <value key="jakarta.cdi">true</value>
-            <value key="jakarta.inject">true</value>
-            <value key="jakarta.ws.rs">true</value>
-            <value key="io.helidon">true</value>
-            <value key="io.helidon.microprofile.config">true</value>
-            <value key="io.helidon.microprofile.server">true</value>
-            <value key="module-opens-package">true</value>
-        </model>
-    </output>
 </archetype-script>
