@@ -32,7 +32,7 @@
                 </map>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.http-signature.yaml"/>
+                <value file="files/application.yaml"/>
             </list>
         </model>
     </output>

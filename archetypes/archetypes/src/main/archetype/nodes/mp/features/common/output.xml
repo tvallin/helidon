@@ -22,10 +22,11 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <exec src="/features/includes/multi-module-output.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache">
+        <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/*.mustache</include>
+                <include>src/*/java/**/*.mustache</include>
             </includes>
         </templates>
         <files>
@@ -39,7 +40,8 @@
         </files>
 
         <template source="files/.idea/runConfigurations/configuration.xml.mustache"
-                  target=".idea/runConfigurations/configuration.xml"/>
+                  target=".idea/runConfigurations/configuration.xml"
+                  engine="mustache"/>
 
         <model>
             <value key="parent-artifactId">helidon-mp</value>
@@ -98,7 +100,7 @@
                 <value>static org.hamcrest.MatcherAssert.assertThat</value>
                 <value>static org.hamcrest.Matchers.is</value>
             </list>
-            <value key="helidon-test">true</value>
+            <value key="helidon-test" order="0">true</value>
             <list key="microprofile-config-entries">
                 <value><![CDATA[# Application properties. This is the default greeting
 app.greeting=Hello

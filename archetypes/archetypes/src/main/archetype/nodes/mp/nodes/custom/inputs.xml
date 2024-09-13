@@ -21,7 +21,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <exec src="/nodes/mp/steps/media.xml"/>
-    <exec src="/nodes/mp/steps/security.xml"/>
+    <exec src="/steps/security.xml"/>
     <exec src="/nodes/mp/steps/database.xml"/>
     <exec src="/nodes/mp/steps/extra.xml"/>
     <exec src="/nodes/mp/steps/observability.xml"/>

@@ -32,7 +32,7 @@
                 <value order="90" if="!(${security.atn} contains 'oidc')"><![CDATA[         roles-allowed: ["user"]]]></value>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.abac.yaml"/>
+                <value file="files/application.yaml"/>
             </list>
         </model>
     </output>

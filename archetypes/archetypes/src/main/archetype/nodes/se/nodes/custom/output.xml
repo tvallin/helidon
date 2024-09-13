@@ -20,13 +20,13 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <exec src="/features/common/output.xml"/>
     <exec src="/nodes/se/features/common/output.xml"/>
 
     <!-- media step -->
     <exec src="/nodes/se/features/media/output.xml"/>
 
     <!-- security step -->
-    <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
     <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
 
     <!-- database step -->
@@ -40,7 +40,6 @@
     <!-- observability step -->
     <exec src="/nodes/se/features/metrics/output.xml" if="${metrics}"/>
     <exec src="/nodes/se/features/health/output.xml" if="${health}"/>
-    <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
 
     <!-- packaging step -->
@@ -55,38 +54,7 @@
 
     <output>
         <model>
-            <list key="Main-routing-builder">
-                <value><![CDATA[.get("/simple-greet", (req, res) -> res.send("Hello World!"))]]></value>
-            </list>
-            <list key="Abstract-tests">
-                <value><![CDATA[
-    @Test
-    void testSimpleGreet() {
-        ClientResponseTyped<String> response = client.get("/simple-greet").request(String.class);
-        assertThat(response.status(), is(Status.OK_200));
-        assertThat(response.entity(), is("Hello World!"));
-    }
-]]>
-                </value>
-            </list>
-            <list key="readme-exercise-the-application">
-                <value order="999"><![CDATA[
-Basic:
-```
-curl -X GET http://localhost:8080/simple-greet
-Hello World!
-```
-]]>
-                </value>
-            </list>
-            <value key="io.helidon.logging.common">true</value>
-            <list key="dependencies">
-                <map order="50" if="!(${extra} contains 'webclient') || ${security}">
-                    <value key="groupId">io.helidon.webclient</value>
-                    <value key="artifactId">helidon-webclient</value>
-                    <value key="scope" if="!${security}">test</value>
-                </map>
-            </list>
+
         </model>
     </output>
 </archetype-script>

@@ -24,6 +24,7 @@
         <!-- generate a simple-greet service if json is not selected -->
         <template source="files/src/main/java/__pkg__/SimpleGreetResource.java.mustache"
                   target="src/main/java/${package/\./\/}/SimpleGreetResource.java"
+                  engine="mustache"
                   if="!(${media} contains 'json')"/>
 
         <!-- TODO https://github.com/oracle/helidon-build-tools/issues/609 -->

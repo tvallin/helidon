@@ -40,7 +40,6 @@
                 <value key="jakarta.xml.bind" order="0">false</value>
                 <value key="io.helidon.common.pki" order="0">false</value>
                 <value key="io.helidon.config" order="0">false</value>
-                <value key="io.helidon.config.Config" order="0">false</value>
                 <value key="io.helidon.cors" order="0">false</value>
                 <value key="io.helidon.dbclient" order="0">false</value>
                 <value key="io.helidon.dbclient.metrics" order="0">false</value>

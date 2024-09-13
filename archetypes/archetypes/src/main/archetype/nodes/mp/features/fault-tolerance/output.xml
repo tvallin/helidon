@@ -36,7 +36,7 @@
                     <value key="artifactId">helidon-microprofile-fault-tolerance</value>
                 </map>
             </list>
-            <map key="modules-requires">
+            <map key="module-requires">
                 <value key="io.helidon.microprofile.faulttolerance">true</value>
             </map>
             <list key="maven-plugins">

@@ -21,10 +21,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
-        <templates engine="mustache" transformations="multipart-mustache,packaged" if="${media} contains 'multipart'">
+        <templates engine="mustache" transformations="mustache,packaged" if="${media} contains 'multipart'">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.multipart.mustache</include>
+                <include>src/*/java/**/*.mustache</include>
             </includes>
         </templates>
         <model>
@@ -34,7 +34,7 @@
                     <value key="artifactId">jersey-media-multipart</value>
                 </map>
             </list>
-            <map key="modules-requires">
+            <map key="module-requires">
                 <value key="jersey.media.multipart">true</value>
             </map>
             <list key="Abstract-tests">
@@ -48,7 +48,7 @@
 ]]>
                 </value>
             </list>
-            <map key="modules-requires">
+            <map key="module-requires">
                 <value key="org.jvnet.mimepull">true</value>
             </map>
         </model>

@@ -40,5 +40,5 @@
     </methods>
     <call method="output"/>
     <exec src="/features/native-image/output.xml" if="${docker.native-image}"/>
-    <exec src="/features/jlink/output.xml" if="${docker.jlink}"/>
+    <exec src="/features/jlink/output.xml" if="${docker.jlink-image}"/>
 </archetype-script>

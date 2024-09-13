@@ -23,8 +23,8 @@
     <step name="Observability" optional="true">
         <inputs>
             <exec src="/nodes/se/features/metrics/inputs.xml"/>
-            <exec src="/nodes/se/features/health/inputs.xml"/>
-            <exec src="/nodes/se/features/tracing/inputs.xml"/>
+            <exec src="/features/health/inputs.xml"/>
+            <exec src="/features/tracing/inputs.xml"/>
         </inputs>
     </step>
 </archetype-script>

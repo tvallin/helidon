@@ -32,7 +32,7 @@
     <output if="${health}">
         <model if="${health.builtin}">
             <value key="health.builtin">${health.builtin}</value>
-            <list key="dependencies" if="${flavor} == 'se'">
+            <list key="dependencies">
                 <map order="800">
                     <value key="groupId">io.helidon.webserver.observe</value>
                     <value key="artifactId">helidon-webserver-observe-health</value>
@@ -42,10 +42,10 @@
                     <value key="artifactId">helidon-health-checks</value>
                 </map>
             </list>
-            <list key="MainTest-static-imports" if="${flavor} == 'se'">
+            <list key="MainTest-static-imports">
                 <value>org.hamcrest.CoreMatchers.containsString</value>
             </list>
-            <list key="Abstract-test" if="${flavor} == 'se'">
+            <list key="Abstract-test">
                 <value><![CDATA[
     @Test
     void testHealth() {
@@ -57,7 +57,7 @@
 ]]>
                 </value>
             </list>
-            <list key="readme-sections" if="${flavor} == 'se'">
+            <list key="readme-sections">
                 <value><![CDATA[
 ## Try health
 

@@ -23,11 +23,10 @@
     <output>
         <template source="files/src/main/java/__pkg__/FileService.java.mustache"
                   target="src/main/java/${package/\./\/}/FileService.java"
-                  if="${media} contains 'multipart'"/>
+                  engine="mustache"/>
 
         <file source="files/src/main/resources/WEB/index.html"
-              target="src/main/resources/WEB/index.html"
-              if="${media} contains 'multipart'"/>
+              target="src/main/resources/WEB/index.html"/>
 
         <model>
             <list key="dependencies">

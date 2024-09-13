@@ -35,7 +35,7 @@
                 </map>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.oidc.yaml"/>
+                <value file="files/application.yaml"/>
             </list>
             <map key="module-requires">
                 <value key="io.helidon.security">true</value>

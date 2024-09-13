@@ -20,32 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output>
-        <templates engine="mustache" transformations="mustache,packaged" if="!(${media} contains 'json')">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/GreetService.java.mustache</include>
-            </includes>
-        </templates>
-        <templates engine="mustache" transformations="jsonp-mustache,packaged" if="${media.json-lib} == 'jsonp'">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.java.jsonp.mustache</include>
-            </includes>
-        </templates>
-        <template source="files/src/main/java/__pkg__/GreetService.java.jsonp.mustache"
-                  target="src/main/java/${package/\./\/}/GreetService.java"/>
-        <templates engine="mustache" transformations="json-mustache,packaged" if="['jsonb', 'jackson'] contains ${media.json-lib}">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.json.mustache</include>
-            </includes>
-        </templates>
-        <templates engine="mustache" transformations="mustache,packaged">
-            <directory>files</directory>
-            <includes>
-                <include>src/**/*.java.mustache</include>
-            </includes>
-        </templates>
-    </output>
+    <exec src="nodes/jackson/output.xml" if="${media.json-lib} == 'jackson'"/>
+    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} == 'jsonb'"/>
+    <exec src="features/common/output.xml"/>
 </archetype-script>

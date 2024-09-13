@@ -92,7 +92,7 @@
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
     <exec src="/nodes/mp/features/jpms/output.xml"/>
-    <exec src="/nodes/mp/steps/customize-project.xml"/>
+    <exec src="/steps/customize-project.xml"/>
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
 </archetype-script>

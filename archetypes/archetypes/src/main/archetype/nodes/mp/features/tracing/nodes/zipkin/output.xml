@@ -30,7 +30,7 @@
                 </map>
             </list>
             <list key="readme-sections">
-                <value file="../files/README.zipkin.md"/>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

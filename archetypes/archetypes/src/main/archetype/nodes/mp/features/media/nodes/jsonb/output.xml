@@ -20,11 +20,12 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
     <output>
-        <templates engine="mustache" transformations="json-mustache,packaged">
+        <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.json.mustache</include>
+                <include>src/*/java/**/*.mustache</include>
             </includes>
         </templates>
         <model>
@@ -39,7 +40,7 @@
                     <value key="scope">runtime</value>
                 </map>
             </list>
-            <map key="modules-requires">
+            <map key="module-requires">
                 <value key="jakarta.json.bind">true</value>
             </map>
         </model>

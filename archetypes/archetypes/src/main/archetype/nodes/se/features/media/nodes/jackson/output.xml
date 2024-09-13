@@ -21,13 +21,13 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
-        <template source="files/src/main/java/__pkg__/GreetService.java.json.mustache"
+        <template source="files/src/main/java/__pkg__/GreetService.java.mustache"
                   target="src/main/java/${package/\./\/}/GreetService.java"
-                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+                  engine="mustache"/>
 
-        <template source="files/src/main/java/__pkg__/Message.java.json.mustache"
+        <template source="files/src/main/java/__pkg__/Message.java.mustache"
                   target="src/main/java/${package/\./\/}/Message.java"
-                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+                  engine="mustache"/>
 
         <model>
             <list key="dependencies">

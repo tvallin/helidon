@@ -21,8 +21,9 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
-        <template source="files/src/main/java/__pkg__/GreetService.java.jsonp.mustache"
-                  target="src/main/java/${package/\./\/}/GreetService.java"/>
+        <template source="files/src/main/java/__pkg__/GreetService.java.mustache"
+                  target="src/main/java/${package/\./\/}/GreetService.java"
+                  engine="mustache"/>
 
         <model>
             <list key="MainTest-other-imports">
