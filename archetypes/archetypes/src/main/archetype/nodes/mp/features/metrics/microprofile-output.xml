@@ -187,9 +187,9 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
     private MetricRegistry registry;]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.microprofile.metrics</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.microprofile.metrics">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>

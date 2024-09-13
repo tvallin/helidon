@@ -69,11 +69,11 @@ curl -X GET http://localhost:8080/traced
 ]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webserver.http2</value>
-                <value>io.helidon.webserver.observe.tracing</value>
-                <value>io.helidon.tracing</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.webserver.http2">true</value>
+                <value key="io.helidon.webserver.observe.tracing">true</value>
+                <value key="io.helidon.tracing">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>

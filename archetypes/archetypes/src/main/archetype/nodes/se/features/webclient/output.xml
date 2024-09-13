@@ -35,9 +35,9 @@
                     <value key="artifactId">helidon-webclient</value>
                 </map>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webclient</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.webclient">true</value>
+            </map>
             <list key="Abstract-tests">
                 <value><![CDATA[
     @Test

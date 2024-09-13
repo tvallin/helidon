@@ -19,12 +19,68 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <output if="${jpms}">
+    <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/main/java/**/module-info.java.mustache</include>
             </includes>
         </templates>
+        <model>
+            <!-- list of module keys with default value (always false) -->
+            <map key="module-requires">
+                <value key="java.logging" order="0">false</value>
+                <value key="jakarta.annotation" order="0">false</value>
+                <value key="jakarta.cdi" order="0">false</value>
+                <value key="jakarta.inject" order="0">false</value>
+                <value key="jakarta.json" order="0">false</value>
+                <value key="jakarta.json.bind" order="0">false</value>
+                <value key="jakarta.persistence" order="0">false</value>
+                <value key="jakarta.ws.rs" order="0">false</value>
+                <value key="jakarta.xml.bind" order="0">false</value>
+                <value key="io.helidon.common.pki" order="0">false</value>
+                <value key="io.helidon.config" order="0">false</value>
+                <value key="io.helidon.config.Config" order="0">false</value>
+                <value key="io.helidon.cors" order="0">false</value>
+                <value key="io.helidon.dbclient" order="0">false</value>
+                <value key="io.helidon.dbclient.metrics" order="0">false</value>
+                <value key="io.helidon.dbclient.tracing" order="0">false</value>
+                <value key="io.helidon.faulttolerance" order="0">false</value>
+                <value key="io.helidon.health.checks" order="0">false</value>
+                <value key="io.helidon.http" order="0">false</value>
+                <value key="io.helidon.http.media.multipart" order="0">false</value>
+                <value key="io.helidon.logging.common" order="0">false</value>
+                <value key="io.helidon.metrics.api" order="0">false</value>
+                <value key="io.helidon.microprofile.cors" order="0">false</value>
+                <value key="io.helidon.microprofile.faulttolerance" order="0">false</value>
+                <value key="io.helidon.microprofile.metrics" order="0">false</value>
+                <value key="io.helidon.microprofile.openapi" order="0">false</value>
+                <value key="io.helidon.microprofile.telemetry" order="0">false</value>
+                <value key="io.helidon.security" order="0">false</value>
+                <value key="io.helidon.security.annotations" order="0">false</value>
+                <value key="io.helidon.security.integration.common" order="0">false</value>
+                <value key="io.helidon.security.providers.google.login" order="0">false</value>
+                <value key="io.helidon.security.providers.jwt" order="0">false</value>
+                <value key="io.helidon.security.providers.oidc" order="0">false</value>
+                <value key="io.helidon.tracing" order="0">false</value>
+                <value key="io.helidon.webclient" order="0">false</value>
+                <value key="io.helidon.webclient.http1" order="0">false</value>
+                <value key="io.helidon.webclient.security" order="0">false</value>
+                <value key="io.helidon.webserver" order="0">false</value>
+                <value key="io.helidon.webserver.context" order="0">false</value>
+                <value key="io.helidon.webserver.cors" order="0">false</value>
+                <value key="io.helidon.webserver.http2" order="0">false</value>
+                <value key="io.helidon.webserver.observe" order="0">false</value>
+                <value key="io.helidon.webserver.observe.health" order="0">false</value>
+                <value key="io.helidon.webserver.observe.metrics" order="0">false</value>
+                <value key="io.helidon.webserver.observe.tracing" order="0">false</value>
+                <value key="io.helidon.webserver.security" order="0">false</value>
+                <value key="io.helidon.webserver.staticcontent" order="0">false</value>
+                <value key="jersey.media.multipart" order="0">false</value>
+                <value key="org.jvnet.mimepull" order="0">false</value>
+                <value key="com.fasterxml.jackson.annotation" order="0">false</value>
+                <value key="com.fasterxml.jackson.core" order="0">false</value>
+            </map>
+        </model>
     </output>
 </archetype-script>

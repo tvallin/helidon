@@ -34,11 +34,11 @@
       authenticate: true]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webserver.context</value>
-                <value>io.helidon.webserver.staticcontent</value>
-                <value>io.helidon.security.providers.google.login</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.webserver.context">true</value>
+                <value key="io.helidon.webserver.staticcontent">true</value>
+                <value key="io.helidon.security.providers.google.login">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>

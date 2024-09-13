@@ -42,11 +42,11 @@
                     <list key="initialize-at-build-time">
                         <value>com.fasterxml.jackson.core</value>
                     </list>
-                    <list key="module-requires">
-                        <value>com.fasterxml.jackson.annotation</value>
-                        <value>com.fasterxml.jackson.core</value>
-                        <value>jakarta.xml.bind</value>
-                    </list>
+                    <map key="modules-requires">
+                        <value key="com.fasterxml.jackson.annotation">true</value>
+                        <value key="com.fasterxml.jackson.core">true</value>
+                        <value key="jakarta.xml.bind">true</value>
+                    </map>
                 </model>
             </output>
         </method>
@@ -64,9 +64,9 @@
                             <value key="scope">runtime</value>
                         </map>
                     </list>
-                    <list key="module-requires">
-                        <value>jakarta.json.bind</value>
-                    </list>
+                    <map key="modules-requires">
+                        <value key="jakarta.json.bind">true</value>
+                    </map>
                 </model>
             </output>
         </method>
@@ -79,10 +79,9 @@
                             <value key="artifactId">jersey-media-multipart</value>
                         </map>
                     </list>
-                    
-                    <list key="module-requires">
-                        <value>jersey.media.multipart</value>
-                    </list>
+                    <map key="modules-requires">
+                        <value key="jersey.media.multipart">true</value>
+                    </map>
                     <list key="Abstract-tests">
                         <value><![CDATA[
     @Test
@@ -94,9 +93,9 @@
 ]]>
                         </value>
                     </list>
-                    <list key="module-requires">
-                        <value>org.jvnet.mimepull</value>
-                    </list>
+                    <map key="modules-requires">
+                        <value key="org.jvnet.mimepull">true</value>
+                    </map>
                 </model>
             </output>
         </method>
@@ -113,12 +112,26 @@
                 <include>src/*/java/**/SimpleGreetResource.java.mustache</include>
             </includes>
         </templates>
+
+        <template source="files/src/main/java/__pkg__/SimpleGreetResource.java.mustache"
+                  target="src/main/java/${package/\./\/}/SimpleGreetResource.java"
+                  if="!(${media} contains 'json')"/>
+
         <templates engine="mustache" transformations="json-mustache,packaged" if="['jsonb', 'jackson'] contains ${media.json-lib}">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/*.json.mustache</include>
             </includes>
         </templates>
+
+        <template source="files/src/main/java/__pkg__/Message.java.json.mustache"
+                  target="src/main/java/${package/\./\/}/Message.java"
+                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+
+        <template source="files/src/main/java/__pkg__/SimpleGreetResource.java.json.mustache"
+                  target="src/main/java/${package/\./\/}/SimpleGreetResource.java"
+                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+
         <templates engine="mustache" transformations="multipart-mustache,packaged" if="${media} contains 'multipart'">
             <directory>files</directory>
             <includes>

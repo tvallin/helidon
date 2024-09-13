@@ -142,9 +142,9 @@ Note that the tests in the example `MainTest` class follow these same steps.
 ]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.microprofile.cors</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.microprofile.cors">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>

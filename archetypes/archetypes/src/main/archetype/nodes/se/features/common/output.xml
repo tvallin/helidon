@@ -128,11 +128,11 @@
             <list key="GreetService-imports">
                 <value>io.helidon.config.Config</value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webserver</value>
-                <value>io.helidon.http</value>
-                <value>io.helidon.config</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.webserver">true</value>
+                <value key="io.helidon.http">true</value>
+                <value key="io.helidon.config">true</value>
+            </map>
             <list key="Main-routing-builder">
                 <value><![CDATA[.register("/greet", new GreetService())]]></value>
             </list>

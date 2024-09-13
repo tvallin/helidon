@@ -386,12 +386,13 @@ docker run --rm --name mongo -p 27017:27017 mongo
 ]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.dbclient</value>
-                <value>io.helidon.dbclient.metrics</value>
-                <value>io.helidon.dbclient.tracing</value>
-                <value if="${media.json-lib} == 'jackson'">jakarta.json</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.dbclient">true</value>
+                <value key="io.helidon.dbclient.metrics">true</value>
+                <value key="io.helidon.dbclient.tracing">true</value>
+                <!-- TODO - seems incorrect -->
+                <value key="jakarta.json" if="${media.json-lib} == 'jackson'">true</value>
+            </map>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 Database:

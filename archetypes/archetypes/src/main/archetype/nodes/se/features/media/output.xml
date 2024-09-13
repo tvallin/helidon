@@ -54,10 +54,10 @@
                             <value key="artifactId">helidon-http-media-jackson</value>
                         </map>
                     </list>
-                    <list key="module-requires">
-                        <value>com.fasterxml.jackson.annotation</value>
-                        <value>com.fasterxml.jackson.core</value>
-                    </list>
+                    <map key="module-requires">
+                        <value key="com.fasterxml.jackson.annotation">true</value>
+                        <value key="com.fasterxml.jackson.core">true</value>
+                    </map>
                 </model>
             </output>
         </method>
@@ -88,9 +88,9 @@
 ]]>
                         </value>
                     </list>
-                    <list key="module-requires">
-                        <value>jakarta.json.bind</value>
-                    </list>
+                    <map key="module-requires">
+                        <value key="jakarta.json.bind">true</value>
+                    </map>
                 </model>
             </output>
         </method>
@@ -107,10 +107,10 @@
                             <value key="artifactId">helidon-webserver-static-content</value>
                         </map>
                     </list>
-                    <list key="module-requires">
-                        <value>io.helidon.http.media.multipart</value>
-                        <value>io.helidon.webserver.staticcontent</value>
-                    </list>
+                    <map key="module-requires">
+                        <value key="io.helidon.http.media.multipart">true</value>
+                        <value key="io.helidon.webserver.staticcontent">true</value>
+                    </map>
                     <list key="module-opens">
                         <value>WEB</value>
                     </list>
@@ -161,25 +161,27 @@
                 <include>src/*/java/**/GreetService.java.mustache</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="jsonp-mustache,packaged" if="${media.json-lib} == 'jsonp'">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.java.jsonp.mustache</include>
-            </includes>
-        </templates>
-        <templates engine="mustache" transformations="json-mustache,packaged" if="['jsonb', 'jackson'] contains ${media.json-lib}">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.json.mustache</include>
-            </includes>
-        </templates>
-        <templates engine="mustache" transformations="multipart-mustache,packaged" if="${media} contains 'multipart'">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/*.multipart.mustache</include>
-            </includes>
-        </templates>
-        <file source="files/src/main/resources/WEB/index.html" target="src/main/resources/WEB/index.html" if="${media} contains 'multipart'"/>
+
+        <template source="files/src/main/java/__pkg__/GreetService.java.jsonp.mustache"
+                  target="src/main/java/${package/\./\/}/GreetService.java"
+                  if="${media.json-lib} == 'jsonp'"/>
+
+        <template source="files/src/main/java/__pkg__/GreetService.java.json.mustache"
+                  target="src/main/java/${package/\./\/}/GreetService.java"
+                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+
+        <template source="files/src/main/java/__pkg__/Message.java.json.mustache"
+                  target="src/main/java/${package/\./\/}/Message.java"
+                  if="['jsonb', 'jackson'] contains ${media.json-lib}"/>
+
+        <template source="files/src/main/java/__pkg__/FileService.java.mustache"
+                  target="src/main/java/${package/\./\/}/FileService.java"
+                  if="${media} contains 'multipart'"/>
+
+        <file source="files/src/main/resources/WEB/index.html"
+              target="src/main/resources/WEB/index.html"
+              if="${media} contains 'multipart'"/>
+
         <model>
             <value key="media-json" if="${media} contains 'json'">true</value>
             <value key="media-json" if="!(${media} contains 'json')">false</value>
@@ -215,9 +217,10 @@ curl -X GET http://localhost:8080/greet/Jose
                     <value key="artifactId">helidon-http-media-jsonp</value>
                 </map>
             </list>
-            <list key="module-requires" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">
-                <value>jakarta.json</value>
-            </list>
+            <map key="module-requires"
+                 if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">
+                <value key="jakarta.json">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>

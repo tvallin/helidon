@@ -468,12 +468,12 @@ For details on an Oracle Docker image, see https://github.com/oracle/docker-imag
                     <value key="artifactId">jakarta.xml.bind-api</value>
                 </map>
             </list>
-            <list key="module-requires">
-                <value>jakarta.xml.bind</value>
-                <value>jakarta.annotation</value>
-                <value>jakarta.persistence</value>
-                <value>jakarta.transaction</value>
-            </list>
+            <map key="modules-requires">
+                <value key="jakarta.xml.bind">true</value>
+                <value key="jakarta.annotation">true</value>
+                <value key="jakarta.persistence">true</value>
+                <value key="jakarta.transaction">true</value>
+            </map>
             <list key="readme-sections">
                 <value template="mustache" file="files/README.md.mustache"/>
             </list>

@@ -19,17 +19,6 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <methods>
-        <method name="module-observe">
-            <output if="${health} || ${metrics} || ${tracing}">
-                <model>
-                    <list key="module-requires">
-                        <value>io.helidon.webserver.observe</value>
-                    </list>
-                </model>
-            </output>
-        </method>
-    </methods>
 
     <exec src="/nodes/se/features/common/output.xml"/>
 
@@ -38,6 +27,10 @@
 
     <!-- security step -->
     <exec src="/nodes/se/features/security/legacy/legacy.xml"/>
+    <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
+
+    <!-- database step -->
+    <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
 
     <!--  extra step  -->
     <exec src="/nodes/se/features/webclient/output.xml"/>
@@ -45,23 +38,16 @@
     <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
 
     <!-- observability step -->
-    <exec src="/nodes/se/features/metrics/output.xml"/>
-    <exec src="/nodes/se/features/health/output.xml"/>
+    <exec src="/nodes/se/features/metrics/output.xml" if="${metrics}"/>
+    <exec src="/nodes/se/features/health/output.xml" if="${health}"/>
     <exec src="/nodes/se/features/tracing/legacy/legacy.xml" if="${tracing}"/>
     <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
-    <call method="module-observe"/>
 
     <!-- packaging step -->
     <exec src="/features/docker/output.xml" if="${docker}"/>
     <exec src="/features/kubernetes/output.xml" if="${k8s}"/>
     <exec src="/features/verrazzano/output.xml" if="${v8o}"/>
     <exec src="/features/jpms/output.xml" if="${jpms}"/>
-
-    <!-- database step -->
-    <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
-
-    <!-- security step -->
-    <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
 
     <!-- customize project step -->
     <exec src="/features/maven/output.xml"/>
@@ -93,9 +79,7 @@ Hello World!
 ]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.logging.common</value>
-            </list>
+            <value key="io.helidon.logging.common">true</value>
             <list key="dependencies">
                 <map order="50" if="!(${extra} contains 'webclient') || ${security}">
                     <value key="groupId">io.helidon.webclient</value>

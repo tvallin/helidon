@@ -32,12 +32,11 @@
                     <value key="artifactId">helidon-cors</value>
                 </map>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webserver.cors</value>
-                <value>io.helidon.cors</value>
-                <value>java.logging</value>
-            </list>
-            
+            <map key="module-requires">
+                <value key="io.helidon.webserver.cors">true</value>
+                <value key="io.helidon.cors">true</value>
+                <value key="java.logging">true</value>
+            </map>
             <list key="Main-helidon-imports">
                 <value>io.helidon.cors.CrossOriginConfig</value>
                 <value>io.helidon.webserver.cors.CorsSupport</value>

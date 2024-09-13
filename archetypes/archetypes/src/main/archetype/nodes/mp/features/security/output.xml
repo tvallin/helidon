@@ -38,10 +38,10 @@
                     <list key="providers-config-entries">
                         <value file="files/application.oidc.yaml"/>
                     </list>
-                    <list key="module-requires">
-                        <value>io.helidon.security</value>
-                        <value>io.helidon.security.annotations</value>
-                    </list>
+                    <map key="module-requires">
+                        <value key="io.helidon.security">true</value>
+                        <value key="io.helidon.security.annotations">true</value>
+                    </map>
                     <list key="readme-sections">
                         <value><![CDATA[
 ## Security integration with OIDC
@@ -76,9 +76,9 @@ to your tenant and application configuration.
                         <value>mp.jwt.verify.issuer=https://{IssuerPublicDomain}/oauth2/default</value>
                         <value template="mustache">mp.jwt.verify.publickey.location=${mp.jwt.verify.issuer}/v1/keys</value>
                     </list>
-                    <list key="module-requires">
-                        <value >io.helidon.microprofile.jwt.auth</value>
-                    </list>
+                    <map key="module-requires">
+                        <value key="io.helidon.microprofile.jwt.auth">true</value>
+                    </map>
                 </model>
             </output>
         </method>

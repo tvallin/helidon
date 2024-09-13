@@ -68,9 +68,9 @@
             <list key="microprofile-config-entries">
                 <value template="mustache" file="files/microprofile-config.properties.mustache"/>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.microprofile.telemetry</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.microprofile.telemetry">true</value>
+            </map>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 Tracing:

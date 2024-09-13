@@ -33,6 +33,8 @@
                 <include>src/*/java/**/*.java.jsonp.mustache</include>
             </includes>
         </templates>
+        <template source="files/src/main/java/__pkg__/GreetService.java.jsonp.mustache"
+                  target="src/main/java/${package/\./\/}/GreetService.java"/>
         <templates engine="mustache" transformations="json-mustache,packaged" if="['jsonb', 'jackson'] contains ${media.json-lib}">
             <directory>files</directory>
             <includes>

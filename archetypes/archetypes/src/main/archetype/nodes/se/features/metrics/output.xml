@@ -55,10 +55,10 @@
 ]]>
                 </value>
             </list>
-            <list key="module-requires">
-                <value>io.helidon.webserver.observe.metrics</value>
-                <value>io.helidon.metrics.api</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.webserver.observe.metrics">true</value>
+                <value key="io.helidon.metrics.api">true</value>
+            </map>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Try metrics

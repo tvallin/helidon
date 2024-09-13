@@ -195,9 +195,9 @@
 ]]>
                 </value>
             </list>
-            <list key="module-requires" if="${extra} contains 'fault-tolerance'">
-                <value>io.helidon.faulttolerance</value>
-            </list>
+            <map key="module-requires">
+                <value key="io.helidon.faulttolerance">true</value>
+            </map>
         </model>
     </output>
 </archetype-script>
