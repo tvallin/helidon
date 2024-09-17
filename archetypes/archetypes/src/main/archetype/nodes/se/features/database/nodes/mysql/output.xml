@@ -34,6 +34,11 @@
                     <value key="groupId">com.mysql</value>
                     <value key="artifactId">mysql-connector-j</value>
                 </map>
+                <map order="99">
+                    <value key="groupId">com.h2database</value>
+                    <value key="artifactId">h2</value>
+                    <value key="scope">test</value>
+                </map>
             </list>
             <value key="db-health-check-stmt" if="${health}">SELECT 0</value>
             <list key="db-connection">
@@ -51,8 +56,7 @@ docker run --rm --name mysql -p 3306:3306 \
     -e MYSQL_USER=user \
     -e MYSQL_PASSWORD=changeit \
     mysql:5.7
-```
-]]>
+```]]>
             </value>
         </model>
     </output>

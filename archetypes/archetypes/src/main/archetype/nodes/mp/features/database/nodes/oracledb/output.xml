@@ -35,8 +35,7 @@ Oracle:
 ```
 docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
 ```
-For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
-]]>
+For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance]]>
             </value>
             <list key="main-persistence-properties">
                 <map if="${db.jpa-impl} == 'hibernate'">
@@ -60,6 +59,11 @@ For details on an Oracle Docker image, see https://github.com/oracle/docker-imag
                     <value key="groupId">com.oracle.database.jdbc</value>
                     <value key="artifactId">ucp</value>
                     <value key="scope">runtime</value>
+                </map>
+                <map order="99">
+                    <value key="groupId">com.h2database</value>
+                    <value key="artifactId">h2</value>
+                    <value key="scope">test</value>
                 </map>
             </list>
             <value key="jdbcDataSource">oracle.jdbc.pool.OracleDataSource</value>

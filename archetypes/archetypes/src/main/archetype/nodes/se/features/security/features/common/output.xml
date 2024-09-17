@@ -20,6 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-security-integration-common">true</boolean>
+        <boolean path="requires-io-helidon-webserver-security">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="security">true</value>
@@ -44,10 +48,6 @@ security:
                   if="!(${security.atn} contains 'http-signature' || ${security.atn} contains 'jwt')">
                 <value template="mustache" file="files/application.yaml.mustache"/>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.security.integration.common">true</value>
-                <value key="io.helidon.webserver.security">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

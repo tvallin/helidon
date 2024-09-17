@@ -23,7 +23,7 @@
     <exec src="nodes/hibernate/output.xml"  if="${db.jpa-impl} == 'hibernate'"/>
     <exec src="nodes/eclipselink/output.xml"  if="${db.jpa-impl} == 'eclipselink'"/>
     <exec src="nodes/hikaricp/output.xml"  if="${db.cp} == 'hikaricp'"/>
-    <exec src="nodes/ucp/output.xml"  if="${db.jpa-impl} == 'ucp'"/>
+    <exec src="nodes/ucp/output.xml"  if="${db.cp} == 'ucp'"/>
     <exec src="nodes/h2/output.xml"  if="${db.server} == 'h2'"/>
     <exec src="nodes/mysql/output.xml"  if="${db.server} == 'mysql'"/>
     <exec src="nodes/oracledb/output.xml"  if="${db.server} == 'oracledb'"/>

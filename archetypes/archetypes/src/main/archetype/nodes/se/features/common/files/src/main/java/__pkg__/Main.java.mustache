@@ -1,30 +1,42 @@
-
 package {{package}};
-
 {{#Main-java-imports}}
+{{#first}}
+
+{{/first}}
 import {{.}};
 {{/Main-java-imports}}
-
 {{#Main-helidon-imports}}
+{{#first}}
+
+{{/first}}
 import {{.}};
 {{/Main-helidon-imports}}
-
 {{#Main-other-imports}}
+{{#first}}
+
+{{/first}}
 import {{.}};
 {{/Main-other-imports}}
-
 {{#Main-static-imports}}
+{{#first}}
+
+{{/first}}
 import {{.}};
 {{/Main-static-imports}}
 
-{{main-class-javadoc}}
+/**
+ * The application main class.
+ */
 public class Main {
 
 {{#main-class-fields}}
 {{.}}
 {{/main-class-fields}}
 
-    {{main-method-javadoc}}
+    /**
+     * Application main entry point.
+     * @param args command line arguments.
+     */
     public static void main(String[] args) {
 
         // load logging configuration
@@ -34,45 +46,39 @@ public class Main {
         Config config = Config.create();
         Config.global(config);
 
-        {{#Main-main}}
-        {{.}}
-        {{/Main-main}}
+{{#Main-main}}
+{{.}}
+{{/Main-main}}
 
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
-                {{#Main-server-builder}}
-                {{.}}
-                {{/Main-server-builder}}
+{{#Main-server-builder}}
+{{.}}
+{{/Main-server-builder}}
                 .routing(Main::routing)
                 .build()
                 .start();
 
-        {{#Main-after-server}}
-        {{.}}
-        {{/Main-after-server}}
+{{#Main-after-server}}
+{{.}}
+{{/Main-after-server}}
 
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/simple-greet");
-        {{#Main-logging}}
-        {{.}}
-        {{/Main-logging}}
-        {{#main-method-content}}
-        {{.}}
-        {{/main-method-content}}
+{{#Main-logging}}
+{{.}}
+{{/Main-logging}}
     }
 
     /**
      * Updates HTTP Routing.
      */
     static void routing(HttpRouting.Builder routing) {
-    {{#Main-routing}}
-    {{.}}
-    {{/Main-routing}}
-    routing
-           {{#Main-routing-builder}}
-           {{.}}{{#last}}; {{/last}}
-           {{/Main-routing-builder}}
-    }
-{{#main-class-content}}
+{{#Main-routing}}
 {{.}}
-{{/main-class-content}}
+{{/Main-routing}}
+        routing{{#Main-routing-builder}}{{.}}{{#last}};{{/last}}{{/Main-routing-builder}}
+    }
+{{#Main-class-content}}
+{{.}}
+{{/Main-class-content}}
 }

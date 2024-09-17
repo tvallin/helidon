@@ -1,23 +1,4 @@
-
 package {{package}};
-
-{{#Main-java-imports}}
-    TODO - remove all the imports
-    import {{.}};
-{{/Main-java-imports}}
-
-{{#Main-helidon-imports}}
-    import {{.}};
-{{/Main-helidon-imports}}
-
-{{#Main-other-imports}}
-    import {{.}};
-{{/Main-other-imports}}
-
-{{#Main-static-imports}}
-    import {{.}};
-{{/Main-static-imports}}
-
 
 /**
  * Main entry point of the application.
@@ -31,12 +12,10 @@ public class Main {
 
 
     /**
-    * Cannot be instantiated.
-    */
+     * Cannot be instantiated.
+     */
     private Main() {
     }
-
-
 
     /**
      * Main method. Starts CDI (and the application).
@@ -44,7 +23,7 @@ public class Main {
      * @param args ignored
      */
     public static void main(String[] args) {
-                io.helidon.Main.main(args);
+        io.helidon.Main.main(args);
     }
 
 }

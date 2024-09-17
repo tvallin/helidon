@@ -30,6 +30,11 @@
                     <value key="groupId">io.helidon.integrations.db</value>
                     <value key="artifactId">ojdbc</value>
                 </map>
+                <map order="99">
+                    <value key="groupId">com.h2database</value>
+                    <value key="artifactId">h2</value>
+                    <value key="scope">test</value>
+                </map>
             </list>
             <value key="db-health-check-stmt" if="${health}">SELECT 1 FROM DUAL</value>
             <list key="db-connection">
@@ -43,8 +48,7 @@ Oracle:
 ```
 docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
 ```
-For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance
-]]>
+For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance]]>
             </value>
         </model>
     </output>

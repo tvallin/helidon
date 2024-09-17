@@ -19,7 +19,13 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <output if="${extra} contains 'cors'">
+
+    <variables>
+        <boolean path="requires-io-helidon-webserver-cors">true</boolean>
+        <boolean path="requires-io-helidon-cors">true</boolean>
+        <boolean path="requires-java-logging">true</boolean>
+    </variables>
+    <output>
         <model>
             <value key="cors" if="${extra} contains 'cors'">true</value>
             <list key="dependencies">
@@ -32,11 +38,6 @@
                     <value key="artifactId">helidon-cors</value>
                 </map>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.cors">true</value>
-                <value key="io.helidon.cors">true</value>
-                <value key="java.logging">true</value>
-            </map>
             <list key="Main-helidon-imports">
                 <value>io.helidon.cors.CrossOriginConfig</value>
                 <value>io.helidon.webserver.cors.CorsSupport</value>
@@ -48,11 +49,11 @@
                 <value file="files/application.yaml"/>
             </list>
             <list key="Main-routing-builder">
-                <value><![CDATA[        .register("/cors-greet", corsSupportForGreeting(), new GreetService())
-]]>
+                <value><![CDATA[
+            .register("/cors-greet", corsSupportForGreeting(), new GreetService())]]>
                 </value>
             </list>
-            <list key="main-class-content">
+            <list key="Main-class-content">
                 <value><![CDATA[
     private static CorsSupport corsSupportForGreeting() {
         Config restrictiveConfig = Config.global().get("restrictive-cors");
@@ -74,8 +75,7 @@
                 .build();
 
         return corsBuilder.build();
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="MainTest-java-imports">
@@ -91,7 +91,7 @@
                 <value>io.helidon.http.HeaderNames.ORIGIN</value>
                 <value>org.hamcrest.CoreMatchers.containsString</value>
             </list>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testAnonymousGreetWithCors() {
@@ -111,8 +111,7 @@
                     allowOrigin.isPresent(), is(true));
             assertThat(allowOrigin.get(), is("*"));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="readme-sections">

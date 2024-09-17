@@ -20,6 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-webclient">true</boolean>
+        <boolean path="requires-io-helidon-webclient-http1">true</boolean>
+    </variables>
     <output if="${extra} contains 'webclient'">
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -35,17 +39,13 @@
                     <value key="artifactId">helidon-webclient</value>
                 </map>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webclient">true</value>
-            </map>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     public void testPerformGetMethod() {
         String greeting = WebClientMain.performGetMethod(client);
         assertThat(greeting, containsString("Hello World!"));
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="MainTest-static-imports">

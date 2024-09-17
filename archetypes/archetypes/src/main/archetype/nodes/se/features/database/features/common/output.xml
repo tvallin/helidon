@@ -62,15 +62,18 @@
                         <value>io.helidon.dbclient.health.DbClientHealthCheck</value>
                     </list>
                     <list key="Main-main">
-                        <value><![CDATA[ObserveFeature observe = ObserveFeature.builder()
-        .addObserver(HealthObserver.builder()
-                             .addCheck(DbClientHealthCheck.create(dbClient, config.get("db.health-check")))
-                             .build())
-        .build();]]>
+                        <value><![CDATA[
+        ObserveFeature observe = ObserveFeature.builder()
+            .addObserver(HealthObserver.builder()
+                .addCheck(DbClientHealthCheck.create(dbClient, config.get("db.health-check")))
+                .build())
+            .build();]]>
                         </value>
                     </list>
                     <list key="Main-server-builder">
-                        <value>.addFeature(observe)</value>
+                        <value><![CDATA[
+                .addFeature(observe)]]>
+                        </value>
                     </list>
                 </model>
             </output>
@@ -78,6 +81,13 @@
     </methods>
     <call method="jdbc" />
     <call method="health" />
+    <variables>
+        <boolean path="requires-io-helidon-dbclient">true</boolean>
+        <boolean path="requires-io-helidon-dbclient-metrics">true</boolean>
+        <boolean path="requires-io-helidon-dbclient-tracing">true</boolean>
+        <!-- TODO - seems incorrect -->
+        <boolean path="requires-jakarta-json" if="${media.json-lib} == 'jackson'">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -122,11 +132,6 @@
                     <value key="groupId">org.slf4j</value>
                     <value key="artifactId">slf4j-jdk14</value>
                 </map>
-                <map if="${db.server} != 'h2'">
-                    <value key="groupId">com.h2database</value>
-                    <value key="artifactId">h2</value>
-                    <value key="scope">test</value>
-                </map>
             </list>
             <list key="Main-helidon-imports" >
                 <value>io.helidon.common.context.Contexts</value>
@@ -135,12 +140,13 @@
             <list key="Main-main">
                 <value order="200"><![CDATA[
         DbClient dbClient = DbClient.create(config.get("db"));
-        Contexts.globalContext().register(dbClient);
-]]>
+        Contexts.globalContext().register(dbClient);]]>
                 </value>
             </list>
             <list key="Main-routing-builder">
-                <value>.register("/db", new PokemonService())</value>
+                <value><![CDATA[
+            .register("/db", new PokemonService())]]>
+                </value>
             </list>
             <list key="MainTest-java-imports">
                 <value>java.util.List</value>
@@ -156,7 +162,7 @@
             <list key="MainTest-static-fields">
                 <value>JsonBuilderFactory JSON_FACTORY = Json.createBuilderFactory(Map.of())</value>
             </list>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testListAllPokemons() {
@@ -218,8 +224,7 @@
 
         response = client.get("/db/pokemon/7").request(String.class);
         assertThat(response.status(), is(Status.NOT_FOUND_404));
-    }
-]]>
+    }]]>
                 </value>
                 <value order="50"><![CDATA[
     private static List<String> pokemonNames() {
@@ -232,17 +237,9 @@
         try (JsonReader reader = Json.createReader(PokemonService.class.getResourceAsStream("/pokemon-types.json"))) {
             return reader.readArray().stream().map(e -> e.asJsonObject().getString("name")).toList();
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.dbclient">true</value>
-                <value key="io.helidon.dbclient.metrics">true</value>
-                <value key="io.helidon.dbclient.tracing">true</value>
-                <!-- TODO - seems incorrect -->
-                <value key="jakarta.json" if="${media.json-lib} == 'jackson'">true</value>
-            </map>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 Database:
@@ -267,14 +264,12 @@ curl -i -X PUT -d '{"id":7,"name":"Raticate","idType":2}' http://localhost:8080/
 
 # Delete Pokémon with id 7
 curl -i -X DELETE http://localhost:8080/db/pokemon/7
-```
-]]>
+```]]>
                 </value>
             </list>
             <list key="readme-run-notes">
                 <value><![CDATA[
-This example requires a database, see [Database Setup](#database-setup).
-]]>
+This example requires a database, see [Database Setup](#database-setup).]]>
                 </value>
             </list>
             <list key="readme-sections">

@@ -24,7 +24,6 @@
         <file source="files/src/main/resources/META-INF/init_script.sql"
               target="src/main/resources/META-INF/init_script.sql"/>
         <model>
-            <value key="helidon-test">false</value>
             <value key="readme-description">Helidon MP application that uses JPA with an in-memory H2 database.</value>
             <value key="integration-artifactId">h2</value>
             <value key="db">H2</value>
@@ -33,8 +32,7 @@ H2:
 ```
 docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
 ```
-For details, see https://www.h2database.com/html/cheatSheet.html
-]]>
+For details, see https://www.h2database.com/html/cheatSheet.html]]>
             </value>
             <list key="main-persistence-properties">
                 <map if="${db.jpa-impl} == 'hibernate'">
@@ -46,6 +44,12 @@ For details, see https://www.h2database.com/html/cheatSheet.html
                 <map if="${db.jpa-impl} == 'eclipselink'">
                     <value key="name">eclipselink.target-database</value>
                     <value key="value">org.eclipse.persistence.platform.database.H2Platform</value>
+                </map>
+            </list>
+            <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.integrations.db</value>
+                    <value key="artifactId">h2</value>
                 </map>
             </list>
             <value key="jdbcDataSource">org.h2.jdbcx.JdbcDataSource</value>
@@ -110,8 +114,7 @@ For details, see https://www.h2database.com/html/cheatSheet.html
                 .request()
                 .get(JsonArray.class);
         return pokemons.size();
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="main-persistence-properties">

@@ -20,8 +20,13 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output if="${security}">
-        <model if="${security.atn} contains 'google'">
+    <variables>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+        <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-google-login">true</boolean>
+    </variables>
+    <output>
+        <model>
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.security.providers</value>
@@ -34,11 +39,6 @@
       authenticate: true]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.context">true</value>
-                <value key="io.helidon.webserver.staticcontent">true</value>
-                <value key="io.helidon.security.providers.google.login">true</value>
-            </map>
             <list key="providers-config-entries">
                 <value file="files/application.yaml"/>
             </list>

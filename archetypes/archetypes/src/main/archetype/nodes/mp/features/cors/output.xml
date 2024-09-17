@@ -19,7 +19,11 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <output if="${extra} contains 'cors'">
+
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-cors">true</boolean>
+    </variables>
+    <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
@@ -138,13 +142,9 @@ connection: keep-alive
 Hola World!
 ```
 
-Note that the tests in the example `MainTest` class follow these same steps.
-]]>
+Note that the tests in the example `MainTest` class follow these same steps.]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.microprofile.cors">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

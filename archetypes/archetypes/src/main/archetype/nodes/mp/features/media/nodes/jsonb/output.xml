@@ -21,6 +21,9 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-jakarta-json-bind">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -40,9 +43,6 @@
                     <value key="scope">runtime</value>
                 </map>
             </list>
-            <map key="module-requires">
-                <value key="jakarta.json.bind">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

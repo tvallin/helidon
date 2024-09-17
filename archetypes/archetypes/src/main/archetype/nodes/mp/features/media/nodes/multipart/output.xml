@@ -20,6 +20,11 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-org-jvnet-mimepull">true</boolean>
+        <boolean path="requires-jersey-media-multipart">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged" if="${media} contains 'multipart'">
             <directory>files</directory>
@@ -34,23 +39,16 @@
                     <value key="artifactId">jersey-media-multipart</value>
                 </map>
             </list>
-            <map key="module-requires">
-                <value key="jersey.media.multipart">true</value>
-            </map>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testFileService() {
         try (Http1ClientResponse response = client.get("/api").request()) {
             assertThat(response.status(), is(Status.OK_200));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="org.jvnet.mimepull">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

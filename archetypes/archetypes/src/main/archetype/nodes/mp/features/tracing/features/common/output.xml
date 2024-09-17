@@ -19,6 +19,10 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-telemetry">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="packaged,mustache">
             <directory>files</directory>
@@ -34,11 +38,8 @@
                 </map>
             </list>
             <list key="microprofile-config-entries">
-                <value template="mustache" file="files/microprofile-config.properties.mustache"/>
+                <value template="mustache" file="files/src/main/resources/microprofile-config.properties.mustache"/>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.microprofile.telemetry">true</value>
-            </map>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 Tracing:
@@ -53,8 +54,7 @@ curl -X GET http://localhost:8080/tracing/custom
 {
   "Custom Span": "SdkSpan{traceId=..."
 }
-```
-]]>
+```]]>
                 </value>
             </list>
         </model>

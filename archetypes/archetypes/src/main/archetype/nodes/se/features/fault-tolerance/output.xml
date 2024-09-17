@@ -20,7 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <output if="${extra} contains 'fault-tolerance'">
+    <variables>
+        <boolean path="requires-io-helidon-faulttolerance">true</boolean>
+    </variables>
+    <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
@@ -30,30 +33,32 @@
         <model>
             <value key="fault-tolerance">true</value>
             <list key="dependencies">
-                <map if="${extra} contains 'fault-tolerance'">
+                <map>
                     <value key="groupId">io.helidon.fault-tolerance</value>
                     <value key="artifactId">helidon-fault-tolerance</value>
                 </map>
             </list>
-            <list key="Main-helidon-imports" if="${extra} contains 'fault-tolerance'">
+            <list key="Main-helidon-imports">
                 <value>io.helidon.http.Status</value>
                 <value>io.helidon.faulttolerance.BulkheadException</value>
                 <value>io.helidon.faulttolerance.CircuitBreakerOpenException</value>
                 <value>io.helidon.faulttolerance.TimeoutException</value>
             </list>
-            <list key="Main-routing-builder" if="${extra} contains 'fault-tolerance'">
-                <value><![CDATA[.register("/", new FtService())
-                .error(BulkheadException.class,
-                        (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("bulkhead"))
-                .error(CircuitBreakerOpenException.class,
-                        (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("circuit breaker"))
-                .error(TimeoutException.class,
-                        (req, res, ex) -> res.status(Status.REQUEST_TIMEOUT_408).send("timeout"))
-                .error(Throwable.class,
-                        (req, res, ex) -> res.status(Status.INTERNAL_SERVER_ERROR_500)
-                                .send(ex.getClass().getName() + ": " + ex.getMessage()))]]></value>
+            <list key="Main-routing-builder">
+                <value><![CDATA[
+            .register("/", new FtService())
+            .error(BulkheadException.class,
+                (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("bulkhead"))
+            .error(CircuitBreakerOpenException.class,
+                (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("circuit breaker"))
+            .error(TimeoutException.class,
+                (req, res, ex) -> res.status(Status.REQUEST_TIMEOUT_408).send("timeout"))
+            .error(Throwable.class,
+                (req, res, ex) -> res.status(Status.INTERNAL_SERVER_ERROR_500)
+                    .send(ex.getClass().getName() + ": " + ex.getMessage()))]]>
+                </value>
             </list>
-            <list key="Abstract-tests" if="${extra} contains 'fault-tolerance'">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testAsync() {
@@ -191,13 +196,9 @@
             assertThat(clientResponse.status(), is(Status.REQUEST_TIMEOUT_408));
             assertThat(clientResponse.as(String.class), is("timeout"));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.faulttolerance">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

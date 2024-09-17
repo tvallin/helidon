@@ -20,17 +20,22 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <!-- TODO - Discuss with romain, I think the built-in should be the dependency and metrics the actual built in -->
     <methods>
         <method name="metrics">
             <output>
                 <model>
-                    <value key="metrics" if="${metrics}">true</value>
+                    <value key="metrics">true</value>
                 </model>
             </output>
         </method>
     </methods>
     <call method="metrics"/>
-    <output if="${metrics}">
+    <variables>
+        <boolean path="requires-io-helidon-webserver-observe-metrics">true</boolean>
+        <boolean path="requires-io-helidon-metrics-api">true</boolean>
+    </variables>
+    <output>
         <model if="${metrics.builtin}">
             <value key="metrics.builtin">${metrics.builtin}</value>
             <list key="dependencies">
@@ -44,21 +49,16 @@
                     <value key="scope">runtime</value>
                 </map>
             </list>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testMetricsObserver() {
         try (Http1ClientResponse response = client.get("/observe/metrics").request()) {
             assertThat(response.status(), is(Status.OK_200));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.observe.metrics">true</value>
-                <value key="io.helidon.metrics.api">true</value>
-            </map>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Try metrics
@@ -73,8 +73,7 @@ curl -s -X GET http://localhost:8080/observe/metrics
 curl -H 'Accept: application/json' -X GET http://localhost:8080/observe/metrics
 {"base":...
 . . .
-```
-]]>
+```]]>
                 </value>
             </list>
         </model>

@@ -27,7 +27,7 @@
                     <value key="artifactId">helidon-tracing-providers-jaeger</value>
                 </map>
             </list>
-            <list key="config-properties">
+            <list key="test-config-properties">
                 <value>tracing.global=false</value>
             </list>
         </model>

@@ -19,6 +19,12 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-io-helidon-webserver-http2">true</boolean>
+        <boolean path="requires-io-helidon-webserver-observe-tracing">true</boolean>
+        <boolean path="requires-io-helidon-tracing">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>./files</directory>
@@ -32,8 +38,7 @@
             <list key="application-yaml-entries">
                 <value><![CDATA[
 tracing:
-  service: helidon-tracing-service
-]]>
+  service: helidon-tracing-service]]>
                 </value>
             </list>
             <list key="dependencies">
@@ -45,28 +50,20 @@ tracing:
                     <value key="groupId">io.helidon.webserver</value>
                     <value key="artifactId">helidon-webserver-http2</value>
                 </map>
-                <map if="${tracing.provider} == 'zipkin'">
-                    <value key="groupId">io.helidon.tracing.providers</value>
-                    <value key="artifactId">helidon-tracing-providers-zipkin</value>
-                </map>
             </list>
             <list key="Main-routing-builder">
-                <value>.register("/traced", new TracedService())</value>
+                <value><![CDATA[
+            .register("/traced", new TracedService())]]>
+                </value>
             </list>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 Tracing:
 ```
 curl -X GET http://localhost:8080/traced
-```
-]]>
+```]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.http2">true</value>
-                <value key="io.helidon.webserver.observe.tracing">true</value>
-                <value key="io.helidon.tracing">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

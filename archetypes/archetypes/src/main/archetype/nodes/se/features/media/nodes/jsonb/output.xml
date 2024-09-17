@@ -20,14 +20,17 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <output>
-        <template source="files/src/main/java/__pkg__/GreetService.java.mustache"
-                  target="src/main/java/${package/\./\/}/GreetService.java"
-                  engine="mustache"/>
 
-        <template source="files/src/main/java/__pkg__/Message.java.mustache"
-                  target="src/main/java/${package/\./\/}/Message.java"
-                  engine="mustache"/>
+    <variables>
+        <boolean path="requires-jakarta-json-bind">true</boolean>
+    </variables>
+    <output>
+        <templates transformations="packaged,mustache" engine="mustache">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.mustache</include>
+            </includes>
+        </templates>
 
         <model>
             <list key="dependencies">
@@ -36,7 +39,7 @@
                     <value key="artifactId">helidon-http-media-jsonb</value>
                 </map>
             </list>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testGreet() {
@@ -50,13 +53,9 @@
         ClientResponseTyped<Message> response = client.get("/greet/Joe").request(Message.class);
         assertThat(response.status(), is(Status.OK_200));
         assertThat(response.entity().getMessage(), is("Hello Joe!"));
-    }
-]]>
+    }]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="jakarta.json.bind">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

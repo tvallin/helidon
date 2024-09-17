@@ -19,6 +19,7 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
     <methods>
         <method name="metric-microprofile-json">
             <output if="${media} contains 'json'">
@@ -114,6 +115,9 @@
     <!-- intersection with json feature -->
     <call method="metric-microprofile-json"/>
     <call method="metric-microprofile"/>
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-metrics">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="metrics.provider">${metrics.provider}</value>
@@ -131,9 +135,7 @@ curl -s -X GET http://localhost:8080/metrics
 curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
 {"base":...
 . . .
-```
-
-]]>
+```]]>
                 </value>
             </list>
             <list key="dependencies">
@@ -178,8 +180,7 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
     @AfterAll
     static void clear() {
         MetricsFactory.closeAll();
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="MainTest-static-fields">
@@ -188,9 +189,6 @@ curl -H 'Accept: application/json' -X GET http://localhost:8080/metrics
     private MetricRegistry registry;]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.microprofile.metrics">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

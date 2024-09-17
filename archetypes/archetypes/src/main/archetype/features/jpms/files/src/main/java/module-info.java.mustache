@@ -1,72 +1,187 @@
-
 module {{package}} {
 {{#module-requires}}
-    {{#java.logging}}requires java.logging;{{/java.logging}}
-    {{#jakarta.annotation}}requires jakarta.annotation;{{/jakarta.annotation}}
-    {{#jakarta.cdi}}requires jakarta.cdi;{{/jakarta.cdi}}
-    {{#jakarta.inject}}requires jakarta.inject;{{/jakarta.inject}}
-    {{#jakarta.json}}requires jakarta.json;{{/jakarta.json}}
-    {{#jakarta.json.bind}}requires jakarta.json.bind;{{/jakarta.json.bind}}
-    {{#jakarta.persistence}}requires jakarta.persistence;{{/jakarta.persistence}}
-    {{#jakarta.ws.rs}}requires jakarta.ws.rs;{{/jakarta.ws.rs}}
-    {{#jakarta.xml.bind}}requires jakarta.xml.bind;{{/jakarta.xml.bind}}
-    {{#io.helidon}}requires io.helidon;{{/io.helidon}}
-    {{#io.helidon.common.pki}}requires io.helidon.common.pki;{{/io.helidon.common.pki}}
-    {{#io.helidon.config}}requires io.helidon.config;{{/io.helidon.config}}
-    {{#io.helidon.config.Config}}requires io.helidon.config.Config;{{/io.helidon.config.Config}}
-    {{#io.helidon.cors}}requires io.helidon.cors;{{/io.helidon.cors}}
-    {{#io.helidon.dbclient}}requires io.helidon.dbclient;{{/io.helidon.dbclient}}
-    {{#io.helidon.dbclient.metrics}}requires io.helidon.dbclient.metrics;{{/io.helidon.dbclient.metrics}}
-    {{#io.helidon.dbclient.tracing}}requires io.helidon.dbclient.tracing;{{/io.helidon.dbclient.tracing}}
-    {{#io.helidon.faulttolerance}}requires io.helidon.faulttolerance;{{/io.helidon.faulttolerance}}
-    {{#io.helidon.health.checks}}requires io.helidon.health.checks;{{/io.helidon.health.checks}}
-    {{#io.helidon.http}}requires io.helidon.http;{{/io.helidon.http}}
-    {{#io.helidon.http.media.multipart}}requires io.helidon.http.media.multipart;{{/io.helidon.http.media.multipart}}
-    {{#io.helidon.logging.common}}requires io.helidon.logging.common;{{/io.helidon.logging.common}}
-    {{#io.helidon.metrics.api}}requires io.helidon.metrics.api;{{/io.helidon.metrics.api}}
-    {{#io.helidon.microprofile.config}}requires io.helidon.microprofile.config;{{/io.helidon.microprofile.config}}
-    {{#io.helidon.microprofile.cors}}requires io.helidon.microprofile.cors;{{/io.helidon.microprofile.cors}}
-    {{#io.helidon.microprofile.faulttolerance}}requires io.helidon.microprofile.faulttolerance;{{/io.helidon.microprofile.faulttolerance}}
-    {{#io.helidon.microprofile.metrics}}requires io.helidon.microprofile.metrics;{{/io.helidon.microprofile.metrics}}
-    {{#io.helidon.microprofile.openapi}}requires io.helidon.microprofile.openapi;{{/io.helidon.microprofile.openapi}}
-    {{#io.helidon.microprofile.telemetry}}requires io.helidon.microprofile.telemetry;{{/io.helidon.microprofile.telemetry}}
-    {{#io.helidon.microprofile.server}}requires io.helidon.microprofile.server;{{/io.helidon.microprofile.server}}
-    {{#io.helidon.microprofile.jwt.auth}}requires io.helidon.microprofile.jwt.auth;{{/io.helidon.microprofile.jwt.auth}}
-    {{#io.helidon.security}}requires io.helidon.security;{{/io.helidon.security}}
-    {{#io.helidon.security.annotations}}requires io.helidon.security.annotations;{{/io.helidon.security.annotations}}
-    {{#io.helidon.security.integration.common}}requires io.helidon.security.integration.common;{{/io.helidon.security.integration.common}}
-    {{#io.helidon.security.providers.common}}requires io.helidon.security.providers.common;{{/io.helidon.security.providers.common}}
-    {{#io.helidon.security.providers.google.login}}requires io.helidon.security.providers.google.login;{{/io.helidon.security.providers.google.login}}
-    {{#io.helidon.security.providers.httpauth}}requires io.helidon.security.providers.httpauth;{{/io.helidon.security.providers.httpauth}}
-    {{#io.helidon.security.providers.httpsign}}requires io.helidon.security.providers.httpsign;{{/io.helidon.security.providers.httpsign}}
-    {{#io.helidon.security.providers.jwt}}requires io.helidon.security.providers.jwt;{{/io.helidon.security.providers.jwt}}
-    {{#io.helidon.security.providers.oidc}}requires io.helidon.security.providers.oidc;{{/io.helidon.security.providers.oidc}}
-    {{#io.helidon.tracing}}requires io.helidon.tracing;{{/io.helidon.tracing}}
-    {{#io.helidon.webclient}}requires io.helidon.webclient;{{/io.helidon.webclient}}
-    {{#io.helidon.webclient.http1}}requires io.helidon.webclient.http1;{{/io.helidon.webclient.http1}}
-    {{#io.helidon.webclient.security}}requires io.helidon.webclient.security;{{/io.helidon.webclient.security}}
-    {{#io.helidon.webserver}}requires io.helidon.webserver;{{/io.helidon.webserver}}
-    {{#io.helidon.webserver.context}}requires io.helidon.webserver.context;{{/io.helidon.webserver.context}}
-    {{#io.helidon.webserver.cors}}requires io.helidon.webserver.cors;{{/io.helidon.webserver.cors}}
-    {{#io.helidon.webserver.http2}}requires io.helidon.webserver.http2;{{/io.helidon.webserver.http2}}
-    {{#io.helidon.webserver.observe}}requires io.helidon.webserver.observe;{{/io.helidon.webserver.observe}}
-    {{#io.helidon.webserver.observe.health}}requires io.helidon.webserver.observe.health;{{/io.helidon.webserver.observe.health}}
-    {{#io.helidon.webserver.observe.metrics}}requires io.helidon.webserver.observe.metrics;{{/io.helidon.webserver.observe.metrics}}
-    {{#io.helidon.webserver.observe.tracing}}requires io.helidon.webserver.observe.tracing;{{/io.helidon.webserver.observe.tracing}}
-    {{#io.helidon.webserver.security}}requires io.helidon.webserver.security;{{/io.helidon.webserver.security}}
-    {{#io.helidon.webserver.staticcontent}}requires io.helidon.webserver.staticcontent;{{/io.helidon.webserver.staticcontent}}
-    {{#jersey.media.multipart}}requires jersey.media.multipart;{{/jersey.media.multipart}}
-    {{#org.jvnet.mimepull}}requires org.jvnet.mimepull;{{/org.jvnet.mimepull}}
-    {{#com.fasterxml.jackson.annotation}}requires com.fasterxml.jackson.annotation;{{/com.fasterxml.jackson.annotation}}
-    {{#com.fasterxml.jackson.core}}requires com.fasterxml.jackson.core;{{/com.fasterxml.jackson.core}}
+{{#java.logging}}
+    requires java.logging;
+{{/java.logging}}
+{{#jakarta.annotation}}
+    requires jakarta.annotation;
+{{/jakarta.annotation}}
+{{#jakarta.cdi}}
+    requires jakarta.cdi;
+{{/jakarta.cdi}}
+{{#jakarta.inject}}
+    requires jakarta.inject;
+{{/jakarta.inject}}
+{{#jakarta.json}}
+    requires jakarta.json;
+{{/jakarta.json}}
+{{#jakarta.json.bind}}
+    requires jakarta.json.bind;
+{{/jakarta.json.bind}}
+{{#jakarta.persistence}}
+    requires jakarta.persistence;
+{{/jakarta.persistence}}
+{{#jakarta.ws.rs}}
+    requires jakarta.ws.rs;
+{{/jakarta.ws.rs}}
+{{#jakarta.xml.bind}}
+    requires jakarta.xml.bind;
+{{/jakarta.xml.bind}}
+{{#io.helidon}}
+    requires io.helidon;
+{{/io.helidon}}
+{{#io.helidon.common.pki}}
+    requires io.helidon.common.pki;
+{{/io.helidon.common.pki}}
+{{#io.helidon.config}}
+    requires io.helidon.config;
+{{/io.helidon.config}}
+{{#io.helidon.cors}}
+    requires io.helidon.cors;
+{{/io.helidon.cors}}
+{{#io.helidon.dbclient}}
+    requires io.helidon.dbclient;
+{{/io.helidon.dbclient}}
+{{#io.helidon.dbclient.metrics}}
+    requires io.helidon.dbclient.metrics;
+{{/io.helidon.dbclient.metrics}}
+{{#io.helidon.dbclient.tracing}}
+    requires io.helidon.dbclient.tracing;
+{{/io.helidon.dbclient.tracing}}
+{{#io.helidon.faulttolerance}}
+    requires io.helidon.faulttolerance;
+{{/io.helidon.faulttolerance}}
+{{#io.helidon.health.checks}}
+    requires io.helidon.health.checks;
+{{/io.helidon.health.checks}}
+{{#io.helidon.http}}
+    requires io.helidon.http;
+{{/io.helidon.http}}
+{{#io.helidon.http.media.multipart}}
+    requires io.helidon.http.media.multipart;
+{{/io.helidon.http.media.multipart}}
+{{#io.helidon.logging.common}}
+    requires io.helidon.logging.common;
+{{/io.helidon.logging.common}}
+{{#io.helidon.metrics.api}}
+    requires io.helidon.metrics.api;
+{{/io.helidon.metrics.api}}
+{{#io.helidon.microprofile.config}}
+    requires io.helidon.microprofile.config;
+{{/io.helidon.microprofile.config}}
+{{#io.helidon.microprofile.cors}}
+    requires io.helidon.microprofile.cors;
+{{/io.helidon.microprofile.cors}}
+{{#io.helidon.microprofile.faulttolerance}}
+    requires io.helidon.microprofile.faulttolerance;
+{{/io.helidon.microprofile.faulttolerance}}
+{{#io.helidon.microprofile.metrics}}
+    requires io.helidon.microprofile.metrics;
+{{/io.helidon.microprofile.metrics}}
+{{#io.helidon.microprofile.openapi}}
+    requires io.helidon.microprofile.openapi;
+{{/io.helidon.microprofile.openapi}}
+{{#io.helidon.microprofile.telemetry}}
+    requires io.helidon.microprofile.telemetry;
+{{/io.helidon.microprofile.telemetry}}
+{{#io.helidon.microprofile.server}}
+    requires io.helidon.microprofile.server;
+{{/io.helidon.microprofile.server}}
+{{#io.helidon.microprofile.jwt.auth}}
+    requires io.helidon.microprofile.jwt.auth;
+{{/io.helidon.microprofile.jwt.auth}}
+{{#io.helidon.security}}
+    requires io.helidon.security;
+{{/io.helidon.security}}
+{{#io.helidon.security.annotations}}
+    requires io.helidon.security.annotations;
+{{/io.helidon.security.annotations}}
+{{#io.helidon.security.integration.common}}
+    requires io.helidon.security.integration.common;
+{{/io.helidon.security.integration.common}}
+{{#io.helidon.security.providers.common}}
+    requires io.helidon.security.providers.common;
+{{/io.helidon.security.providers.common}}
+{{#io.helidon.security.providers.google.login}}
+    requires io.helidon.security.providers.google.login;
+{{/io.helidon.security.providers.google.login}}
+{{#io.helidon.security.providers.httpauth}}
+    requires io.helidon.security.providers.httpauth;
+{{/io.helidon.security.providers.httpauth}}
+{{#io.helidon.security.providers.httpsign}}
+    requires io.helidon.security.providers.httpsign;
+{{/io.helidon.security.providers.httpsign}}
+{{#io.helidon.security.providers.jwt}}
+    requires io.helidon.security.providers.jwt;
+{{/io.helidon.security.providers.jwt}}
+{{#io.helidon.security.providers.oidc}}
+    requires io.helidon.security.providers.oidc;
+{{/io.helidon.security.providers.oidc}}
+{{#io.helidon.tracing}}
+    requires io.helidon.tracing;
+{{/io.helidon.tracing}}
+{{#io.helidon.webclient}}
+    requires io.helidon.webclient;
+{{/io.helidon.webclient}}
+{{#io.helidon.webclient.http1}}
+    requires io.helidon.webclient.http1;
+{{/io.helidon.webclient.http1}}
+{{#io.helidon.webclient.security}}
+    requires io.helidon.webclient.security;
+{{/io.helidon.webclient.security}}
+{{#io.helidon.webserver}}
+    requires io.helidon.webserver;
+{{/io.helidon.webserver}}
+{{#io.helidon.webserver.context}}
+    requires io.helidon.webserver.context;
+{{/io.helidon.webserver.context}}
+{{#io.helidon.webserver.cors}}
+    requires io.helidon.webserver.cors;
+{{/io.helidon.webserver.cors}}
+{{#io.helidon.webserver.http2}}
+    requires io.helidon.webserver.http2;
+{{/io.helidon.webserver.http2}}
+{{#io.helidon.webserver.observe}}
+    requires io.helidon.webserver.observe;
+{{/io.helidon.webserver.observe}}
+{{#io.helidon.webserver.observe.health}}
+    requires io.helidon.webserver.observe.health;
+{{/io.helidon.webserver.observe.health}}
+{{#io.helidon.webserver.observe.metrics}}
+    requires io.helidon.webserver.observe.metrics;
+{{/io.helidon.webserver.observe.metrics}}
+{{#io.helidon.webserver.observe.tracing}}
+    requires io.helidon.webserver.observe.tracing;
+{{/io.helidon.webserver.observe.tracing}}
+{{#io.helidon.webserver.security}}
+    requires io.helidon.webserver.security;
+{{/io.helidon.webserver.security}}
+{{#io.helidon.webserver.staticcontent}}
+    requires io.helidon.webserver.staticcontent;
+{{/io.helidon.webserver.staticcontent}}
+{{#jersey.media.multipart}}
+    requires jersey.media.multipart;
+{{/jersey.media.multipart}}
+{{#org.jvnet.mimepull}}
+    requires org.jvnet.mimepull;
+{{/org.jvnet.mimepull}}
+{{#com.fasterxml.jackson.annotation}}
+    requires com.fasterxml.jackson.annotation;
+{{/com.fasterxml.jackson.annotation}}
+{{#com.fasterxml.jackson.core}}
+    requires com.fasterxml.jackson.core;
+{{/com.fasterxml.jackson.core}}
 {{/module-requires}}
 
     exports {{package}};
-
 {{#module-opens}}
+{{#first}}
+
+{{/first}}
     opens {{.}};
 {{/module-opens}}
 {{#module-opens-package}}
+
     opens {{package}};
 {{/module-opens-package}}
 }

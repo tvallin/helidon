@@ -20,7 +20,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="/features/common/output.xml"/>
     <exec src="/nodes/se/features/common/output.xml"/>
 
     <!-- media step -->
@@ -33,9 +32,9 @@
     <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
 
     <!--  extra step  -->
-    <exec src="/nodes/se/features/webclient/output.xml"/>
-    <exec src="/nodes/se/features/cors/output.xml"/>
-    <exec src="/nodes/se/features/fault-tolerance/output.xml"/>
+    <exec src="/nodes/se/features/webclient/output.xml" if="${extra} contains 'webclient'"/>
+    <exec src="/nodes/se/features/cors/output.xml" if="${extra} contains 'cors'"/>
+    <exec src="/nodes/se/features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
 
     <!-- observability step -->
     <exec src="/nodes/se/features/metrics/output.xml" if="${metrics}"/>
@@ -49,12 +48,7 @@
     <exec src="/features/jpms/output.xml" if="${jpms}"/>
 
     <!-- customize project step -->
-    <exec src="/features/maven/output.xml"/>
+    <exec src="/features/maven/output.xml" if="${build-system} == 'maven'"/>
     <exec src="/features/customize-project/output.xml"/>
 
-    <output>
-        <model>
-
-        </model>
-    </output>
 </archetype-script>

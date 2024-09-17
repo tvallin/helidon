@@ -42,7 +42,7 @@ import com.intellij.util.ProcessingContext
 
 class ArchetypeScriptReference extends PsiPolyVariantReferenceBase<XmlAttributeValue> {
 
-    static final String ROOT_PREFIX = "/archetypes/archetypes/src/main/archetype"
+    static final String SOURCE_ROOT = "src/main/archetype"
 
     ArchetypeScriptReference(XmlAttributeValue element) {
         super(element, true)
@@ -51,10 +51,12 @@ class ArchetypeScriptReference extends PsiPolyVariantReferenceBase<XmlAttributeV
     def fileRef() {
         def elementFile = element.containingFile.virtualFile
         if (element.value.startsWith("/")) {
-            def path = element.project.basePath + ROOT_PREFIX + element.value
+            def index = elementFile.path.lastIndexOf(SOURCE_ROOT)
+            def path = elementFile.path.substring(0, index + SOURCE_ROOT.length()) + element.value
             return elementFile.fileSystem.findFileByPath(path)
+        } else {
+            return elementFile.parent.findFileByRelativePath(element.value)
         }
-        return elementFile.parent.findFileByRelativePath(element.value)
     }
 
     @Override

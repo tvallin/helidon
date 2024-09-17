@@ -19,6 +19,11 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-io-helidon-security">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-oidc">true</boolean>
+    </variables>
     <output>
         <model>
             <list key="providers-config-entries">
@@ -83,8 +88,7 @@
                 <value><![CDATA[
         Security security = Security.create(config.get("security"));
         // this is needed for proper encryption/decryption of cookies
-        Contexts.globalContext().register(security);
-]]>
+        Contexts.globalContext().register(security);]]>
                 </value>
             </list>
             <list key="Main-routing">
@@ -92,27 +96,23 @@
         if (Config.global().get("security.enabled").asBoolean().orElse(true)) {
             // IDCS requires a web resource for redirects
             routing.addFeature(OidcFeature.create(Config.global()));
-        }
-]]>
+        }]]>
                 </value>
             </list>
             <list key="Main-routing-builder">
-                <value><![CDATA[// web server does not (yet) have possibility to configure routes in config files, so explicit...
-                        .get("/rest/profile", (req, res) -> {
-                            Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
-                            res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
-                            res.send("Response from config based service, you are: \n" + securityContext
-                                    .flatMap(SecurityContext::user)
-                                    .map(Subject::toString)
-                                    .orElse("Security context is null"));
-                        })
-                        .get("/loggedout", (req, res) -> res.send("You have been logged out"))]]>
+                <value><![CDATA[
+            // web server does not (yet) have possibility to configure routes in config files, so explicit...
+            .get("/rest/profile", (req, res) -> {
+                Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
+                res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
+                res.send("Response from config based service, you are: \n" + securityContext
+                    .flatMap(SecurityContext::user)
+                    .map(Subject::toString)
+                    .orElse("Security context is null"));
+            })
+            .get("/loggedout", (req, res) -> res.send("You have been logged out"))]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.security">true</value>
-                <value key="io.helidon.security.providers.oidc">true</value>
-            </map>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Security integration with IDCS
@@ -136,8 +136,7 @@ Build and run the application and then try the endpoints:
 
 1. Open http://localhost:7987/rest/profile in your browser. This should present
  you with a response highlighting your logged in role (null) correctly as you are not logged in
-2. Open `http://localhost:7987/oidc/logout` in your browser. This will log you out from your IDCS and Helidon sessions
-]]>
+2. Open `http://localhost:7987/oidc/logout` in your browser. This will log you out from your IDCS and Helidon sessions]]>
                 </value>
             </list>
         </model>

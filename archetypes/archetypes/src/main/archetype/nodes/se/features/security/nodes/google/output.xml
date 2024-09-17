@@ -20,6 +20,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+        <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-google-login">true</boolean>
+    </variables>
     <output>
         <files>
             <directory>files</directory>
@@ -69,37 +74,36 @@
         Security security = Security.builder()
                 .addProvider(GoogleTokenProvider.builder()
                         .clientId("your-client-id.apps.googleusercontent.com"))
-                .build();
-]]>
+                .build();]]>
                 </value>
             </list>
             <list key="Main-server-builder">
-                <value><![CDATA[.featuresDiscoverServices(false)
+                <value><![CDATA[
+                .featuresDiscoverServices(false)
                 .addFeature(ContextFeature.create())
                 .addFeature(SecurityFeature.builder()
                                     .security(security)
-                                    .build())
-]]>
+                                    .build())]]>
                 </value>
             </list>
             <list key="Main-routing-builder">
-                <value><![CDATA[.get("/rest/profile", SecurityFeature.authenticate(),
+                <value><![CDATA[
+            .get("/rest/profile", SecurityFeature.authenticate(),
                  (req, res) -> {
                         Optional<SecurityContext> securityContext = req.context().get(SecurityContext.class);
                         res.headers().contentType(HttpMediaTypes.PLAINTEXT_UTF_8);
                         res.send("Response from builder based service, you are: \n" + securityContext
-                                .flatMap(SecurityContext::user)
-                                .map(Subject::toString)
-                                .orElse("Security context is null"));
+                            .flatMap(SecurityContext::user)
+                            .map(Subject::toString)
+                            .orElse("Security context is null"));
                         res.next();
                     })
-            .register(StaticContentService.create("/WEB"))
-]]>
+            .register(StaticContentService.create("/WEB"))]]>
                 </value>
             </list>
             <list key="Main-logging">
                 <value><![CDATA[
-            System.out.println("Check Google login http://localhost:" + server.port() + "/google-login.html");]]>
+        System.out.println("Check Google login http://localhost:" + server.port() + "/google-login.html");]]>
                 </value>
             </list>
             <list key="security-properties">
@@ -140,15 +144,9 @@ This example requires a Google client id to run.
 Update the following files with your client id (it should support http://localhost:8080):
 1. src/main/resources/application.yaml - set security.properties.google-client-id or override it in a file in ~/helidon/examples.yaml
 2. src/main/resources/WEB/index.html - update the meta tag in header with name "google-signin-client_id"
-3. src/main/java/io/helidon/security/examples/google/GoogleMain.java - update the client id in builder of provider
-]]>
+3. src/main/java/io/helidon/security/examples/google/GoogleMain.java - update the client id in builder of provider]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.context">true</value>
-                <value key="io.helidon.webserver.staticcontent">true</value>
-                <value key="io.helidon.security.providers.google.login">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

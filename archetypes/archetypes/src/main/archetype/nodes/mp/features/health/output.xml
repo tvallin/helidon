@@ -23,13 +23,13 @@
         <method name="health">
             <output>
                 <model>
-                    <value key="health" if="${health}">true</value>
+                    <value key="health">true</value>
                 </model>
             </output>
         </method>
     </methods>
     <call method="health"/>
-    <output if="${health}">
+    <output>
         <model if="${health.builtin}">
             <value key="health.builtin">${health.builtin}</value>
             <list key="dependencies">
@@ -58,8 +58,7 @@
 curl -s -X GET http://localhost:8080/health
 {"outcome":"UP",...
 
-```
-]]>
+```]]>
                 </value>
             </list>
         </model>

@@ -20,7 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="/features/docker/output.xml" if="${docker}"/>
+    <exec src="/features/docker/output.xml"/>
     <exec src="../native-image/output.xml" if="${docker.native-image}"/>
     <output>
         <model>

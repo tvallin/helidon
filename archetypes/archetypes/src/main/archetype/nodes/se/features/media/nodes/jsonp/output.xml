@@ -21,23 +21,26 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
-        <template source="files/src/main/java/__pkg__/GreetService.java.mustache"
-                  target="src/main/java/${package/\./\/}/GreetService.java"
-                  engine="mustache"/>
+
+        <templates transformations="packaged,mustache" engine="mustache">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.mustache</include>
+            </includes>
+        </templates>
 
         <model>
             <list key="MainTest-other-imports">
                 <value>jakarta.json.JsonObject</value>
             </list>
-            <list key="Abstract-tests">
-                <value><![CDATA[
+            <list key="MainTest-tests">
+                <value order="99"><![CDATA[
     @Test
     void testGreeting() {
         ClientResponseTyped<JsonObject> response = client.get("/greet").request(JsonObject.class);
         assertThat(response.status(), is(Status.OK_200));
         assertThat(response.entity().getString("message"), is("Hello World!"));
-    }
-]]>
+    }]]>
                 </value>
             </list>
         </model>

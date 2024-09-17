@@ -20,15 +20,18 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+    <variables>
+        <boolean path="requires-com-fasterxml-jackson-annotation">true</boolean>
+        <boolean path="requires-com-fasterxml-jackson-core">true</boolean>
+        <boolean path="requires-jakarta-xml-bind">true</boolean>
+    </variables>
     <output>
-        <template source="files/src/main/java/__pkg__/Message.java.mustache"
-                  target="src/main/java/${package/\./\/}/Message.java"
-                  engine="mustache"/>
-
-        <template source="files/src/main/java/__pkg__/SimpleGreetResource.java.mustache"
-                  target="src/main/java/${package/\./\/}/SimpleGreetResource.java"
-                  engine="mustache"/>
-
+        <templates transformations="packaged,mustache" engine="mustache">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.java.mustache</include>
+            </includes>
+        </templates>
         <model>
             <list key="dependencies">
                 <map order="500">
@@ -48,11 +51,6 @@
             <list key="initialize-at-build-time">
                 <value>com.fasterxml.jackson.core</value>
             </list>
-            <map key="module-requires">
-                <value key="com.fasterxml.jackson.annotation">true</value>
-                <value key="com.fasterxml.jackson.core">true</value>
-                <value key="jakarta.xml.bind">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

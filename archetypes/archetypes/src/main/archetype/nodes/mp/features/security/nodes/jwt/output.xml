@@ -20,6 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-jwt-auth">true</boolean>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -39,10 +43,6 @@
                 <value>mp.jwt.verify.issuer=https://{IssuerPublicDomain}/oauth2/default</value>
                 <value template="mustache">mp.jwt.verify.publickey.location=${mp.jwt.verify.issuer}/v1/keys</value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.microprofile.jwt.auth">true</value>
-                <value key="io.helidon.webserver.context">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

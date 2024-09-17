@@ -19,6 +19,8 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <!-- TODO - Discuss with Romain, health builtin version not. I don't get it -->
     <methods>
         <method name="health">
             <output>
@@ -29,7 +31,11 @@
         </method>
     </methods>
     <call method="health"/>
-    <output if="${health}">
+    <variables>
+        <boolean path="requires-io-helidon-webserver-observe-health">true</boolean>
+        <boolean path="requires-io-helidon-health-checks">true</boolean>
+    </variables>
+    <output>
         <model if="${health.builtin}">
             <value key="health.builtin">${health.builtin}</value>
             <list key="dependencies">
@@ -45,16 +51,14 @@
             <list key="MainTest-static-imports">
                 <value>org.hamcrest.CoreMatchers.containsString</value>
             </list>
-            <list key="Abstract-test">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
-    void testHealth() {
+    void testHealthObserver() {
         try (Http1ClientResponse response = client.get("/observe/health").request()) {
-            assertThat(response.status(), is(Status.OK_200));
-            assertThat(response.as(String.class), containsString("status\":\"UP"));
+            assertThat(response.status(), is(Status.NO_CONTENT_204));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="readme-sections">
@@ -72,15 +76,9 @@ Probe the health endpoints:
 ```bash
 curl -X GET http://localhost:8080/observe/health
 curl -X GET http://localhost:8080/observe/health/ready
-```
-
-]]>
+```]]>
                 </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webserver.observe.health">true</value>
-                <value key="io.helidon.health.checks">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

@@ -20,12 +20,17 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-jakarta-json" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">true</boolean>
+    </variables>
     <output>
-        <!-- generate a simple-greet service if json is not selected -->
-        <template source="files/src/main/java/__pkg__/SimpleGreetResource.java.mustache"
-                  target="src/main/java/${package/\./\/}/SimpleGreetResource.java"
-                  engine="mustache"
-                  if="!(${media} contains 'json')"/>
+        <templates engine="mustache" transformations="packaged,mustache" if="!(${media} contains 'json')">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.mustache</include>
+            </includes>
+        </templates>
 
         <!-- TODO https://github.com/oracle/helidon-build-tools/issues/609 -->
         <model>
@@ -49,13 +54,9 @@ curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Hola"}' http:
 
 curl -X GET http://localhost:8080/greet/Jose
 {"message":"Hola Jose!"}
-```
-]]>
+```]]>
                 </value>
             </list>
-            <map key="module-requires" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">
-                <value key="jakarta.json">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

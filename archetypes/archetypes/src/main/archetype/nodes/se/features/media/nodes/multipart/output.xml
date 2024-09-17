@@ -20,10 +20,18 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <variables>
+        <boolean path="requires-io-helidon-http-media-multipart">true</boolean>
+        <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
+    </variables>
     <output>
-        <template source="files/src/main/java/__pkg__/FileService.java.mustache"
-                  target="src/main/java/${package/\./\/}/FileService.java"
-                  engine="mustache"/>
+        <templates transformations="packaged,mustache" engine="mustache">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.mustache</include>
+            </includes>
+        </templates>
 
         <file source="files/src/main/resources/WEB/index.html"
               target="src/main/resources/WEB/index.html"/>
@@ -39,10 +47,6 @@
                     <value key="artifactId">helidon-webserver-static-content</value>
                 </map>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.http.media.multipart">true</value>
-                <value key="io.helidon.webserver.staticcontent">true</value>
-            </map>
             <list key="module-opens">
                 <value>WEB</value>
             </list>
@@ -53,26 +57,26 @@
                 <value>io.helidon.webserver.staticcontent.StaticContentService</value>
             </list>
             <list key="Main-routing-builder">
-                <value order="1"><![CDATA[.any("/", (req, res) -> {
-                    res.status(Status.MOVED_PERMANENTLY_301);
-                    res.header(HeaderValues.createCached(HeaderNames.LOCATION, "/ui"));
-                    res.send();
-                })
-                .register("/ui", StaticContentService.builder("WEB")
-                        .welcomeFileName("index.html")
-                        .build())
-                .register("/api", new FileService())]]>
+                <value order="1"><![CDATA[
+            .any("/", (req, res) -> {
+                res.status(Status.MOVED_PERMANENTLY_301);
+                res.header(HeaderValues.createCached(HeaderNames.LOCATION, "/ui"));
+                res.send();
+            })
+            .register("/ui", StaticContentService.builder("WEB")
+                .welcomeFileName("index.html")
+                .build())
+            .register("/api", new FileService())]]>
                 </value>
             </list>
-            <list key="Abstract-tests">
+            <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
     void testFileService() {
         try (Http1ClientResponse response = client.get("/api").request()) {
             assertThat(response.status(), is(Status.OK_200));
         }
-    }
-]]>
+    }]]>
                 </value>
             </list>
         </model>

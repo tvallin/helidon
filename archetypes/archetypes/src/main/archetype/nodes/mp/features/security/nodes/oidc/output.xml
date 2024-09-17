@@ -20,6 +20,9 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-security-annotations">true</boolean>
+    </variables>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -37,10 +40,6 @@
             <list key="providers-config-entries">
                 <value file="files/application.yaml"/>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.security">true</value>
-                <value key="io.helidon.security.annotations">true</value>
-            </map>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Security integration with OIDC
@@ -48,8 +47,7 @@
 This example demonstrates integration with OIDC (Open ID Connect) providers.
 
 To configure it, you need to replace the default values from configuration
-to your tenant and application configuration.
-]]>
+to your tenant and application configuration.]]>
                 </value>
             </list>
         </model>

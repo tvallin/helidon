@@ -22,7 +22,12 @@
 
     <output>
         <model>
-            <value key="database-hikari">true</value>
+            <list key="microprofile-config-entries">
+                <value file="files/src/main/resources/META-INF/microprofile-config.properties.mustache" template="mustache"/>
+            </list>
+            <list key="test-config-properties">
+                <value file="files/src/test/resources/META-INF/microprofile-config.properties.mustache" template="mustache"/>
+            </list>
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.integrations.cdi</value>

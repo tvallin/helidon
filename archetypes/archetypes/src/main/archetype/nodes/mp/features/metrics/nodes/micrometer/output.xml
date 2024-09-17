@@ -105,6 +105,9 @@
     <!-- intersection with json feature-->
     <call method="metric-micrometer-json"/>
     <call method="metric-micrometer"/>
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-metrics">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="metrics.provider">${metrics.provider}</value>
@@ -161,16 +164,12 @@
     @AfterAll
     static void clear() {
         MetricsFactory.closeAll();
-    }
-]]>
+    }]]>
                 </value>
             </list>
             <list key="MainTest-static-imports">
                 <value>static org.junit.jupiter.api.Assertions.assertEquals</value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.microprofile.metrics">true</value>
-            </map>
         </model>
     </output>
 </archetype-script>

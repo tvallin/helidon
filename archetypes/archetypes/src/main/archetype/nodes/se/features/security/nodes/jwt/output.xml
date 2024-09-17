@@ -20,7 +20,14 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-webclient-security">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-jwt">true</boolean>
+        <boolean path="requires-io-helidon-webclient-http1">true</boolean>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+    </variables>
     <output>
+        <!-- TODO -->
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
@@ -69,18 +76,17 @@
             <list key="Main-main">
                 <value><![CDATA[
         Config clientConfig = Config.create(ConfigSources.classpath("client-service-jwt.yaml"));
-        Config backendConfig = Config.create(ConfigSources.classpath("backend-service-jwt.yaml"));
-]]>
+        Config backendConfig = Config.create(ConfigSources.classpath("backend-service-jwt.yaml"));]]>
                 </value>
             </list>
             <list key="Main-after-server">
                 <value><![CDATA[
-        server.context().register(server);
-]]>
+        server.context().register(server);]]>
                 </value>
             </list>
             <list key="Main-server-builder">
-                <value><![CDATA[// backend that prints the current user
+                <value><![CDATA[
+                // backend that prints the current user
                 .putSocket("backend", socket -> socket
                         .routing(routing -> routing
                                 .addFeature(SecurityHttpFeature.create(backendConfig.get("security.web-server")))
@@ -98,25 +104,20 @@
                                             .orElse("Anonymous");
 
                                     res.send(username);
-                                })))
-]]>
+                                })))]]>
                 </value>
             </list>
             <list key="Main-routing-builder">
-                <value><![CDATA[.addFeature(SecurityHttpFeature.create(clientConfig.get("security.web-server")))
-                .register(new JwtOverrideService())
-]]>
+                <value><![CDATA[
+            .addFeature(SecurityHttpFeature.create(clientConfig.get("security.web-server")))
+            .register(new JwtOverrideService())]]>
                 </value>
             </list>
             <list key="Main-routing">
-                <value><![CDATA[        Config clientConfig = Config.create(ConfigSources.classpath("client-service-jwt.yaml"));]]></value>
+                <value><![CDATA[
+        Config clientConfig = Config.create(ConfigSources.classpath("client-service-jwt.yaml"));]]>
+                </value>
             </list>
-            <map key="module-requires">
-                <value key="io.helidon.webclient.security">true</value>
-                <value key="io.helidon.security.providers.jwt">true</value>
-                <value key="io.helidon.webclient.http1">true</value>
-                <value key="io.helidon.webserver.context">true</value>
-            </map>
             <list key="readme-sections">
                 <value><![CDATA[
 ## Try JWT
@@ -126,8 +127,7 @@ curl -u "jack:changeit" http://localhost:8080/propagate
 curl -u "jack:changeit" http://localhost:8080/override
 curl -u "jill:changeit" http://localhost:8080/propagate
 curl -u "jill:changeit" http://localhost:8080/override
-```
-]]>
+```]]>
                 </value>
             </list>
         </model>

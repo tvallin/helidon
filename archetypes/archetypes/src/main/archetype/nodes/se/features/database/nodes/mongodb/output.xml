@@ -34,14 +34,19 @@
                     <value key="groupId">io.helidon.common</value>
                     <value key="artifactId">helidon-common-mapper</value>
                 </map>
-                <map>
+                <map order="99">
                     <value key="groupId">io.helidon.dbclient</value>
                     <value key="artifactId">helidon-dbclient-jdbc</value>
                     <value key="scope">test</value>
                 </map>
-                <map>
+                <map order="99">
                     <value key="groupId">io.helidon.dbclient</value>
                     <value key="artifactId">helidon-dbclient-hikari</value>
+                    <value key="scope">test</value>
+                </map>
+                <map order="99">
+                    <value key="groupId">com.h2database</value>
+                    <value key="artifactId">h2</value>
                     <value key="scope">test</value>
                 </map>
             </list>
@@ -58,8 +63,7 @@
 Mongodb:
 ```
 docker run --rm --name mongo -p 27017:27017 mongo
-```
-]]>
+```]]>
             </value>
         </model>
     </output>
