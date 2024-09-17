@@ -28,5 +28,4 @@
     <exec src="nodes/mysql/output.xml"  if="${db.server} == 'mysql'"/>
     <exec src="nodes/oracledb/output.xml"  if="${db.server} == 'oracledb'"/>
     <exec src="features/common/output.xml"/>
-
 </archetype-script>

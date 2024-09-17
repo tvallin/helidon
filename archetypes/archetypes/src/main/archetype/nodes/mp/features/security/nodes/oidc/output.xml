@@ -38,17 +38,10 @@
                 </map>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.yaml"/>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
             <list key="readme-sections">
-                <value><![CDATA[
-## Security integration with OIDC
-
-This example demonstrates integration with OIDC (Open ID Connect) providers.
-
-To configure it, you need to replace the default values from configuration
-to your tenant and application configuration.]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

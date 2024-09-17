@@ -27,41 +27,10 @@
     <output>
         <model>
             <list key="providers-config-entries">
-                <value><![CDATA[
-  - oidc:
-      client-id: "your-client-id"
-      client-secret: "changeit"
-      identity-uri: "https://your-tenant-id.identity.oracle.com"
-      # A prefix used for custom scopes
-      scope-audience: "http://localhost:7987/test-application"
-      proxy-host: ""
-      # Used as a base for redirects back to us (based on Host header now, so no need to explicitly define it)
-      # If explicitly defined, will override host header
-      # frontend-uri: "http://localhost:7987"
-      # support for non-public signature JWK (and maybe other IDCS specific handling)
-      server-type: "idcs"
-      logout-enabled: true
-      # Can define just a path, host will be taken from header
-      post-logout-uri: "/loggedout"
-      # We want to redirect to login page (and token can be received either through cookie or header)
-      redirect: true
-  - idcs-role-mapper:
-      multitenant: false
-      oidc-config:
-        # we must repeat IDCS configuration, as in this case
-        # IDCS serves both as open ID connect authenticator and
-        # as a role mapper. Using minimal configuration here
-        client-id: "your-client-id"
-        client-secret: "changeit"
-        identity-uri: "https://your-tenant-id.identity.oracle.com"]]>
-                </value>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
             <list key="paths-config-entries">
-                <value><![CDATA[   - path: "/rest/profile"
-             methods: ["get"]
-             authenticate: true
-             roles-allowed: ["my_admins"]]]>
-                </value>
+                <value file="files/src/main/resources/paths.yaml"/>
             </list>
             <list key="dependencies">
                 <map>
@@ -114,30 +83,7 @@
                 </value>
             </list>
             <list key="readme-sections">
-                <value><![CDATA[
-## Security integration with IDCS
-
-This example demonstrates integration with IDCS (Oracle identity service, integrated with Open ID Connect provider).
-
-### Code Configuration
-
-Edit application.yaml for IdcsMain.java or OidcConfig variable definition for IdcsBuilderMain.java sample
-
- 1. idcs-uri  : Base URL of your idcs instance, usually something like https://idcs-<longnumber>.identity.oraclecloud.com
- 2. idcs-client-id  : This is obtained from your IDCS application in the IDCS console
- 3. idcs-client-secret   : This is obtained from your IDCS application in the IDCS console
- 4. frontend-uri : This is the base URL of your application when run, e.g. `http://localhost:7987`
- 5. proxy-host   : Your proxy server if needed
- 6. scope-audience : This is the scope audience which MUST match the primary audience in the IDCS resource, recommendation is not to have a trailing slash (/)
-
-## Try the application
-
-Build and run the application and then try the endpoints:
-
-1. Open http://localhost:7987/rest/profile in your browser. This should present
- you with a response highlighting your logged in role (null) correctly as you are not logged in
-2. Open `http://localhost:7987/oidc/logout` in your browser. This will log you out from your IDCS and Helidon sessions]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

@@ -59,12 +59,7 @@
             <list key="application-test-yaml-entries">
                 <value file="files/application-test.yaml.mustache" template="mustache"/>
             </list>
-            <value key="start-db"><![CDATA[
-Mongodb:
-```
-docker run --rm --name mongo -p 27017:27017 mongo
-```]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
         </model>
     </output>
 </archetype-script>

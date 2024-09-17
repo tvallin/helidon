@@ -29,7 +29,7 @@
             <value key="security">true</value>
             <value key="features">true</value>
             <list key="server-features">
-                <value template="mustache" file="files/config.yaml.mustache"/>
+                <value template="mustache" file="files/src/main/resources/server-features.yaml.mustache"/>
             </list>
             <list key="dependencies">
                 <map>
@@ -38,15 +38,11 @@
                 </map>
             </list>
             <list key="application-test-yaml-entries">
-                <value><![CDATA[
-security:
-  enabled: false
-]]>
-                </value>
+                <value file="files/src/test/resources/application.yaml"/>
             </list>
             <list key="application-yaml-entries"
                   if="!(${security.atn} contains 'http-signature' || ${security.atn} contains 'jwt')">
-                <value template="mustache" file="files/application.yaml.mustache"/>
+                <value template="mustache" file="files/src/main/resources/application.yaml.mustache"/>
             </list>
         </model>
     </output>

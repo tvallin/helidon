@@ -32,13 +32,6 @@
             <list key="readme-sections">
                 <value template="mustache" file="files/README.md.mustache"/>
             </list>
-            <list key="native-sections">
-                <!--
-                    We don't need to templatize the native image section.
-                    TODO - Remove and inline the extended readme.
-                -->
-                <value file="files/README-ext.md.mustache" if="!${db}" template="mustache"/>
-            </list>
         </model>
     </output>
 </archetype-script>

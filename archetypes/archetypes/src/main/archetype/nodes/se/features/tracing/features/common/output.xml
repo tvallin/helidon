@@ -36,10 +36,7 @@
             <value key="tracing">true</value>
             <value key="tracing.provider">${tracing.provider}</value>
             <list key="application-yaml-entries">
-                <value><![CDATA[
-tracing:
-  service: helidon-tracing-service]]>
-                </value>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
             <list key="dependencies">
                 <map>
@@ -57,12 +54,7 @@ tracing:
                 </value>
             </list>
             <list key="readme-exercise-the-application">
-                <value><![CDATA[
-Tracing:
-```
-curl -X GET http://localhost:8080/traced
-```]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

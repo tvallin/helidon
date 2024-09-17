@@ -28,17 +28,7 @@
             <value key="readme-description">Helidon MP application that uses the dbclient API with MySQL database.</value>
             <value key="integration-artifactId">helidon-integrations-db-mysql</value>
             <value key="db">MySQL</value>
-            <value key="start-db"><![CDATA[
-MySQL:
-```
-docker run --rm --name mysql -p 3306:3306 \
-    -e MYSQL_ROOT_PASSWORD=root \
-    -e MYSQL_DATABASE=pokemon \
-    -e MYSQL_USER=user \
-    -e MYSQL_PASSWORD=changeit \
-    mysql:5.7
-```]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
             <list key="main-persistence-properties">
                 <map if="${db.jpa-impl} == 'hibernate'">
                     <value key="name">hibernate.column_ordering_strategy</value>
@@ -69,5 +59,4 @@ docker run --rm --name mysql -p 3306:3306 \
             <value key="userPassword">changeit</value>
         </model>
     </output>
-
 </archetype-script>

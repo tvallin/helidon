@@ -10,6 +10,9 @@ security:
   web-server:
     # protected paths on the web server - do not include paths served by Jersey, as those are protected directly
     paths:
+    - path: "/simple-greet"
+        methods: ["get"]
+        authenticate: true
 {{#paths-config-entries}}
 {{.}}
 {{/paths-config-entries}}

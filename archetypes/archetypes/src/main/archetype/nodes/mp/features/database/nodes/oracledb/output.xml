@@ -30,13 +30,7 @@
             <value key="readme-native-url">url: jdbc:oracle:thin:@localhost:1521/XE</value>
             <value key="integration-artifactId">ojdbc</value>
             <value key="db">OracleDB</value>
-            <value key="start-db"><![CDATA[
-Oracle:
-```
-docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
-```
-For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
             <list key="main-persistence-properties">
                 <map if="${db.jpa-impl} == 'hibernate'">
                     <value key="name">hibernate.column_ordering_strategy</value>
@@ -72,5 +66,4 @@ For details on an Oracle Docker image, see https://github.com/oracle/docker-imag
             <value key="userPassword">oracle</value>
         </model>
     </output>
-
 </archetype-script>

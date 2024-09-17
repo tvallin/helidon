@@ -53,9 +53,7 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>.helidon.mustache</include>
                 <include>README.md.mustache</include>
-                <include>.gitignore.mustache</include>
                 <include>src/main/java/**/Main.java.mustache</include>
             </includes>
         </templates>
@@ -126,11 +124,6 @@
                 <value><![CDATA[
             .register("/greet", new GreetService())]]></value>
             </list>
-            <list key="application-yaml-entries">
-                <value><![CDATA[app:
-    greeting: "Hello"]]>
-                </value>
-            </list>
             <value key="main-method-javadoc"><![CDATA[
     /**
      * Application main entry point.
@@ -162,13 +155,7 @@
                 </value>
             </list>
             <list key="readme-exercise-the-application">
-                <value order="999"><![CDATA[
-Basic:
-```
-curl -X GET http://localhost:8080/simple-greet
-Hello World!
-```]]>
-                </value>
+                <value order="999" file="files/README.md"/>
             </list>
         </model>
     </output>

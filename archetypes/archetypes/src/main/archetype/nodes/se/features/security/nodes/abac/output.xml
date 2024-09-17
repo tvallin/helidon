@@ -36,15 +36,10 @@
                 </map>
             </list>
             <list key="providers-config-entries">
-                <value><![CDATA[
-  - abac:
-      fail-on-unvalidated: true
-      fail-if-none-validated: true
-]]>
-                </value>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
             <list key="paths-config-entries">
-                <value order="90" if="!(${security.atn} contains 'oidc')"><![CDATA[         roles-allowed: ["user"]]]></value>
+                <value file="files/src/main/resources/paths.yaml" order="90" if="!(${security.atn} contains 'oidc')"/>
             </list>
         </model>
     </output>

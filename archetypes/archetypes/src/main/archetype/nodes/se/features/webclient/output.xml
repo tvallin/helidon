@@ -24,7 +24,7 @@
         <boolean path="requires-io-helidon-webclient">true</boolean>
         <boolean path="requires-io-helidon-webclient-http1">true</boolean>
     </variables>
-    <output if="${extra} contains 'webclient'">
+    <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>

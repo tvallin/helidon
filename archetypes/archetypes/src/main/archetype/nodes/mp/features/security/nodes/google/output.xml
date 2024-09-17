@@ -34,13 +34,10 @@
                 </map>
             </list>
             <list key="paths-config-entries">
-                <value><![CDATA[    - path: "/rest/profile"
-      methods: ["get"]
-      authenticate: true]]>
-                </value>
+                <value file="files/src/main/resources/paths.yaml"/>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.yaml"/>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
         </model>
     </output>

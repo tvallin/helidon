@@ -27,13 +27,7 @@
             <value key="readme-description">Helidon MP application that uses JPA with an in-memory H2 database.</value>
             <value key="integration-artifactId">h2</value>
             <value key="db">H2</value>
-            <value key="start-db"><![CDATA[
-H2:
-```
-docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
-```
-For details, see https://www.h2database.com/html/cheatSheet.html]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
             <list key="main-persistence-properties">
                 <map if="${db.jpa-impl} == 'hibernate'">
                     <value key="name">hibernate.column_ordering_strategy</value>

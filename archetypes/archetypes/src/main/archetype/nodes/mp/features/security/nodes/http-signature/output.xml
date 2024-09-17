@@ -32,7 +32,7 @@
                 </map>
             </list>
             <list key="providers-config-entries">
-                <value file="files/application.yaml"/>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
         </model>
     </output>

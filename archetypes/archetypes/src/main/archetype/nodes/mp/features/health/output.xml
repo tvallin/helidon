@@ -51,15 +51,7 @@
                 </value>
             </list>
             <list key="readme-sections">
-                <value><![CDATA[
-## Try health
-
-```
-curl -s -X GET http://localhost:8080/health
-{"outcome":"UP",...
-
-```]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

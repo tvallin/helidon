@@ -25,6 +25,5 @@
     <exec src="nodes/google/output.xml" if="${security.atn} contains ['google']"/>
     <exec src="nodes/http-signature/output.xml" if="${security.atn} contains 'http-signature'"/>
     <exec src="nodes/abac/output.xml" if="${security.atz} contains ['abac']"/>
-    <!-- common code for any security provider -->
     <exec src="features/common/output.xml"/>
 </archetype-script>

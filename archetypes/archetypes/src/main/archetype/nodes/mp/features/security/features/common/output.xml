@@ -39,12 +39,6 @@
                     <value key="artifactId">helidon-microprofile-security</value>
                 </map>
             </list>
-            <list key="paths-config-entries">
-                <value><![CDATA[    - path: "/simple-greet"
-      methods: ["get"]
-      authenticate: true]]>
-                </value>
-            </list>
         </model>
     </output>
 </archetype-script>

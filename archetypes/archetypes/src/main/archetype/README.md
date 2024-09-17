@@ -1,6 +1,3 @@
-
-Remove features output gard condition -> transfer to the caller
-
 Remove the CDATA content for everything except java
 
 Dernières étapes :

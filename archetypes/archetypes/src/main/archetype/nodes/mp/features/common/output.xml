@@ -84,16 +84,7 @@
                 </map>
             </list>
             <list key="maven-plugins">
-                <value><![CDATA[            <plugin>
-                <groupId>io.smallrye</groupId>
-                <artifactId>jandex-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-index</id>
-                    </execution>
-                </executions>
-            </plugin>]]>
-                </value>
+                <value file="files/plugin.xml"/>
             </list>
             <list key="MainTest-java-imports">
                 <value>jakarta.inject.Inject</value>
@@ -112,10 +103,7 @@
             </list>
             <value key="helidon-test" order="0">true</value>
             <list key="microprofile-config-entries">
-                <value><![CDATA[
-# Application properties. This is the default greeting
-app.greeting=Hello]]>
-                </value>
+                <value file="files/src/main/resources/microprofile-config.properties"/>
             </list>
             <list key="MainTest-java-imports" if="${media.json-lib} == 'jsonp'">
                 <value>jakarta.json.JsonObject</value>
@@ -151,13 +139,7 @@ app.greeting=Hello]]>
                 </map>
             </list>
             <list key="readme-exercise-the-application">
-                <value order="999"><![CDATA[
-Basic:
-```
-curl -X GET http://localhost:8080/simple-greet
-Hello World!
-```]]>
-                </value>
+                <value order="999" file="files/README.md"/>
             </list>
             <value key="module-opens-package">true</value>
         </model>

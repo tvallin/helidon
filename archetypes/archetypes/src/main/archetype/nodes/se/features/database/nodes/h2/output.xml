@@ -32,18 +32,9 @@
             </list>
             <value key="db-health-check-stmt" if="${health}">SELECT 0</value>
             <list key="db-connection">
-                <value><![CDATA[    url: "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE"
-    username: sa
-    password:]]>
-                </value>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
-            <value key="start-db"><![CDATA[
-H2:
-```
-docker run --rm --name h2 -p 9092:9082 -p 8082:8082 nemerosa/h2
-```
-For details, see https://www.h2database.com/html/cheatSheet.html]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
         </model>
     </output>
 </archetype-script>

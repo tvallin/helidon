@@ -38,18 +38,9 @@
             </list>
             <value key="db-health-check-stmt" if="${health}">SELECT 1 FROM DUAL</value>
             <list key="db-connection">
-                <value><![CDATA[    url: jdbc:oracle:thin:@localhost:1521/XE
-    username: system
-    password: oracle]]>
-                </value>
+                <value file="files/src/main/resources/application.yaml"/>
             </list>
-            <value key="start-db"><![CDATA[
-Oracle:
-```
-docker run --rm --name xe -p 1521:1521 -p 8888:8080 wnameless/oracle-xe-11g-r2
-```
-For details on an Oracle Docker image, see https://github.com/oracle/docker-images/tree/master/OracleDatabase/SingleInstance]]>
-            </value>
+            <value key="start-db" file="files/README.md"/>
         </model>
     </output>
 </archetype-script>

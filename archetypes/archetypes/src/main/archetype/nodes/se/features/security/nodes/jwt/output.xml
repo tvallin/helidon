@@ -27,7 +27,6 @@
         <boolean path="requires-io-helidon-webserver-context">true</boolean>
     </variables>
     <output>
-        <!-- TODO -->
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
@@ -119,16 +118,7 @@
                 </value>
             </list>
             <list key="readme-sections">
-                <value><![CDATA[
-## Try JWT
-
-```bash
-curl -u "jack:changeit" http://localhost:8080/propagate
-curl -u "jack:changeit" http://localhost:8080/override
-curl -u "jill:changeit" http://localhost:8080/propagate
-curl -u "jill:changeit" http://localhost:8080/override
-```]]>
-                </value>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>
