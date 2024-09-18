@@ -28,62 +28,62 @@
             </includes>
         </templates>
         <model>
-            <map key="module-requires">
-                <value key="java.logging" if="${requires-java-logging}">true</value>
-                <value key="jakarta.annotation" if="${requires-jakarta-annotation}">true</value>
-                <value key="jakarta.cdi" if="${requires-jakarta-cdi}">true</value>
-                <value key="jakarta.inject" if="${requires-jakarta-inject}">true</value>
-                <value key="jakarta.json" if="${requires-jakarta-json}">true</value>
-                <value key="jakarta.json.bind" if="${requires-jakarta-json-bind}">true</value>
-                <value key="jakarta.persistence" if="${requires-jakarta-persistence}">true</value>
-                <value key="jakarta.ws.rs" if="${requires-jakarta-ws-rs}">true</value>
-                <value key="jakarta.xml.bind" if="${requires-jakarta-xml-bind}">true</value>
-                <value key="io.helidon" if="${requires-io-helidon}">true</value>
-                <value key="io.helidon.common.pki" if="${requires-io-helidon-common-pki}">true</value>
-                <value key="io.helidon.config" if="${requires-io-helidon-config}">true</value>
-                <value key="io.helidon.cors" if="${requires-io-helidon-cors}">true</value>
-                <value key="io.helidon.dbclient" if="${requires-io-helidon-dbclient}">true</value>
-                <value key="io.helidon.dbclient.metrics" if="${requires-io-helidon-dbclient-metrics}">true</value>
-                <value key="io.helidon.dbclient.tracing" if="${requires-io-helidon-dbclient-tracing}">true</value>
-                <value key="io.helidon.faulttolerance" if="${requires-io-helidon-faulttolerance}">true</value>
-                <value key="io.helidon.health.checks" if="${requires-io-helidon-health-checks}">true</value>
-                <value key="io.helidon.http" if="${requires-io-helidon-http}">true</value>
-                <value key="io.helidon.http.media.multipart" if="${requires-io-helidon-http-media-multipart}">true</value>
-                <value key="io.helidon.logging.common" if="${requires-io-helidon-logging-common}">true</value>
-                <value key="io.helidon.metrics.api" if="${requires-io-helidon-metrics-api}">true</value>
-                <value key="io.helidon.microprofile.cors" if="${requires-io-helidon-microprofile-cors}">true</value>
-                <value key="io.helidon.microprofile.faulttolerance" if="${requires-io-helidon-microprofile-faulttolerance}">true</value>
-                <value key="io.helidon.microprofile.jwt.auth" if="${requires-io-helidon-microprofile-jwt-auth}">true</value>
-                <value key="io.helidon.microprofile.metrics" if="${requires-io-helidon-microprofile-metrics}">true</value>
-                <value key="io.helidon.microprofile.openapi" if="${requires-io-helidon-microprofile-openapi}">true</value>
-                <value key="io.helidon.microprofile.telemetry" if="${requires-io-helidon-microprofile-telemetry}">true</value>
-                <value key="io.helidon.microprofile.config" if="${requires-io-helidon-microprofile-config}">true</value>
-                <value key="io.helidon.security" if="${requires-io-helidon-security}">true</value>
-                <value key="io.helidon.security.annotations" if="${requires-io-helidon-security-annotations}">true</value>
-                <value key="io.helidon.security.integration.common" if="${requires-io-helidon-security-integration-common}">true</value>
-                <value key="io.helidon.security.providers.common" if="${requires-io-helidon-security-providers-common}">true</value>
-                <value key="io.helidon.security.providers.google.login" if="${requires-io-helidon-security-providers-google-login}">true</value>
-                <value key="io.helidon.security.providers.httpauth" if="${requires-io-helidon-security-providers-httpauth}">true</value>
-                <value key="io.helidon.security.providers.httpsign" if="${requires-io-helidon-security-providers-httpsign}">true</value>
-                <value key="io.helidon.security.providers.jwt" if="${requires-io-helidon-security-providers-jwt}">true</value>
-                <value key="io.helidon.security.providers.oidc" if="${requires-io-helidon-security-providers-oidc}">true</value>
-                <value key="io.helidon.tracing" if="${requires-io-helidon-tracing}">true</value>
-                <value key="io.helidon.webclient.http1" if="${requires-io-helidon-webclient-http1}">true</value>
-                <value key="io.helidon.webclient.security" if="${requires-io-helidon-webclient-security}">true</value>
-                <value key="io.helidon.webserver" if="${requires-io-helidon-webserver}">true</value>
-                <value key="io.helidon.webserver.context" if="${requires-io-helidon-webserver-context}">true</value>
-                <value key="io.helidon.webserver.cors" if="${requires-io-helidon-webserver-cors}">true</value>
-                <value key="io.helidon.webserver.http2" if="${requires-io-helidon-webserver-http2}">true</value>
-                <value key="io.helidon.webserver.observe" if="${requires-io-helidon-webserver-observe}">true</value>
-                <value key="io.helidon.webserver.observe.health" if="${requires-io-helidon-webserver-observe-health}">true</value>
-                <value key="io.helidon.webserver.observe.metrics" if="${requires-io-helidon-webserver-observe-metrics}">true</value>
-                <value key="io.helidon.webserver.observe.tracing" if="${requires-io-helidon-webserver-observe-tracing}">true</value>
-                <value key="io.helidon.webserver.security" if="${requires-io-helidon-webserver-security}">true</value>
-                <value key="io.helidon.webserver.staticcontent" if="${requires-io-helidon-webserver-staticcontent}">true</value>
-                <value key="org.jvnet.mimepull" if="${requires-org-jvnet-mimepull}">true</value>
-                <value key="com.fasterxml.jackson.annotation" if="${requires-com-fasterxml-jackson-annotation}">true</value>
-                <value key="com.fasterxml.jackson.core" if="${requires-com-fasterxml-jackson-core}">true</value>
-            </map>
+            <list key="module-requires">
+                <value if="${requires-java-logging}">java.logging</value>
+                <value if="${requires-jakarta-annotation}">jakarta.annotation</value>
+                <value if="${requires-jakarta-cdi}">jakarta.cdi</value>
+                <value if="${requires-jakarta-inject}">jakarta.inject</value>
+                <value if="${requires-jakarta-json}">jakarta.json</value>
+                <value if="${requires-jakarta-json-bind}">jakarta.json.bind</value>
+                <value if="${requires-jakarta-persistence}">jakarta.persistence</value>
+                <value if="${requires-jakarta-ws-rs}">jakarta.ws.rs</value>
+                <value if="${requires-jakarta-xml-bind}">jakarta.xml.bind</value>
+                <value if="${requires-io-helidon}">io.helidon</value>
+                <value if="${requires-io-helidon-common-pki}">io.helidon.common.pki</value>
+                <value if="${requires-io-helidon-config}">io.helidon.config</value>
+                <value if="${requires-io-helidon-cors}">io.helidon.cors</value>
+                <value if="${requires-io-helidon-dbclient}">io.helidon.dbclient</value>
+                <value if="${requires-io-helidon-dbclient-metrics}">io.helidon.dbclient.metrics</value>
+                <value if="${requires-io-helidon-dbclient-tracing}">io.helidon.dbclient.tracing</value>
+                <value if="${requires-io-helidon-faulttolerance}">io.helidon.faulttolerance</value>
+                <value if="${requires-io-helidon-health-checks}">io.helidon.health.checks</value>
+                <value if="${requires-io-helidon-http}">io.helidon.http</value>
+                <value if="${requires-io-helidon-http-media-multipart}">io.helidon.http.media.multipart</value>
+                <value if="${requires-io-helidon-logging-common}">io.helidon.logging.common</value>
+                <value if="${requires-io-helidon-metrics-api}">io.helidon.metrics.api</value>
+                <value if="${requires-io-helidon-microprofile-cors}">io.helidon.microprofile.cors</value>
+                <value if="${requires-io-helidon-microprofile-faulttolerance}">io.helidon.microprofile.faulttolerance</value>
+                <value if="${requires-io-helidon-microprofile-jwt-auth}">io.helidon.microprofile.jwt.auth</value>
+                <value if="${requires-io-helidon-microprofile-metrics}">io.helidon.microprofile.metrics</value>
+                <value if="${requires-io-helidon-microprofile-openapi}">io.helidon.microprofile.openapi</value>
+                <value if="${requires-io-helidon-microprofile-telemetry}">io.helidon.microprofile.telemetry</value>
+                <value if="${requires-io-helidon-microprofile-config}">io.helidon.microprofile.config</value>
+                <value if="${requires-io-helidon-security}">io.helidon.security</value>
+                <value if="${requires-io-helidon-security-annotations}">io.helidon.security.annotations</value>
+                <value if="${requires-io-helidon-security-integration-common}">io.helidon.security.integration.common</value>
+                <value if="${requires-io-helidon-security-providers-common}">io.helidon.security.providers.common</value>
+                <value if="${requires-io-helidon-security-providers-google-login}">io.helidon.security.providers.google.login</value>
+                <value if="${requires-io-helidon-security-providers-httpauth}">io.helidon.security.providers.httpauth</value>
+                <value if="${requires-io-helidon-security-providers-httpsign}">io.helidon.security.providers.httpsign</value>
+                <value if="${requires-io-helidon-security-providers-jwt}">io.helidon.security.providers.jwt</value>
+                <value if="${requires-io-helidon-security-providers-oidc}">io.helidon.security.providers.oidc</value>
+                <value if="${requires-io-helidon-tracing}">io.helidon.tracing</value>
+                <value if="${requires-io-helidon-webclient-http1}">io.helidon.webclient.http1</value>
+                <value if="${requires-io-helidon-webclient-security}">io.helidon.webclient.security</value>
+                <value if="${requires-io-helidon-webserver}">io.helidon.webserver</value>
+                <value if="${requires-io-helidon-webserver-context}">io.helidon.webserver.context</value>
+                <value if="${requires-io-helidon-webserver-cors}">io.helidon.webserver.cors</value>
+                <value if="${requires-io-helidon-webserver-http2}">io.helidon.webserver.http2</value>
+                <value if="${requires-io-helidon-webserver-observe}">io.helidon.webserver.observe</value>
+                <value if="${requires-io-helidon-webserver-observe-health}">io.helidon.webserver.observe.health</value>
+                <value if="${requires-io-helidon-webserver-observe-metrics}">io.helidon.webserver.observe.metrics</value>
+                <value if="${requires-io-helidon-webserver-observe-tracing}">io.helidon.webserver.observe.tracing</value>
+                <value if="${requires-io-helidon-webserver-security}">io.helidon.webserver.security</value>
+                <value if="${requires-io-helidon-webserver-staticcontent}">io.helidon.webserver.staticcontent</value>
+                <value if="${requires-org-jvnet-mimepull}">org.jvnet.mimepull</value>
+                <value if="${requires-com-fasterxml-jackson-annotation}">com.fasterxml.jackson.annotation</value>
+                <value if="${requires-com-fasterxml-jackson-core}">com.fasterxml.jackson.core</value>
+            </list>
         </model>
     </output>
 </archetype-script>

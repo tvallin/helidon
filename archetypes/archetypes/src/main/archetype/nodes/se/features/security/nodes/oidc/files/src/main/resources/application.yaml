@@ -18,9 +18,9 @@
   - idcs-role-mapper:
       multitenant: false
       oidc-config:
-        # we must repeat IDCS configuration, as in this case
-        # IDCS serves both as open ID connect authenticator and
-        # as a role mapper. Using minimal configuration here
-        client-id: "your-client-id"
-        client-secret: "changeit"
-        identity-uri: "https://your-tenant-id.identity.oracle.com"
+      # we must repeat IDCS configuration, as in this case
+      # IDCS serves both as open ID connect authenticator and
+      # as a role mapper. Using minimal configuration here
+      client-id: "your-client-id"
+      client-secret: "changeit"
+      identity-uri: "https://your-tenant-id.identity.oracle.com"

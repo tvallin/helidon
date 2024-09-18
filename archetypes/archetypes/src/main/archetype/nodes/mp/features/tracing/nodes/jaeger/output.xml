@@ -21,7 +21,6 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <output>
         <model>
-            <value key="tracing" if="${tracing}">true</value>
             <value key="tracing.provider">${tracing.provider}</value>
             <list key="dependencies">
                 <map order="800">

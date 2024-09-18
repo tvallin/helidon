@@ -1,16 +1,10 @@
 server:
   port: 8080
   host: 0.0.0.0
-  {{#features}}
+{{#server-features}}
+{{#first}}
   features:
-    {{#server-features}}
-    {{.}}
-    {{/server-features}}
-  {{/features}}
-app:
-  greeting: "Hello"
-{{#application-yaml-entries}}
-
+{{/first}}
 {{.}}
-{{/application-yaml-entries}}
-
+{{/server-features}}
+{{#application-yaml}}{{.}}{{/application-yaml}}

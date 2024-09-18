@@ -20,11 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-io-helidon-webserver-http2">true</boolean>
-        <boolean path="requires-io-helidon-webserver-observe-tracing">true</boolean>
-        <boolean path="requires-io-helidon-tracing">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>./files</directory>
@@ -33,9 +29,7 @@
             </includes>
         </templates>
         <model>
-            <value key="tracing">true</value>
-            <value key="tracing.provider">${tracing.provider}</value>
-            <list key="application-yaml-entries">
+            <list key="application-yaml">
                 <value file="files/src/main/resources/application.yaml"/>
             </list>
             <list key="dependencies">

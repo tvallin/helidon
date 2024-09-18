@@ -20,9 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-io-helidon-microprofile-telemetry">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates engine="mustache" transformations="packaged,mustache">
             <directory>files</directory>
@@ -37,8 +35,8 @@
                     <value key="artifactId">helidon-microprofile-telemetry</value>
                 </map>
             </list>
-            <list key="microprofile-config-entries">
-                <value template="mustache" file="files/src/main/resources/microprofile-config.properties.mustache"/>
+            <list key="microprofile-config">
+                <value file="files/src/main/resources/META-INF/microprofile-config.properties.mustache" template="mustache"/>
             </list>
             <list key="readme-exercise-the-application">
                 <value file="files/README.md"/>

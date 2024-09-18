@@ -20,30 +20,15 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <!-- TODO - Discuss with romain, I think the built-in should be the dependency and metrics the actual built in -->
-    <methods>
-        <method name="metrics">
-            <output>
-                <model>
-                    <value key="metrics">true</value>
-                </model>
-            </output>
-        </method>
-    </methods>
-    <call method="metrics"/>
-    <variables>
-        <boolean path="requires-io-helidon-webserver-observe-metrics">true</boolean>
-        <boolean path="requires-io-helidon-metrics-api">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
-        <model if="${metrics.builtin}">
-            <value key="metrics.builtin">${metrics.builtin}</value>
+        <model if="${metrics}">
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.webserver.observe</value>
                     <value key="artifactId">helidon-webserver-observe-metrics</value>
                 </map>
-                <map>
+                <map if="${metrics.builtin}">
                     <value key="groupId">io.helidon.metrics</value>
                     <value key="artifactId">helidon-metrics-system-meters</value>
                     <value key="scope">runtime</value>

@@ -42,7 +42,7 @@
                 </map>
             </list>
             <list key="maven-plugins">
-                <value file="files/plugin.xml"/>
+                <value file="files/maven-plugins.xml"/>
             </list>
             <list key="main-persistence-properties">
                 <map if="${db.auto-ddl}">

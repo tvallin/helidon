@@ -37,11 +37,11 @@
                             <value key="artifactId">helidon-dbclient-metrics-hikari</value>
                         </map>
                     </list>
-                    <list key="application-yaml-entries">
-                        <value file="files/application.yaml.mustache" template="mustache"/>
+                    <list key="application-yaml">
+                        <value file="files/src/main/resources/application.yaml.mustache" template="mustache"/>
                     </list>
-                    <list key="application-test-yaml-entries">
-                        <value file="files/application-test.yaml.mustache" template="mustache"/>
+                    <list key="application-test-yaml">
+                        <value file="files/src/test/resources/application-test.yaml.mustache" template="mustache"/>
                     </list>
                 </model>
             </output>
@@ -81,13 +81,7 @@
     </methods>
     <call method="jdbc" />
     <call method="health" />
-    <variables>
-        <boolean path="requires-io-helidon-dbclient">true</boolean>
-        <boolean path="requires-io-helidon-dbclient-metrics">true</boolean>
-        <boolean path="requires-io-helidon-dbclient-tracing">true</boolean>
-        <!-- TODO - seems incorrect -->
-        <boolean path="requires-jakarta-json" if="${media.json-lib} == 'jackson'">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>

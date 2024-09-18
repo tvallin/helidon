@@ -21,9 +21,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-jakarta-json-bind">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates transformations="packaged,mustache" engine="mustache">
             <directory>files</directory>

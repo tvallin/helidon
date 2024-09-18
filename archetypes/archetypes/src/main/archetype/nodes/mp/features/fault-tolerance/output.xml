@@ -20,9 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-io-helidon-microprofile-faulttolerance">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
@@ -40,7 +38,7 @@
                 </map>
             </list>
             <list key="maven-plugins">
-                <value file="files/plugin.xml"/>
+                <value file="files/maven-plugins.xml"/>
             </list>
         </model>
     </output>

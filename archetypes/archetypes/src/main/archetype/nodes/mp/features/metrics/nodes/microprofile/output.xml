@@ -115,9 +115,7 @@
     <!-- intersection with json feature -->
     <call method="metric-microprofile-json"/>
     <call method="metric-microprofile"/>
-    <variables>
-        <boolean path="requires-io-helidon-microprofile-metrics">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <model>
             <value key="metrics.provider">${metrics.provider}</value>
@@ -132,6 +130,12 @@
                 <map>
                     <value key="groupId">io.helidon.microprofile.metrics</value>
                     <value key="artifactId">helidon-microprofile-metrics</value>
+                    <list key="exclusions" if="!${metrics.builtin}">
+                        <map>
+                            <value key="groupId">io.helidon.metrics</value>
+                            <value key="artifactId">helidon-metrics-system-meters</value>
+                        </map>
+                    </list>
                 </map>
             </list>
             <list key="SimpleGreetService-imports">

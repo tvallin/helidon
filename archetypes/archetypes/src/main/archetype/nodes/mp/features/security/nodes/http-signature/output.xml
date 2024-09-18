@@ -21,9 +21,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <output>
-
         <file source="files/src/main/resources/keystore.p12" target="src/main/resources/keystore.p12"/>
-
         <model>
             <list key="dependencies">
                 <map>
@@ -31,7 +29,7 @@
                     <value key="artifactId">helidon-security-providers-http-sign</value>
                 </map>
             </list>
-            <list key="providers-config-entries">
+            <list key="security-providers">
                 <value file="files/src/main/resources/application.yaml"/>
             </list>
         </model>

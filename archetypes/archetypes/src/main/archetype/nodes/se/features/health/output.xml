@@ -20,30 +20,15 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <!-- TODO - Discuss with Romain, health builtin version not. I don't get it -->
-    <methods>
-        <method name="health">
-            <output>
-                <model>
-                    <value key="health" if="${health}">true</value>
-                </model>
-            </output>
-        </method>
-    </methods>
-    <call method="health"/>
-    <variables>
-        <boolean path="requires-io-helidon-webserver-observe-health">true</boolean>
-        <boolean path="requires-io-helidon-health-checks">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
-        <model if="${health.builtin}">
-            <value key="health.builtin">${health.builtin}</value>
+        <model>
             <list key="dependencies">
                 <map order="800">
                     <value key="groupId">io.helidon.webserver.observe</value>
                     <value key="artifactId">helidon-webserver-observe-health</value>
                 </map>
-                <map order="800">
+                <map order="800" if="${health.builtin}">
                     <value key="groupId">io.helidon.health</value>
                     <value key="artifactId">helidon-health-checks</value>
                 </map>

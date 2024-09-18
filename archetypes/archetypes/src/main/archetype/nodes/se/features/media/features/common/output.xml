@@ -21,9 +21,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-jakarta-json" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,packaged" if="!(${media} contains 'json')">
             <directory>files</directory>
@@ -32,12 +30,8 @@
             </includes>
         </templates>
         <model>
-            <value key="media-json" if="${media} contains 'json'">true</value>
-            <value key="media-json" if="!(${media} contains 'json')">false</value>
             <value key="media-json-jackson" if="${media} contains 'json' &amp;&amp; ${media.json-lib} == 'jackson'">true</value>
             <value key="media-json-jackson" if="!(${media} contains 'json' &amp;&amp; ${media.json-lib} == 'jackson')">false</value>
-            <value key="json-lib" if="${media} contains 'json'">${media.json-lib}</value>
-            <value key="multipart" if="${media} contains 'multipart'">true</value>
             <list key="readme-exercise-the-application">
                 <value order="900" if="${media} contains 'json'" file="files/README.md"/>
             </list>
@@ -50,6 +44,9 @@
                     <value key="groupId">io.helidon.http.media</value>
                     <value key="artifactId">helidon-http-media-jsonp</value>
                 </map>
+            </list>
+            <list key="application-yaml">
+                <value file="files/src/main/resources/greeting.yaml"/>
             </list>
         </model>
     </output>

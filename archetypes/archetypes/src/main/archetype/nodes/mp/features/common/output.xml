@@ -22,37 +22,9 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/features/common/output.xml"/>
-    <variables>
-        <boolean path="requires-jakarta-cdi">true</boolean>
-        <boolean path="requires-jakarta-inject">true</boolean>
-        <boolean path="requires-jakarta-ws-rs">true</boolean>
-        <boolean path="requires-io-helidon">true</boolean>
-        <boolean path="requires-io-helidon-microprofile-config">true</boolean>
-        <boolean path="requires-io-helidon-microprofile-server">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <exec src="/features/includes/multi-module-output.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache,packaged">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/resources/**/*.mustache</include>
-                <include>src/*/java/**/*.mustache</include>
-            </includes>
-        </templates>
-        <files>
-            <directory>files</directory>
-            <includes>
-                <include>src/*/resources/**</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.mustache</exclude>
-            </excludes>
-        </files>
-
-        <template source="files/.idea/runConfigurations/configuration.xml.mustache"
-                  target=".idea/runConfigurations/configuration.xml"
-                  engine="mustache"/>
-
         <model>
             <value key="parent-artifactId">helidon-mp</value>
             <value key="dot-helidon-schema-version">1.1.0</value>
@@ -84,7 +56,7 @@
                 </map>
             </list>
             <list key="maven-plugins">
-                <value file="files/plugin.xml"/>
+                <value file="files/maven-plugins.xml"/>
             </list>
             <list key="MainTest-java-imports">
                 <value>jakarta.inject.Inject</value>
@@ -102,8 +74,8 @@
                 <value>static org.hamcrest.Matchers.is</value>
             </list>
             <value key="helidon-test" order="0">true</value>
-            <list key="microprofile-config-entries">
-                <value file="files/src/main/resources/microprofile-config.properties"/>
+            <list key="microprofile-config">
+                <value file="files/src/main/resources/META-INF/greeting.properties"/>
             </list>
             <list key="MainTest-java-imports" if="${media.json-lib} == 'jsonp'">
                 <value>jakarta.json.JsonObject</value>

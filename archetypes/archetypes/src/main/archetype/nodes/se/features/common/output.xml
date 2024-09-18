@@ -21,12 +21,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/features/common/output.xml"/>
-    <variables>
-        <boolean path="requires-io-helidon-webserver">true</boolean>
-        <boolean path="requires-io-helidon-http">true</boolean>
-        <boolean path="requires-io-helidon-config">true</boolean>
-        <boolean path="requires-io-helidon-logging-common">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <exec src="/features/includes/multi-module-output.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,packaged">

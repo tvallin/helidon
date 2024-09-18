@@ -59,7 +59,7 @@
             </list>
             <list key="maven-plugins">
                 <!-- use template to avoid the substitutions ${} -->
-                <value template="mustache" file="files/plugin.xml"/>
+                <value template="mustache" file="files/maven-plugins.xml"/>
             </list>
             <list key="main-persistence-properties">
                 <map if="${db.auto-ddl} &amp;&amp; ${db.server} != 'h2'">

@@ -27,8 +27,8 @@
                     <value key="artifactId">helidon-tracing-providers-jaeger</value>
                 </map>
             </list>
-            <list key="test-config-properties">
-                <value>tracing.global=false</value>
+            <list key="application-test-yaml">
+                <value file="files/src/test/resources/application.yaml"/>
             </list>
         </model>
     </output>

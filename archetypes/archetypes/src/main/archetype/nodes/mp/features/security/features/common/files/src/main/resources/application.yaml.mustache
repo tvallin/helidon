@@ -1,19 +1,9 @@
-{{#yaml-config-entries}}
-    {{.}}
-{{/yaml-config-entries}}
+{{#yaml-config-entries}}{{.}}{{/yaml-config-entries}}
 {{#security}}
 security:
   providers:
-{{#providers-config-entries}}
-{{.}}
-{{/providers-config-entries}}
+{{#security-providers}}{{.}}{{/security-providers}}
   web-server:
-    # protected paths on the web server - do not include paths served by Jersey, as those are protected directly
     paths:
-    - path: "/simple-greet"
-        methods: ["get"]
-        authenticate: true
-{{#paths-config-entries}}
-{{.}}
-{{/paths-config-entries}}
+{{#security-server-paths}}{{.}}{{/security-server-paths}}
 {{/security}}

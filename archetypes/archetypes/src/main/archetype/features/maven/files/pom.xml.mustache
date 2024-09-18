@@ -14,15 +14,15 @@
     <groupId>{{groupId}}</groupId>
     <artifactId>{{artifactId}}</artifactId>
     <version>{{project-version}}</version>
-
 {{#mainClass}}
+
     <properties>
         <mainClass>{{mainClass}}</mainClass>
     </properties>
 {{/mainClass}}
 
     <dependencies>
-        {{#dependencies}}
+{{#dependencies}}
         <dependency>
             <groupId>{{groupId}}</groupId>
             <artifactId>{{artifactId}}</artifactId>
@@ -38,8 +38,20 @@
 {{#optional}}
             <optional>{{.}}</optional>
 {{/optional}}
+{{#exclusions}}
+{{#first}}
+            <exclusions>
+{{/first}}
+                <exclusion>
+                    <groupId>{{groupId}}</groupId>
+                    <artifactId>{{artifactId}}</artifactId>
+                </exclusion>
+{{#first}}
+            </exclusions>
+{{/first}}
+{{/exclusions}}
         </dependency>
-        {{/dependencies}}
+{{/dependencies}}
     </dependencies>
 
     <build>
@@ -58,7 +70,7 @@
 {{/maven-plugins}}
         </plugins>
     </build>
-    {{#maven-profiles}}
-        {{.}}
-    {{/maven-profiles}}
+{{#maven-profiles}}
+{{.}}
+{{/maven-profiles}}
 </project>

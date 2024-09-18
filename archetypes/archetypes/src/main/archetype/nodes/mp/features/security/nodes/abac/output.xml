@@ -28,10 +28,10 @@
                     <value key="artifactId">helidon-security-providers-abac</value>
                 </map>
             </list>
-            <list key="paths-config-entries">
+            <list key="security-server-paths">
                 <value order="90" if="!(${security.atn} contains 'oidc')"><![CDATA[         roles-allowed: ["user"]]]></value>
             </list>
-            <list key="providers-config-entries">
+            <list key="security-providers">
                 <value file="files/src/main/resources/application.yaml"/>
             </list>
         </model>

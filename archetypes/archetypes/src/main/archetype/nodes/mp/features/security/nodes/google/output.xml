@@ -20,11 +20,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-io-helidon-webserver-context">true</boolean>
-        <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
-        <boolean path="requires-io-helidon-security-providers-google-login">true</boolean>
-    </variables>
+    <exec src="variables.xml"/>
     <output>
         <model>
             <list key="dependencies">
@@ -33,10 +29,10 @@
                     <value key="artifactId">helidon-security-providers-google-login</value>
                 </map>
             </list>
-            <list key="paths-config-entries">
-                <value file="files/src/main/resources/paths.yaml"/>
+            <list key="security-server-paths">
+                <value file="files/src/main/resources/security-server-paths.yaml"/>
             </list>
-            <list key="providers-config-entries">
+            <list key="security-providers">
                 <value file="files/src/main/resources/application.yaml"/>
             </list>
         </model>

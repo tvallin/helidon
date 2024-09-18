@@ -21,6 +21,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <exec src="/features/jpms/variables.xml"/>
     <exec src="/nodes/mp/features/common/output.xml"/>
 
     <!-- media step -->
@@ -45,9 +46,6 @@
     <exec src="/nodes/mp/features/docker/output.xml" if="${docker}"/>
     <exec src="/features/kubernetes/output.xml" if="${k8s}"/>
     <exec src="/features/verrazzano/output.xml" if="${v8o}"/>
-
-    <!-- TODO - Discuss with Romain, why I can't put this under mp/jpms ? Scope variables issue ? -->
-    <exec src="/features/jpms/output.xml" if="${jpms}"/>
     <exec src="/nodes/mp/features/jpms/output.xml" if="${jpms}"/>
 
     <!-- database step -->
@@ -56,4 +54,7 @@
     <!-- customize project -->
     <exec src="/features/maven/output.xml" if="${build-system} == 'maven'"/>
     <exec src="/features/customize-project/output.xml"/>
+
+    <!-- templates and file at the end -->
+    <exec src="/nodes/mp/features/common/files.xml"/>
 </archetype-script>

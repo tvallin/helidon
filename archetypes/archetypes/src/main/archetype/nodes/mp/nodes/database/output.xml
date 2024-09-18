@@ -21,10 +21,4 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/nodes/mp/nodes/custom/output.xml"/>
-    <!--  TODO - Should be removed because selected by h2  -->
-    <output>
-        <model>
-            <value key="readme-description">Helidon MP application that uses JPA with an in-memory H2 database.</value>
-        </model>
-    </output>
 </archetype-script>

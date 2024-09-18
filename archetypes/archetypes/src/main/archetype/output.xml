@@ -24,6 +24,7 @@
     <output>
         <model>
             <value key="flavor">${flavor}</value>
+            <value key="helidon-version">${helidon-version}</value>
         </model>
     </output>
 </archetype-script>

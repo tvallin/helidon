@@ -1,4 +1,3 @@
-
 package {{package}};
 
 {{#SimpleGreetService-imports}}
@@ -23,9 +22,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  */
 @Path("/simple-greet")
 public class SimpleGreetResource {
-{{#SimpleGreetResource-static-fields}}
-{{.}}
-{{/SimpleGreetResource-static-fields}}
+{{#SimpleGreetResource-static-fields}}{{.}}{{/SimpleGreetResource-static-fields}}
 
     private final String message;
 
@@ -45,8 +42,6 @@ public class SimpleGreetResource {
         return String.format("%s %s!", message, "World");
     }
 
-{{#SimpleGreetService-methods}}
-{{.}}
-{{/SimpleGreetService-methods}}
+{{#SimpleGreetService-methods}}{{.}}{{/SimpleGreetService-methods}}
 
 }
