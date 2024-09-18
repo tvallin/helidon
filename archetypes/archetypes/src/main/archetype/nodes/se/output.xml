@@ -20,9 +20,9 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="/nodes/se/nodes/custom/output.xml" if="${app-type} == 'custom'"/>
-    <exec src="/nodes/se/nodes/database/output.xml" if="${app-type} == 'database'"/>
-    <exec src="/nodes/se/nodes/quickstart/output.xml" if="${app-type} == 'quickstart'"/>
+    <exec src="nodes/custom/output.xml" if="${app-type} == 'custom'"/>
+    <exec src="nodes/database/output.xml" if="${app-type} == 'database'"/>
+    <exec src="nodes/quickstart/output.xml" if="${app-type} == 'quickstart'"/>
 
     <output>
         <model>

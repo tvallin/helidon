@@ -30,17 +30,17 @@
                 <option value="quickstart"
                         name="Quickstart"
                         description="Sample Helidon project that includes multiple REST operations">
-                    <exec src="/nodes/se/nodes/quickstart/inputs.xml"/>
+                    <exec src="nodes/quickstart/inputs.xml"/>
                 </option>
                 <option value="database"
                         name="Database"
                         description="Helidon SE application that uses a database with the DB Client API">
-                    <exec src="/nodes/se/nodes/database/inputs.xml"/>
+                    <exec src="nodes/database/inputs.xml"/>
                 </option>
                 <option value="custom"
                         name="Custom"
                         description="Custom Helidon SE project">
-                    <exec src="/nodes/se/nodes/custom/inputs.xml"/>
+                    <exec src="nodes/custom/inputs.xml"/>
                 </option>
             </enum>
         </inputs>

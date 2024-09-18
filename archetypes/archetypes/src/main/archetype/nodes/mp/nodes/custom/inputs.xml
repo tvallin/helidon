@@ -20,11 +20,12 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <exec src="/nodes/mp/steps/media.xml"/>
+
+    <exec src="../../steps/media.xml"/>
     <exec src="/steps/security.xml"/>
-    <exec src="/nodes/mp/steps/database.xml"/>
-    <exec src="/nodes/mp/steps/extra.xml"/>
-    <exec src="/nodes/mp/steps/observability.xml"/>
+    <exec src="../../steps/database.xml"/>
+    <exec src="../../steps/extra.xml"/>
+    <exec src="../../steps/observability.xml"/>
     <exec src="/steps/packaging.xml"/>
     <exec src="/steps/customize-project.xml"/>
 </archetype-script>

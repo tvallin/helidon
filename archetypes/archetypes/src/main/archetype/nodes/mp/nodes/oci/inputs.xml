@@ -32,6 +32,6 @@
         <boolean path="jpms">false</boolean>
     </presets>
     <exec src="/steps/packaging.xml"/>
-    <exec src="/nodes/mp/features/docker/output.xml"/>
+    <exec src="../../features/docker/output.xml"/>
     <exec src="/steps/customize-project.xml"/>
 </archetype-script>

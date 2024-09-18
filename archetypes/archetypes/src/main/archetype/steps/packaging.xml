@@ -21,9 +21,9 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Packaging and Deployment" optional="true">
-        <exec src="/features/docker/inputs.xml"/>
-        <exec src="/features/kubernetes/inputs.xml"/>
-        <exec src="/features/verrazzano/inputs.xml"/>
-        <exec src="/features/jpms/inputs.xml"/>
+        <exec src="../features/docker/inputs.xml"/>
+        <exec src="../features/kubernetes/inputs.xml"/>
+        <exec src="../features/verrazzano/inputs.xml"/>
+        <exec src="../features/jpms/inputs.xml"/>
     </step>
 </archetype-script>

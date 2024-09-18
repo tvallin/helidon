@@ -40,5 +40,5 @@
         <boolean path="jpms">false</boolean>
         <boolean path="db">true</boolean>
     </presets>
-    <exec src="/nodes/mp/nodes/custom/inputs.xml"/>
+    <exec src="../../nodes/custom/inputs.xml"/>
 </archetype-script>

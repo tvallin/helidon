@@ -30,22 +30,22 @@
                 <option value="quickstart"
                         name="Quickstart"
                         description="Sample Helidon MP project that includes multiple REST operations">
-                    <exec src="/nodes/mp/nodes/quickstart/inputs.xml"/>
+                    <exec src="nodes/quickstart/inputs.xml"/>
                 </option>
                 <option value="database"
                         name="Database"
                         description="Helidon MP application that uses a database with JPA">
-                    <exec src="/nodes/mp/nodes/database/inputs.xml"/>
+                    <exec src="nodes/database/inputs.xml"/>
                 </option>
                 <option value="custom"
                         name="Custom"
                         description="Custom Helidon MP project">
-                    <exec src="/nodes/mp/nodes/custom/inputs.xml"/>
+                    <exec src="nodes/custom/inputs.xml"/>
                 </option>
                 <option value="oci"
                         name="OCI"
                         description="Helidon MP application that integrates with Oracle Cloud Infrastructure">
-                    <exec src="/nodes/mp/nodes/oci/inputs.xml"/>
+                    <exec src="nodes/oci/inputs.xml"/>
                 </option>
             </enum>
         </inputs>
