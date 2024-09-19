@@ -83,7 +83,7 @@
     <call method="health" />
     <exec src="variables.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/main/**</include>

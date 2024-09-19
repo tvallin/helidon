@@ -22,7 +22,7 @@
 
     <output>
         <file source="files/src/main/resources/META-INF/beans.xml" target="src/main/resources/META-INF/beans.xml"/>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/*.hbs</include>

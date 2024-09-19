@@ -23,13 +23,13 @@
     <exec src="/features/common/output.xml"/>
     <exec src="variables.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/*.java.hbs</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="mustache">
+        <templates engine="mustache" transformations="hbs">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/*.hbs</include>
@@ -44,7 +44,7 @@
                 <exclude>**/*.hbs</exclude>
             </excludes>
         </files>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>README.md.hbs</include>

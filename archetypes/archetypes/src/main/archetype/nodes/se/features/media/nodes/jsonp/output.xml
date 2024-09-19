@@ -22,7 +22,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <exec src="variables.xml"/>
     <output>
-        <templates transformations="packaged,mustache" engine="mustache">
+        <templates transformations="packaged,mustache" engine="hbs">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>

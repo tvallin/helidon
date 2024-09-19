@@ -22,7 +22,7 @@
 
     <exec src="variables.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache">
+        <templates engine="mustache" transformations="hbs">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/application.yaml.hbs</include>

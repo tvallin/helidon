@@ -23,7 +23,7 @@
 
     <exec src="variables.xml"/>
     <output>
-        <templates engine="mustache" transformations="packaged,mustache" if="!(${media} contains 'json')">
+        <templates engine="mustache" transformations="packaged,hbs" if="!(${media} contains 'json')">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>

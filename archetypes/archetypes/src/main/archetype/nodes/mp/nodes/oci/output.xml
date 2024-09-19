@@ -50,7 +50,7 @@
                     <replace regex="groupid" replacement="${groupId/\./\/}"/>
                     <replace regex="artifactid" replacement="${artifactId/\./\/}"/>
                 </transformation>
-                <templates engine="mustache" transformations="mustache,packaged">
+                <templates engine="mustache" transformations="hbs,packaged">
                     <directory>/nodes/mp/features/common/files</directory>
                     <includes>
                         <include>.helidon.hbs</include>
@@ -80,13 +80,13 @@
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <output>
-        <templates engine="mustache" transformations="mustache,module-dir">
+        <templates engine="mustache" transformations="hbs,module-dir">
             <directory>../../features/security/files</directory>
             <includes>
                 <include>src/*/resources/**/application.yaml.hbs</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>
@@ -96,7 +96,7 @@
                 <exclude>maven-*.hbs</exclude>
             </excludes>
         </templates>
-        <templates engine="mustache" transformations="mustache,packaged,module-dir">
+        <templates engine="mustache" transformations="hbs,packaged,module-dir">
             <directory>../../features/common/files</directory>
             <includes>
                 <include>src/main/resources/**</include>

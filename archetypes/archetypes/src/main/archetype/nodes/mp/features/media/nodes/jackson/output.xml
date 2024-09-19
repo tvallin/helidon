@@ -22,7 +22,7 @@
 
     <exec src="variables.xml"/>
     <output>
-        <templates transformations="packaged,mustache" engine="mustache">
+        <templates transformations="packaged,mustache" engine="hbs">
             <directory>files</directory>
             <includes>
                 <include>**/*.java.hbs</include>

@@ -20,10 +20,10 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
     <exec src="variables.xml"/>
-    <exec src="/features/includes/multi-module-output.xml"/>
     <output>
-        <transformation id="mustache">
+        <transformation id="hbs">
             <replace regex="\.hbs$" replacement=""/>
         </transformation>
         <transformation id="packaged">
@@ -34,18 +34,18 @@
             <replace regex="artifactid" replacement="${artifactId}"/>
             <replace regex="version" replacement="${version}"/>
         </transformation>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/*.java.hbs</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="mustache,packaged">
+        <templates engine="mustache" transformations="hbs,packaged">
             <directory>files</directory>
             <includes>
+                <include>.gitignore.hbs</include>
                 <include>.helidon.hbs</include>
                 <include>README.md.hbs</include>
-                <include>.gitignore.hbs</include>
             </includes>
         </templates>
         <model>
