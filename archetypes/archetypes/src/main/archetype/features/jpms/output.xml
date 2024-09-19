@@ -24,7 +24,7 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/main/java/**/module-info.java.mustache</include>
+                <include>src/main/java/**/module-info.java.hbs</include>
             </includes>
         </templates>
         <model>

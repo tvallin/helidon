@@ -21,7 +21,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Media Support" optional="true">
-        <exec src="../features/media/inputs.xml"/>
+        <exec src="/nodes/mp/features/media/inputs.xml"/>
         <variables>
             <text path="media.json-lib" if="!(${media} contains 'json')"/>
         </variables>

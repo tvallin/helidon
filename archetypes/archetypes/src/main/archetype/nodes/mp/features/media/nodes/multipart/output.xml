@@ -26,7 +26,7 @@
         <templates engine="mustache" transformations="mustache,packaged" if="${media} contains 'multipart'">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.mustache</include>
+                <include>src/*/java/**/*.hbs</include>
             </includes>
         </templates>
         <model>

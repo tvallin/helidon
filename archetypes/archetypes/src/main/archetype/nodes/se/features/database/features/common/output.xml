@@ -38,10 +38,10 @@
                         </map>
                     </list>
                     <list key="application-yaml">
-                        <value file="files/src/main/resources/application.yaml.mustache" template="mustache"/>
+                        <value file="files/src/main/resources/application.yaml.hbs" template="mustache"/>
                     </list>
                     <list key="application-test-yaml">
-                        <value file="files/src/test/resources/application-test.yaml.mustache" template="mustache"/>
+                        <value file="files/src/test/resources/application-test.yaml.hbs" template="mustache"/>
                     </list>
                 </model>
             </output>
@@ -241,7 +241,7 @@
                 <value>This example requires a database, see [Database Setup](#database-setup).</value>
             </list>
             <list key="readme-sections">
-                <value template="mustache" file="files/README.md.mustache"/>
+                <value template="mustache" file="files/README.md.hbs"/>
             </list>
             <list key="gitignore">
                 <value>ObjectStore/</value>

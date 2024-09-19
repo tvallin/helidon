@@ -24,13 +24,13 @@
         <templates engine="mustache" transformations="mustache,gav">
             <directory>files</directory>
             <includes>
-                <include>**/native-image.properties.mustache</include>
+                <include>**/native-image.properties.hbs</include>
             </includes>
         </templates>
-        <template source="files/Dockerfile.native.mustache" target="Dockerfile.native" engine="mustache"/>
+        <template source="files/Dockerfile.native.hbs" target="Dockerfile.native" engine="mustache"/>
         <model>
             <list key="readme-sections">
-                <value template="mustache" file="files/README.md.mustache"/>
+                <value template="mustache" file="files/README.md.hbs"/>
             </list>
         </model>
     </output>

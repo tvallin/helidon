@@ -24,7 +24,7 @@
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
-                <include>v8o.yaml.mustache</include>
+                <include>v8o.yaml.hbs</include>
             </includes>
         </templates>
     </output>

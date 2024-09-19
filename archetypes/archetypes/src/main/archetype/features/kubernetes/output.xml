@@ -24,14 +24,14 @@
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
-                <include>app.yaml.mustache</include>
+                <include>app.yaml.hbs</include>
             </includes>
         </templates>
         <model>
             <list key="readme-sections">
                 <value order="50"
                        template="mustache"
-                       file="files/README.md.mustache"/>
+                       file="files/README.md.hbs"/>
             </list>
         </model>
     </output>

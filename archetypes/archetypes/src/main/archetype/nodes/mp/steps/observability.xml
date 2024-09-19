@@ -22,7 +22,7 @@
 
     <step name="Observability" optional="true">
         <inputs>
-            <exec src="../features/metrics/inputs.xml"/>
+            <exec src="/nodes/mp/features/metrics/inputs.xml"/>
             <exec src="/features/health/inputs.xml"/>
             <exec src="/features/tracing/inputs.xml"/>
         </inputs>

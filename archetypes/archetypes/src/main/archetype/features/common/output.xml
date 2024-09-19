@@ -21,10 +21,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
     <exec src="variables.xml"/>
-    <exec src="../includes/multi-module-output.xml"/>
+    <exec src="/features/includes/multi-module-output.xml"/>
     <output>
         <transformation id="mustache">
-            <replace regex="\.mustache$" replacement=""/>
+            <replace regex="\.hbs$" replacement=""/>
         </transformation>
         <transformation id="packaged">
             <replace regex="__pkg__" replacement="${package/\./\/}"/>
@@ -37,15 +37,15 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.java.mustache</include>
+                <include>src/*/java/**/*.java.hbs</include>
             </includes>
         </templates>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>.helidon.mustache</include>
-                <include>README.md.mustache</include>
-                <include>.gitignore.mustache</include>
+                <include>.helidon.hbs</include>
+                <include>README.md.hbs</include>
+                <include>.gitignore.hbs</include>
             </includes>
         </templates>
         <model>

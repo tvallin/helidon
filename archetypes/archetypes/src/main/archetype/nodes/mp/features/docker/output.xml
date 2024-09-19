@@ -21,7 +21,7 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/features/docker/output.xml"/>
-    <exec src="../native-image/output.xml" if="${docker.native-image}"/>
+    <exec src="/nodes/mp/features/native-image/output.xml" if="${docker.native-image}"/>
     <output>
         <model>
             <list key="docker-phase1-options">

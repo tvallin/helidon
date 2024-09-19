@@ -23,7 +23,7 @@
         <method name="output">
             <output>
                 <file source="files/.dockerignore" target=".dockerignore"/>
-                <template source="files/Dockerfile.mustache" target="Dockerfile" engine="mustache"/>
+                <template source="files/Dockerfile.hbs" target="Dockerfile" engine="mustache"/>
                 <model>
                     <list key="poms" if="!${multi-module}">
                         <value>ADD pom.xml .</value>
@@ -32,13 +32,13 @@
                         <value>ADD src src</value>
                     </list>
                     <list key="readme-sections">
-                        <value order="50" template="mustache" file="files/README.md.mustache"/>
+                        <value order="50" template="mustache" file="files/README.md.hbs"/>
                     </list>
                 </model>
             </output>
         </method>
     </methods>
     <call method="output"/>
-    <exec src="../native-image/output.xml" if="${docker.native-image}"/>
-    <exec src="../jlink/output.xml" if="${docker.jlink-image}"/>
+    <exec src="/features/native-image/output.xml" if="${docker.native-image}"/>
+    <exec src="/features/jlink/output.xml" if="${docker.jlink-image}"/>
 </archetype-script>

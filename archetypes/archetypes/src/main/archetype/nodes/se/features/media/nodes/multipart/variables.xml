@@ -24,6 +24,7 @@
     <variables>
         <boolean path="requires-io-helidon-http-media-multipart">true</boolean>
         <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
+        <boolean path="requires-jakarta-json">true</boolean>
     </variables>
 </archetype-script>
 

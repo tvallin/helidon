@@ -22,39 +22,39 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/features/jpms/variables.xml"/>
-    <exec src="../../features/common/output.xml"/>
+    <exec src="/nodes/mp/features/common/output.xml"/>
 
     <!-- media step -->
-    <exec src="../../features/media/output.xml"/>
+    <exec src="/nodes/mp/features/media/output.xml"/>
 
     <!-- security step -->
-    <exec src="../../features/security/output.xml" if="${security}"/>
+    <exec src="/nodes/mp/features/security/output.xml" if="${security}"/>
 
     <!-- extra step -->
-    <exec src="../../features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
-    <exec src="../../features/cors/output.xml" if="${extra} contains 'cors'"/>
+    <exec src="/nodes/mp/features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
+    <exec src="/nodes/mp/features/cors/output.xml" if="${extra} contains 'cors'"/>
 
     <!-- observability step -->
-    <exec src="../../features/health/output.xml" if="${health}"/>
+    <exec src="/nodes/mp/features/health/output.xml" if="${health}"/>
     <!-- reproduce a permutation issue -->
-    <exec src="../../steps/observability-output.xml"/>
-    <exec src="../../features/tracing/output.xml" if="${tracing}"/>
-    <exec src="../../features/metrics/output.xml" if="${metrics}"/>
+    <exec src="/nodes/mp/steps/observability-output.xml"/>
+    <exec src="/nodes/mp/features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/mp/features/metrics/output.xml" if="${metrics}"/>
 
     <!-- packaging step -->
-    <exec src="../../features/native-image/output.xml" if="${docker}"/>
-    <exec src="../../features/docker/output.xml" if="${docker}"/>
+    <exec src="/nodes/mp/features/native-image/output.xml" if="${docker}"/>
+    <exec src="/nodes/mp/features/docker/output.xml" if="${docker}"/>
     <exec src="/features/kubernetes/output.xml" if="${k8s}"/>
     <exec src="/features/verrazzano/output.xml" if="${v8o}"/>
-    <exec src="../../features/jpms/output.xml" if="${jpms}"/>
+    <exec src="/nodes/mp/features/jpms/output.xml" if="${jpms}"/>
 
     <!-- database step -->
-    <exec src="../../features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/mp/features/database/output.xml" if="${db}"/>
 
     <!-- customize project -->
     <exec src="/features/maven/output.xml" if="${build-system} == 'maven'"/>
     <exec src="/features/customize-project/output.xml"/>
 
     <!-- templates and file at the end -->
-    <exec src="../../features/common/files.xml"/>
+    <exec src="/nodes/mp/features/common/files.xml"/>
 </archetype-script>

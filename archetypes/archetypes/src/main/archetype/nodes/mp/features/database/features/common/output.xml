@@ -26,7 +26,7 @@
             <directory>files</directory>
             <includes>
                 <include>src/main/java/**</include>
-                <include>src/*/resources/*/persistence.xml.mustache</include>
+                <include>src/*/resources/*/persistence.xml.hbs</include>
             </includes>
         </templates>
         <model>
@@ -100,7 +100,7 @@
                 </map>
             </list>
             <list key="readme-sections">
-                <value template="mustache" file="files/README.md.mustache"/>
+                <value template="mustache" file="files/README.md.hbs"/>
             </list>
             <list key="gitignore">
                 <value>ObjectStore/</value>

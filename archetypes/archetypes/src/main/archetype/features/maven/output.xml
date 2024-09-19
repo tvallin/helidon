@@ -24,7 +24,7 @@
         <templates engine="mustache" transformations="mustache,module-dir">
             <directory>files</directory>
             <includes>
-                <include>pom.xml.mustache</include>
+                <include>pom.xml.hbs</include>
             </includes>
         </templates>
     </output>

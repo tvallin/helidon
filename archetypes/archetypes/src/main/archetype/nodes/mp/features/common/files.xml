@@ -25,18 +25,18 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/resources/**/*.mustache</include>
-                <include>src/*/java/**/*.mustache</include>
+                <include>src/*/resources/**/*.hbs</include>
+                <include>src/*/java/**/*.hbs</include>
             </includes>
             <excludes>
-                <exclude>src/*/resources/**/application.yaml.mustache</exclude>
+                <exclude>src/*/resources/**/application.yaml.hbs</exclude>
             </excludes>
         </templates>
-        <template source="files/src/main/resources/application.yaml.mustache"
+        <template source="files/src/main/resources/application.yaml.hbs"
                   target="src/main/resources/application.yaml"
                   engine="mustache"
                   if="${application-yaml}"/>
-        <template source="files/.idea/runConfigurations/configuration.xml.mustache"
+        <template source="files/.idea/runConfigurations/configuration.xml.hbs"
                   target=".idea/runConfigurations/configuration.xml"
                   engine="mustache"/>
     </output>

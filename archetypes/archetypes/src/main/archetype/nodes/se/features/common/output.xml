@@ -27,13 +27,13 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.java.mustache</include>
+                <include>src/*/java/**/*.java.hbs</include>
             </includes>
         </templates>
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
-                <include>src/*/resources/**/*.mustache</include>
+                <include>src/*/resources/**/*.hbs</include>
             </includes>
         </templates>
         <files>
@@ -42,14 +42,14 @@
                 <include>src/*/resources/**</include>
             </includes>
             <excludes>
-                <exclude>**/*.mustache</exclude>
+                <exclude>**/*.hbs</exclude>
             </excludes>
         </files>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>README.md.mustache</include>
-                <include>src/main/java/**/Main.java.mustache</include>
+                <include>README.md.hbs</include>
+                <include>src/main/java/**/Main.java.hbs</include>
             </includes>
         </templates>
         <model>

@@ -25,7 +25,7 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/JwtOverrideService.java.mustache</include>
+                <include>src/*/java/**/JwtOverrideService.java.hbs</include>
             </includes>
         </templates>
         <files>

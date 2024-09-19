@@ -23,6 +23,7 @@
 
     <variables>
         <boolean path="requires-jakarta-json-bind">true</boolean>
+        <boolean path="requires-jakarta-json">true</boolean>
     </variables>
 </archetype-script>
 

@@ -25,8 +25,8 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>**/JwtApplication.java.mustache</include>
-                <include>**/JwtResource.java.mustache</include>
+                <include>**/JwtApplication.java.hbs</include>
+                <include>**/JwtResource.java.hbs</include>
             </includes>
         </templates>
         <model>

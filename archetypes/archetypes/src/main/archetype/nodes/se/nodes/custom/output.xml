@@ -21,26 +21,26 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <exec src="/features/jpms/variables.xml"/>
-    <exec src="../../features/common/output.xml"/>
+    <exec src="/nodes/se/features/common/output.xml"/>
 
     <!-- media step -->
-    <exec src="../../features/media/output.xml"/>
+    <exec src="/nodes/se/features/media/output.xml"/>
 
     <!-- security step -->
-    <exec src="../../features/security/output.xml" if="${security}"/>
+    <exec src="/nodes/se/features/security/output.xml" if="${security}"/>
 
     <!-- database step -->
-    <exec src="../../features/database/output.xml" if="${db}"/>
+    <exec src="/nodes/se/features/database/output.xml" if="${db}"/>
 
     <!--  extra step  -->
-    <exec src="../../features/webclient/output.xml" if="${extra} contains 'webclient'"/>
-    <exec src="../../features/cors/output.xml" if="${extra} contains 'cors'"/>
-    <exec src="../../features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
+    <exec src="/nodes/se/features/webclient/output.xml" if="${extra} contains 'webclient'"/>
+    <exec src="/nodes/se/features/cors/output.xml" if="${extra} contains 'cors'"/>
+    <exec src="/nodes/se/features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
 
     <!-- observability step -->
-    <exec src="../../features/metrics/output.xml" if="${metrics}"/>
-    <exec src="../../features/health/output.xml" if="${health}"/>
-    <exec src="../../features/tracing/output.xml" if="${tracing}"/>
+    <exec src="/nodes/se/features/metrics/output.xml" if="${metrics}"/>
+    <exec src="/nodes/se/features/health/output.xml" if="${health}"/>
+    <exec src="/nodes/se/features/tracing/output.xml" if="${tracing}"/>
 
     <!-- packaging step -->
     <exec src="/features/docker/output.xml" if="${docker}"/>

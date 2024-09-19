@@ -21,6 +21,6 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Database" optional="true">
-        <exec src="../features/database/inputs.xml"/>
+        <exec src="/nodes/mp/features/database/inputs.xml"/>
     </step>
 </archetype-script>

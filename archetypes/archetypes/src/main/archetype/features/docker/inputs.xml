@@ -27,8 +27,8 @@
                  default="false"
                  optional="true">
             <inputs>
-                <exec src="../native-image/inputs.xml"/>
-                <exec src="../jlink/inputs.xml"/>
+                <exec src="/features/native-image/inputs.xml"/>
+                <exec src="/features/jlink/inputs.xml"/>
             </inputs>
         </boolean>
     </inputs>

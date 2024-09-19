@@ -25,7 +25,7 @@
         <model>
             <value key="security">true</value>
             <list key="server-features">
-                <value template="mustache" file="files/src/main/resources/server-features.yaml.mustache"/>
+                <value template="mustache" file="files/src/main/resources/server-features.yaml.hbs"/>
             </list>
             <list key="dependencies">
                 <map>
@@ -38,7 +38,7 @@
             </list>
             <list key="application-yaml"
                   if="!(${security.atn} contains 'http-signature' || ${security.atn} contains 'jwt')">
-                <value template="mustache" file="files/src/main/resources/application.yaml.mustache"/>
+                <value template="mustache" file="files/src/main/resources/application.yaml.hbs"/>
             </list>
         </model>
     </output>

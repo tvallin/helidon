@@ -26,7 +26,7 @@
         <templates engine="mustache" transformations="packaged,mustache" if="!(${media} contains 'json')">
             <directory>files</directory>
             <includes>
-                <include>**/*.mustache</include>
+                <include>**/*.hbs</include>
             </includes>
         </templates>
 

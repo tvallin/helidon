@@ -22,5 +22,5 @@
 
     <!-- micrometer is not a provider but an add-on -->
     <!-- the micrometer specific part is not yet implemented -->
-    <exec src="../microprofile/output.xml"/>
+    <exec src="/nodes/mp/features/metrics/nodes/microprofile/output.xml"/>
 </archetype-script>

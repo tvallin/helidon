@@ -54,10 +54,10 @@
                 <value>io.helidon.dbclient.DbClient</value>
             </list>
             <list key="application-yaml">
-                <value file="files/src/main/resources/application.yaml.mustache" template="mustache"/>
+                <value file="files/src/main/resources/application.yaml.hbs" template="mustache"/>
             </list>
             <list key="application-test-yaml">
-                <value file="files/src/test/resources/application-test.yaml.mustache" template="mustache"/>
+                <value file="files/src/test/resources/application-test.yaml.hbs" template="mustache"/>
             </list>
             <value key="start-db" file="files/README.md"/>
         </model>

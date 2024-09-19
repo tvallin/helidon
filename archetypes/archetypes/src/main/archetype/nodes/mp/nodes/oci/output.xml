@@ -25,26 +25,26 @@
                 <model>
                     <value key="docker-run-readme-section"
                            template="mustache"
-                           file="files/README.md.docker.mustache"/>
+                           file="files/README.md.docker.hbs"/>
                 </model>
             </output>
         </method>
         <method name="common">
             <output>
                 <transformation id="mustache">
-                    <replace regex="\.mustache$" replacement=""/>
+                    <replace regex="\.hbs$" replacement=""/>
                 </transformation>
                 <transformation id="packaged">
                     <replace regex="__pkg__" replacement="${package/\./\/}"/>
                 </transformation>
                 <transformation id="json-mustache">
-                    <replace regex="\.json.mustache$" replacement=""/>
+                    <replace regex="\.json.hbs$" replacement=""/>
                 </transformation>
                 <transformation id="jsonp-mustache">
-                    <replace regex="\.jsonp.mustache$" replacement=""/>
+                    <replace regex="\.jsonp.hbs$" replacement=""/>
                 </transformation>
                 <transformation id="multipart-mustache">
-                    <replace regex="\.multipart.mustache$" replacement=""/>
+                    <replace regex="\.multipart.hbs$" replacement=""/>
                 </transformation>
                 <transformation id="native-image">
                     <replace regex="groupid" replacement="${groupId/\./\/}"/>
@@ -53,9 +53,9 @@
                 <templates engine="mustache" transformations="mustache,packaged">
                     <directory>/nodes/mp/features/common/files</directory>
                     <includes>
-                        <include>.helidon.mustache</include>
-                        <include>README.md.mustache</include>
-                        <include>.gitignore.mustache</include>
+                        <include>.helidon.hbs</include>
+                        <include>README.md.hbs</include>
+                        <include>.gitignore.hbs</include>
                     </includes>
                 </templates>
                 <model>
@@ -76,24 +76,24 @@
     <exec src="/features/includes/multi-module-output.xml"/>
     <exec src="/features/kubernetes/output.xml"/>
     <exec src="/features/verrazzano/output.xml"/>
-    <exec src="../../features/jpms/output.xml"/>
+    <exec src="/nodes/mp/features/jpms/output.xml"/>
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <output>
         <templates engine="mustache" transformations="mustache,module-dir">
             <directory>../../features/security/files</directory>
             <includes>
-                <include>src/*/resources/**/application.yaml.mustache</include>
+                <include>src/*/resources/**/application.yaml.hbs</include>
             </includes>
         </templates>
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>**/*.mustache</include>
+                <include>**/*.hbs</include>
             </includes>
             <excludes>
-                <exclude>README*.mustache</exclude>
-                <exclude>maven-*.mustache</exclude>
+                <exclude>README*.hbs</exclude>
+                <exclude>maven-*.hbs</exclude>
             </excludes>
         </templates>
         <templates engine="mustache" transformations="mustache,packaged,module-dir">
@@ -265,15 +265,15 @@ ocimetrics:
                 </map>
             </list>
             <list key="maven-plugins">
-                <value template="mustache" file="files/maven-plugins.xml.mustache"/>
+                <value template="mustache" file="files/maven-plugins.xml.hbs"/>
             </list>
             <list key="maven-profiles">
-                <value template="mustache" file="files/maven-profiles.xml.mustache"/>
+                <value template="mustache" file="files/maven-profiles.xml.hbs"/>
             </list>
             <value key="readme-description" file="files/README-Description.md"/>
             <value key="readme-run-commands"
                    template="mustache"
-                   file="files/README.md.run-commands.mustache"/>
+                   file="files/README.md.run-commands.hbs"/>
             <list key="readme-exercise-the-application">
                 <value><![CDATA[
 1. Use curl to access the client application

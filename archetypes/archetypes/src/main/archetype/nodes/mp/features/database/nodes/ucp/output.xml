@@ -23,10 +23,10 @@
     <output>
         <model>
             <list key="microprofile-config">
-                <value file="files/src/main/resources/META-INF/microprofile-config.properties.mustache" template="mustache"/>
+                <value file="files/src/main/resources/META-INF/microprofile-config.properties.hbs" template="mustache"/>
             </list>
             <list key="microprofile-test-config">
-                <value file="files/src/test/resources/META-INF/microprofile-config.properties.mustache" template="mustache"/>
+                <value file="files/src/test/resources/META-INF/microprofile-config.properties.hbs" template="mustache"/>
             </list>
             <list key="dependencies">
                 <map>

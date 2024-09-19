@@ -16,12 +16,13 @@
     limitations under the License.
 
 -->
+<!--suppress GrazieInspection -->
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <variables>
-        <boolean path="requires-jakarta-json" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">true</boolean>
+        <boolean path="requires-jakarta-json">true</boolean>
     </variables>
 </archetype-script>
 

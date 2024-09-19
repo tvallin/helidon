@@ -24,7 +24,7 @@
         <templates transformations="packaged,mustache" engine="mustache">
             <directory>files</directory>
             <includes>
-                <include>**/*.mustache</include>
+                <include>**/*.hbs</include>
             </includes>
         </templates>
     </output>

@@ -25,7 +25,7 @@
         <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/FtService.java.mustache</include>
+                <include>src/*/java/**/FtService.java.hbs</include>
             </includes>
         </templates>
         <model>

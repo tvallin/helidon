@@ -24,7 +24,7 @@
         <templates engine="mustache" transformations="mustache">
             <directory>files</directory>
             <includes>
-                <include>src/main/resources/**/hibernate.properties.mustache</include>
+                <include>src/main/resources/**/hibernate.properties.hbs</include>
             </includes>
         </templates>
         <model>
@@ -52,5 +52,4 @@
             </list>
         </model>
     </output>
-
 </archetype-script>
