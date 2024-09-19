@@ -22,6 +22,7 @@
 
     <exec src="/features/jpms/variables.xml"/>
     <exec src="/nodes/se/features/common/output.xml"/>
+    <exec src="/features/multi-module/output.xml"/>
 
     <!-- media step -->
     <exec src="/nodes/se/features/media/output.xml"/>

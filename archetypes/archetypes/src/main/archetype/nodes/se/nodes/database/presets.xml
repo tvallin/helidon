@@ -19,6 +19,25 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <exec src="presets.xml"/>
-    <exec src="/nodes/se/nodes/custom/inputs.xml"/>
+    <presets>
+        <list path="media">
+            <value>json</value>
+        </list>
+        <boolean path="metrics">true</boolean>
+        <enum path="metrics.provider">microprofile</enum>
+        <boolean path="metrics.builtin">true</boolean>
+        <boolean path="health">true</boolean>
+        <boolean path="health.builtin">true</boolean>
+        <boolean path="tracing">false</boolean>
+        <list path="extra"/>
+        <boolean path="security">false</boolean>
+        <boolean path="docker">true</boolean>
+        <boolean path="docker.native-image">true</boolean>
+        <boolean path="docker.jlink-image">true</boolean>
+        <boolean path="k8s">true</boolean>
+        <boolean path="v8o">false</boolean>
+        <boolean path="jpms">false</boolean>
+        <boolean path="db">true</boolean>
+        <boolean path="multi-module">false</boolean>
+    </presets>
 </archetype-script>

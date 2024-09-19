@@ -23,7 +23,6 @@
 
     <exec src="/features/common/output.xml"/>
     <exec src="variables.xml"/>
-    <exec src="/features/includes/multi-module-output.xml"/>
     <output>
         <model>
             <value key="parent-artifactId">helidon-mp</value>

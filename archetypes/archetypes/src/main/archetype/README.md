@@ -1,14 +1,10 @@
 Dernières étapes :
 
-Rename `.hbs` to `.hbs`
-
-Change to relative path when layout is final -> Half done
-
 Create issue in build-tools for sorted list
 
 Convention:
 
-relative path for under, absolute for upper
+relative path for subdirectories, absolute path for upper from cwd.
 application.yaml have to be under src/main/resources directory -> done
 
 Follow up issue
