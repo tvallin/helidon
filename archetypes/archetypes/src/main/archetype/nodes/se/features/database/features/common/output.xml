@@ -79,11 +79,17 @@
             </output>
         </method>
     </methods>
+    <variables>
+        <boolean path="requires-io-helidon-dbclient">true</boolean>
+        <boolean path="requires-io-helidon-dbclient-metrics">true</boolean>
+        <boolean path="requires-io-helidon-dbclient-tracing">true</boolean>
+        <!-- TODO - seems incorrect -->
+        <boolean path="requires-jakarta-json" if="${media.json-lib} == 'jackson'">true</boolean>
+    </variables>
     <call method="jdbc" />
     <call method="health" />
-    <exec src="variables.xml"/>
     <output>
-        <templates engine="mustache" transformations="hbs,packaged">
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/main/**</include>

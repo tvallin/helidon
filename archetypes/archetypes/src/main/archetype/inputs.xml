@@ -20,5 +20,34 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="steps/flavor.xml"/>
+    <step name="Helidon Flavor" optional="true">
+        <inputs>
+            <enum id="flavor"
+                  name="Select a Flavor"
+                  default="se"
+                  global="true"
+                  optional="true">
+                <option value="se"
+                        name="Helidon SE"
+                        description="Programmatic, lean &amp; fast">
+                    <exec src="nodes/se/inputs.xml"/>
+                </option>
+                <option value="mp"
+                        name="Helidon MP"
+                        description="Declarative, MicroProfile compliant">
+<!--                    <exec src="nodes/mp/inputs.xml"/>-->
+                </option>
+            </enum>
+        </inputs>
+    </step>
+    <step name="Packaging and Deployment" optional="true">
+        <exec src="features/docker/inputs.xml"/>
+        <exec src="features/kubernetes/inputs.xml"/>
+        <exec src="features/verrazzano/inputs.xml"/>
+        <exec src="features/jpms/inputs.xml"/>
+        <exec src="features/multi-module/inputs.xml"/>
+    </step>
+    <step name="Customize Project" optional="true">
+        <exec src="features/customize-project/inputs.xml"/>
+    </step>
 </archetype-script>

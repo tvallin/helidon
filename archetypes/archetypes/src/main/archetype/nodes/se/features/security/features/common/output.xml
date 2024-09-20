@@ -20,7 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-security-integration-common">true</boolean>
+        <boolean path="requires-io-helidon-webserver-security">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="security">true</value>

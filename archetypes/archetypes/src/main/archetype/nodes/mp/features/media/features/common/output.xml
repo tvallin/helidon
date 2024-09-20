@@ -21,9 +21,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-jakarta-json" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">true</boolean>
+    </variables>
     <output>
-        <templates engine="mustache" transformations="packaged,hbs" if="!(${media} contains 'json')">
+        <templates engine="mustache" transformations="basedir,packaged,hbs" if="!(${media} contains 'json')">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>

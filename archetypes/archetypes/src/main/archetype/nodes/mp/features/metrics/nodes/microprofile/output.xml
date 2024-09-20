@@ -115,7 +115,9 @@
     <!-- intersection with json feature -->
     <call method="metric-microprofile-json"/>
     <call method="metric-microprofile"/>
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-metrics">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="metrics.provider">${metrics.provider}</value>

@@ -20,8 +20,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="/features/jpms/variables.xml"/>
-    <exec src="variables.xml"/>
     <exec src="presets.xml"/>
     <exec src="/steps/packaging.xml"/>
     <exec src="/nodes/mp/features/docker/output.xml"/>

@@ -20,16 +20,23 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-webclient-http1">true</boolean>
+        <boolean path="requires-io-helidon-common-pki">true</boolean>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-common">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-httpauth">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-httpsign">true</boolean>
+    </variables>
     <output>
-        <templates engine="mustache" transformations="hbs,packaged">
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/Service1.java.hbs</include>
                 <include>src/*/java/**/Service2.java.hbs</include>
             </includes>
         </templates>
-        <files>
+        <files transformations="basedir">
             <directory>files</directory>
             <includes>
                 <include>src/main/resources/keystore.p12</include>

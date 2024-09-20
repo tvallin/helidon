@@ -19,8 +19,53 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+    <variables>
+        <boolean path="requires-io-helidon-microprofile-openapi">true</boolean>
+    </variables>
+    <output>
+        <templates transformations="basedir,packaged,hbs" engine="mustache">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.hbs</include>
+            </includes>
+        </templates>
+        <model>
+            <value key="readme-description">Sample Helidon MP project that includes multiple REST operations.</value>
+            <list key="MainTest-java-imports">
+                <value>jakarta.ws.rs.client.Entity</value>
+                <value>jakarta.ws.rs.core.MediaType</value>
+            </list>
+            <list key="MainTest-methods">
+                <value><![CDATA[
+    @Test
+    void testGreetings() {
+        Message jsonMessage = target
+                .path("greet/Joe")
+                .request()
+                .get(Message.class);
+        assertThat(jsonMessage.getMessage(), is("Hello Joe!"));
 
-    <exec src="nodes/jackson/output.xml" if="${media.json-lib} == 'jackson'"/>
-    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} == 'jsonb'"/>
-    <exec src="features/common/output.xml"/>
+        try (Response r = target
+                .path("greet/greeting")
+                .request()
+                .put(Entity.entity("{\"greeting\" : \"Hola\"}", MediaType.APPLICATION_JSON))) {
+            assertThat(r.getStatus(), is(204));
+        }
+
+        jsonMessage = target
+                .path("greet/Jose")
+                .request()
+                .get(Message.class);
+        assertThat(jsonMessage.getMessage(), is("Hola Jose!"));
+    }]]>
+                </value>
+            </list>
+            <list key="dependencies">
+                <map order="1000">
+                    <value key="groupId">io.helidon.microprofile.openapi</value>
+                    <value key="artifactId">helidon-microprofile-openapi</value>
+                </map>
+            </list>
+        </model>
+    </output>
 </archetype-script>

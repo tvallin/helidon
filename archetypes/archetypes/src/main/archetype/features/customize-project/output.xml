@@ -20,12 +20,10 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <exec src="/features/maven/output.xml" if="${build-system} == 'maven'"/>
     <output>
         <model>
-            <value key="parent-groupId" if="!${multi-module}">io.helidon.applications</value>
-            <value key="parent-version" if="!${multi-module}">${helidon-version}</value>
-            <value key="remote-parent-pom" if="!${multi-module}">true</value>
-            <value key="artifactId" if="!${multi-module}">${artifactId}</value>
+            <value key="artifactId">${artifactId}</value>
             <value key="groupId">${groupId}</value>
             <value key="project-version">${version}</value>
             <value key="package">${package}</value>

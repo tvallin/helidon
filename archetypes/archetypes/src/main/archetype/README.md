@@ -1,3 +1,6 @@
+rename readme-sections
+Replace wildcard on templates/template
+
 Dernières étapes :
 
 Create issue in build-tools for sorted list

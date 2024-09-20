@@ -30,6 +30,9 @@
             <list key="application-test-yaml">
                 <value file="files/src/test/resources/application.yaml"/>
             </list>
+            <list key="readme-sections">
+                <value file="/common/jaeger/README.md"/>
+            </list>
         </model>
     </output>
 </archetype-script>

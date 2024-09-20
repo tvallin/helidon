@@ -22,8 +22,46 @@
     <methods>
         <method name="output">
             <output>
-                <file source="files/.dockerignore" target=".dockerignore"/>
-                <template source="files/Dockerfile.hbs" target="Dockerfile" engine="mustache"/>
+                <transformation id="dot-native">
+                    <replace regex="^(.*)$" replacement="$1.native"/>
+                </transformation>
+                <transformation id="dot-jlink">
+                    <replace regex="^(.*)$" replacement="$1.jlink"/>
+                </transformation>
+
+                <!-- TODO top level for all modules (make it work for both multi and non multi) -->
+                <file source="files/.dockerignore" target="${basedir}/.dockerignore"/>
+                <!-- TODO fix multi modules docker build -->
+                <templates transformations="basedir,hbs" engine="mustache">
+                    <directory>files</directory>
+                    <includes>
+                        <include>Dockerfile.hbs</include>
+                    </includes>
+                    <model>
+                        <value key="native-image">false</value>
+                        <value key="jlink">false</value>
+                    </model>
+                </templates>
+                <templates transformations="basedir,hbs,dot-native" engine="mustache" if="${docker.native-image}">
+                    <directory>files</directory>
+                    <includes>
+                        <include>Dockerfile.hbs</include>
+                    </includes>
+                    <model>
+                        <value key="native-image">true</value>
+                        <value key="jlink">false</value>
+                    </model>
+                </templates>
+                <templates transformations="basedir,hbs,dot-jlink" engine="mustache" if="${docker.jlink-image}">
+                    <directory>files</directory>
+                    <includes>
+                        <include>Dockerfile.hbs</include>
+                    </includes>
+                    <model>
+                        <value key="native-image">false</value>
+                        <value key="jlink">true</value>
+                    </model>
+                </templates>
                 <model>
                     <list key="poms" if="!${multi-module}">
                         <value>ADD pom.xml .</value>

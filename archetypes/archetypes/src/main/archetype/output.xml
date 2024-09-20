@@ -19,12 +19,68 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
-    <exec src="nodes/mp/output.xml" if="${flavor} == 'mp'"/>
+
+    <methods>
+        <method name="transformations">
+            <output>
+                <transformation id="hbs">
+                    <replace regex="\.hbs$" replacement=""/>
+                </transformation>
+                <transformation id="packaged">
+                    <replace regex="__pkg__" replacement="${package/\./\/}"/>
+                </transformation>
+                <transformation id="gav">
+                    <replace regex="groupid" replacement="${groupId/\./\/}"/>
+                    <replace regex="artifactid" replacement="${artifactId}"/>
+                    <replace regex="version" replacement="${version}"/>
+                </transformation>
+                <transformation id="basedir">
+                    <replace regex="^(.*)$" replacement="${basedir}/$1"/>
+                </transformation>
+            </output>
+        </method>
+    </methods>
+    <!--
+        Set all variables with default values first.
+        They are overridden based on inputs.
+    -->
+    <exec src="defaults.xml"/>
+    <call method="transformations"/>
+
+    <!-- flavor step -->
+<!--    <exec src="nodes/mp/output.xml" if="${flavor} == 'mp'"/>-->
     <exec src="nodes/se/output.xml" if="${flavor} == 'se'"/>
+
+    <!-- packaging step -->
+    <exec src="features/docker/output.xml" if="${docker}"/>
+    <exec src="features/kubernetes/output.xml" if="${k8s}"/>
+    <exec src="features/verrazzano/output.xml" if="${v8o}"/>
+    <exec src="features/jpms/output.xml" if="${jpms}"/>
+    <exec src="features/multi-module/output.xml" if="${multi-module}"/>
+
+    <!-- customize step -->
+    <exec src="features/customize-project/output.xml"/>
+
     <output>
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
+            <directory>files</directory>
+            <includes>
+                <include>src/*/java/**/*.java.hbs</include>
+            </includes>
+        </templates>
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
+            <directory>files</directory>
+            <includes>
+                <include>.helidon.hbs</include>
+                <include>README.md.hbs</include>
+            </includes>
+        </templates>
+        <template source="files/.gitignore.hbs" target=".gitignore" engine="mustache"/>
         <model>
             <value key="flavor">${flavor}</value>
             <value key="helidon-version">${helidon-version}</value>
+            <value key="dot-helidon-schema-version">1.1.0</value>
+            <value key="basedir">${basedir}</value>
         </model>
     </output>
 </archetype-script>

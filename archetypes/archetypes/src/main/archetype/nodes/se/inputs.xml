@@ -25,7 +25,6 @@
             <enum id="app-type"
                   name="Select an Application Type"
                   default="quickstart"
-                  global="true"
                   optional="true">
                 <option value="quickstart"
                         name="Quickstart"
@@ -39,10 +38,33 @@
                 </option>
                 <option value="custom"
                         name="Custom"
-                        description="Custom Helidon SE project">
-                    <exec src="nodes/custom/inputs.xml"/>
-                </option>
+                        description="Custom Helidon SE project"/>
             </enum>
+        </inputs>
+    </step>
+    <step name="Media Support" optional="true">
+        <exec src="features/media/inputs.xml"/>
+    </step>
+    <step name="Security" optional="true">
+        <exec src="features/security/inputs.xml"/>
+    </step>
+    <step name="Database" optional="true">
+        <exec src="features/database/inputs.xml"/>
+    </step>
+    <step name="Extra" optional="true">
+        <inputs>
+            <list id="extra" name="Select Additional Components" optional="true">
+                <option value="webclient" name="WebClient" description="HTTP client"/>
+                <option value="fault-tolerance" name="Fault Tolerance" description="System for building resilient applications"/>
+                <option value="cors" name="CORS" description="Cross-Origin Resource Sharing utilities"/>
+            </list>
+        </inputs>
+    </step>
+    <step name="Observability" optional="true">
+        <inputs>
+            <exec src="features/metrics/inputs.xml"/>
+            <exec src="features/health/inputs.xml"/>
+            <exec src="features/tracing/inputs.xml"/>
         </inputs>
     </step>
 </archetype-script>

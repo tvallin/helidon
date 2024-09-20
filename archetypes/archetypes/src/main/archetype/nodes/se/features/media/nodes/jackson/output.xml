@@ -21,9 +21,12 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-com-fasterxml-jackson-annotation">true</boolean>
+        <boolean path="requires-com-fasterxml-jackson-core">true</boolean>
+    </variables>
     <output>
-        <templates transformations="packaged,mustache" engine="hbs">
+        <templates transformations="basedir,packaged,hbs" engine="mustache">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>

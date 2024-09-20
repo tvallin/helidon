@@ -20,8 +20,43 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="/features/tracing/output.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-webserver-http2">true</boolean>
+        <boolean path="requires-io-helidon-webserver-observe-tracing">true</boolean>
+        <boolean path="requires-io-helidon-tracing">true</boolean>
+    </variables>
+
     <exec src="nodes/jaeger/output.xml" if="${tracing.provider} == 'jaeger'"/>
     <exec src="nodes/zipkin/output.xml" if="${tracing.provider} == 'zipkin'"/>
-    <exec src="features/common/output.xml"/>
+    <output>
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
+            <directory>./files</directory>
+            <includes>
+                <include>**/TracedService.java.*</include>
+            </includes>
+        </templates>
+        <model>
+            <list key="application-yaml">
+                <value file="files/src/main/resources/application.yaml"/>
+            </list>
+            <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.webserver.observe</value>
+                    <value key="artifactId">helidon-webserver-observe-tracing</value>
+                </map>
+                <map>
+                    <value key="groupId">io.helidon.webserver</value>
+                    <value key="artifactId">helidon-webserver-http2</value>
+                </map>
+            </list>
+            <list key="Main-routing-builder">
+                <value><![CDATA[
+            .register("/traced", new TracedService())]]>
+                </value>
+            </list>
+            <list key="readme-exercise-the-application">
+                <value file="files/README.md"/>
+            </list>
+        </model>
+    </output>
 </archetype-script>

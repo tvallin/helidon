@@ -28,6 +28,9 @@
                     <value key="artifactId">opentelemetry-exporter-zipkin</value>
                 </map>
             </list>
+            <list key="readme-sections">
+                <value file="/common/zipkin/README.md"/>
+            </list>
         </model>
     </output>
 </archetype-script>

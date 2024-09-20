@@ -21,9 +21,12 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-org-jvnet-mimepull">true</boolean>
+        <boolean path="requires-jersey-media-multipart">true</boolean>
+    </variables>
     <output>
-        <templates engine="mustache" transformations="hbs,packaged" if="${media} contains 'multipart'">
+        <templates engine="mustache" transformations="basedir,hbs,packaged" if="${media} contains 'multipart'">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/*.hbs</include>

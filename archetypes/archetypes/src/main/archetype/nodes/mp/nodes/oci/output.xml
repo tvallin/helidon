@@ -19,6 +19,7 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
     <methods>
         <method name="pre-processed-models">
             <output>
@@ -50,7 +51,7 @@
                     <replace regex="groupid" replacement="${groupId/\./\/}"/>
                     <replace regex="artifactid" replacement="${artifactId/\./\/}"/>
                 </transformation>
-                <templates engine="mustache" transformations="hbs,packaged">
+                <templates engine="mustache" transformations="basedir,hbs,packaged">
                     <directory>/nodes/mp/features/common/files</directory>
                     <includes>
                         <include>.helidon.hbs</include>
@@ -71,6 +72,10 @@
             </output>
         </method>
     </methods>
+    <variables>
+        <text path="module-dir">server</text>
+        <boolean path="multi-module">true</boolean>
+    </variables>
     <call method="pre-processed-models"/>
     <call method="common"/>
     <exec src="/features/multi-module/output.xml"/>
@@ -80,13 +85,13 @@
     <exec src="/features/maven/output.xml"/>
     <exec src="/features/customize-project/output.xml"/>
     <output>
-        <templates engine="mustache" transformations="hbs,module-dir">
+        <templates engine="mustache" transformations="basedir,hbs">
             <directory>../../features/security/files</directory>
             <includes>
                 <include>src/*/resources/**/application.yaml.hbs</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="hbs,packaged">
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>
@@ -96,7 +101,7 @@
                 <exclude>maven-*.hbs</exclude>
             </excludes>
         </templates>
-        <templates engine="mustache" transformations="hbs,packaged,module-dir">
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>../../features/common/files</directory>
             <includes>
                 <include>src/main/resources/**</include>
@@ -156,9 +161,9 @@ ocimetrics:
                 </list>
             </model>
         </templates>
-        <file source="../../features/common/files/src/main/resources/META-INF/beans.xml"
-              target="client/src/main/resources/META-INF/beans.xml" />
-        <files>
+        <file source="/nodes/mp/features/common/files/src/main/resources/META-INF/beans.xml"
+              target="${basedir}/client/src/main/resources/META-INF/beans.xml" />
+        <files transformations="basedir">
             <directory>files</directory>
             <includes>
                 <include>server/src/main/resources</include>

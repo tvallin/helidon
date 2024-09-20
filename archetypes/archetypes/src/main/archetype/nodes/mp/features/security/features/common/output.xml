@@ -20,9 +20,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-security">true</boolean>
+    </variables>
     <output>
-        <templates engine="mustache" transformations="hbs">
+        <templates engine="mustache" transformations="basedir,hbs">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/application.yaml.hbs</include>

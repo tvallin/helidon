@@ -21,13 +21,12 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <output>
-        <templates engine="mustache" transformations="hbs,gav">
+        <templates engine="mustache" transformations="basedir,hbs,gav">
             <directory>files</directory>
             <includes>
                 <include>**/native-image.properties.hbs</include>
             </includes>
         </templates>
-        <template source="files/Dockerfile.native.hbs" target="Dockerfile.native" engine="mustache"/>
         <model>
             <list key="readme-sections">
                 <value template="mustache" file="files/README.md.hbs"/>

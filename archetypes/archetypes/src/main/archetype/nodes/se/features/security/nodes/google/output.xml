@@ -20,15 +20,20 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-webserver-context">true</boolean>
+        <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
+        <boolean path="requires-io-helidon-security-providers-google-login">true</boolean>
+    </variables>
     <output>
-        <files>
+        <files transformations="basedir">
             <directory>files</directory>
             <includes>
                 <include>src/*/resources/**/static.js/google-app.js</include>
             </includes>
         </files>
-        <file source="files/src/main/resources/WEB/google-login.html" target="src/main/resources/WEB/google-login.html"/>
+        <file source="files/src/main/resources/WEB/google-login.html"
+              target="${basedir}/src/main/resources/WEB/google-login.html"/>
         <model>
             <list key="security-server-paths">
                 <value file="files/src/main/resources/security-server-paths.yaml"/>

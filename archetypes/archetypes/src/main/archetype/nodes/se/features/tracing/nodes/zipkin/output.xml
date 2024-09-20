@@ -27,6 +27,9 @@
                     <value key="artifactId">helidon-tracing-providers-zipkin</value>
                 </map>
             </list>
+            <list key="readme-sections">
+                <value file="/common/zipkin/README.md"/>
+            </list>
         </model>
     </output>
 </archetype-script>

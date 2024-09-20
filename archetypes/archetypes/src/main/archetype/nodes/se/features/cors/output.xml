@@ -20,7 +20,11 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="variables.xml"/>
+    <variables>
+        <boolean path="requires-io-helidon-webserver-cors">true</boolean>
+        <boolean path="requires-io-helidon-cors">true</boolean>
+        <boolean path="requires-java-logging">true</boolean>
+    </variables>
     <output>
         <model>
             <value key="cors" if="${extra} contains 'cors'">true</value>

@@ -22,7 +22,7 @@
 
     <output>
         <file source="files/src/main/resources/META-INF/init_script.sql"
-              target="src/main/resources/META-INF/init_script.sql"/>
+              target="${basedir}/src/main/resources/META-INF/init_script.sql"/>
         <model>
             <value key="readme-description">Helidon MP application that uses JPA with an in-memory H2 database.</value>
             <value key="integration-artifactId">h2</value>
