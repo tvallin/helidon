@@ -21,11 +21,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <text path="media.json-lib" if="!(${media} contains 'json')"/>
-    </variables>
-    <exec src="nodes/jackson/output.xml" if="${media.json-lib} contains 'jackson'"/>
-    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} contains 'jsonb'"/>
-    <exec src="nodes/multipart/output.xml" if="${media.json-lib} contains 'multipart'"/>
-    <exec src="features/common/output.xml"/>
+    <exec src="nodes/json/output.xml" if="${media} contains 'json'"/>
+    <exec src="nodes/multipart/output.xml" if="${media} contains 'multipart'"/>
 </archetype-script>

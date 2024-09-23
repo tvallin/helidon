@@ -1,7 +1,7 @@
 
 ## Building the Docker Image
 
-```
+```shell
 docker build -t {{artifactId}} .
 ```
 
@@ -11,7 +11,7 @@ docker build -t {{artifactId}} .
 {{.}}
 {{/docker-run-readme-section}}
 {{^docker-run-readme-section}}
-```
+```shell
 docker run --rm -p 8080:8080 {{artifactId}}:latest
 ```
 {{/docker-run-readme-section}}

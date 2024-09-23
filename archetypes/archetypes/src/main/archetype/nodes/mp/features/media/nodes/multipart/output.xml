@@ -24,6 +24,7 @@
     <variables>
         <boolean path="requires-org-jvnet-mimepull">true</boolean>
         <boolean path="requires-jersey-media-multipart">true</boolean>
+        <boolean path="requires-jakarta-json">true</boolean>
     </variables>
     <output>
         <templates engine="mustache" transformations="basedir,hbs,packaged" if="${media} contains 'multipart'">

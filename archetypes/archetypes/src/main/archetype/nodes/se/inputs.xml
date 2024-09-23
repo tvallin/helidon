@@ -17,15 +17,16 @@
 
 -->
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <step name="Application Type" optional="true">
         <inputs>
             <enum id="app-type"
                   name="Select an Application Type"
                   default="quickstart"
-                  optional="true">
+                  optional="true"
+                  global="true">
                 <option value="quickstart"
                         name="Quickstart"
                         description="Sample Helidon project that includes multiple REST operations">

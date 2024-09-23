@@ -28,6 +28,7 @@
             </includes>
         </templates>
         <model>
+            <!-- need to guard each require with a variable to avoid duplication -->
             <list key="module-requires">
                 <value if="${requires-java-logging}">java.logging</value>
                 <value if="${requires-jakarta-annotation}">jakarta.annotation</value>

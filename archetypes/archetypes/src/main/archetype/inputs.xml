@@ -35,7 +35,7 @@
                 <option value="mp"
                         name="Helidon MP"
                         description="Declarative, MicroProfile compliant">
-<!--                    <exec src="nodes/mp/inputs.xml"/>-->
+                    <exec src="nodes/mp/inputs.xml"/>
                 </option>
             </enum>
         </inputs>

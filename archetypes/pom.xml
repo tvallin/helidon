@@ -48,7 +48,8 @@
                 <plugin>
                     <groupId>io.helidon.build-tools</groupId>
                     <artifactId>helidon-archetype-maven-plugin</artifactId>
-                    <version>${version.plugin.helidon-build-tools}</version>
+<!--                    <version>${version.plugin.helidon-build-tools}</version>-->
+                    <version>4.0.0-SNAPSHOT</version>
                 </plugin>
             </plugins>
         </pluginManagement>

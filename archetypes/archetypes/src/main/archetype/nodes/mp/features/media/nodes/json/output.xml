@@ -21,23 +21,20 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <variables>
-        <boolean path="requires-jakarta-json" if="${media} contains 'multipart' || ['jsonp', 'jsonb'] contains ${media.json-lib}">true</boolean>
-    </variables>
+    <exec src="nodes/jackson/output.xml" if="${media.json-lib} contains 'jackson'"/>
+    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} contains 'jsonb'"/>
+    <exec src="nodes/jsonp/output.xml" if="${media.json-lib} contains 'jsonp'"/>
     <output>
-        <templates engine="mustache" transformations="basedir,packaged,hbs" if="!(${media} contains 'json')">
+        <templates engine="mustache" transformations="basedir,packaged,hbs">
             <directory>files</directory>
             <includes>
                 <include>**/*.hbs</include>
             </includes>
         </templates>
-
-        <!-- TODO https://github.com/oracle/helidon-build-tools/issues/609 -->
         <model>
-            <value key="jackson" if="${media} contains 'json' &amp;&amp; ${media.json-lib} == 'jackson'">true</value>
-            <value key="jackson" if="!(${media} contains 'json' &amp;&amp; ${media.json-lib} == 'jackson')">false</value>
+            <value key="jackson" order="0">false</value>
             <list key="readme-exercise-the-application">
-                <value order="900" if="${media} contains 'json'" file="files/README.md"/>
+                <value order="900" file="files/README.md"/>
             </list>
         </model>
     </output>
