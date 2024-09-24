@@ -23,4 +23,18 @@
 
     <exec src="nodes/json/output.xml" if="${media} contains 'json'"/>
     <exec src="nodes/multipart/output.xml" if="${media} contains 'multipart'"/>
+    <output>
+        <templates engine="mustache" transformations="basedir,packaged,hbs">
+            <directory>files</directory>
+            <includes>
+                <include>**/*.hbs</include>
+            </includes>
+        </templates>
+        <model>
+            <value key="jackson" order="0">false</value>
+            <list key="readme-exercise-the-application">
+                <value order="900" file="files/README.md"/>
+            </list>
+        </model>
+    </output>
 </archetype-script>
