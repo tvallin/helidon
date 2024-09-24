@@ -34,8 +34,12 @@
             </includes>
         </templates>
 
-        <file source="files/src/main/resources/WEB/index.html"
-              target="${basedir}/src/main/resources/WEB/index.html"/>
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/WEB/index.html</include>
+            </includes>
+        </files>
 
         <model>
             <list key="dependencies">

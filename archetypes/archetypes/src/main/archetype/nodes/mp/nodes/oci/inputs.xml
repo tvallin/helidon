@@ -21,6 +21,12 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <presets>
+        <list path="media"></list>
+        <list path="extra"/>
+        <boolean path="metrics">false</boolean>
+        <boolean path="health">false</boolean>
+        <boolean path="tracing">false</boolean>
+        <boolean path="security">false</boolean>
         <boolean path="db">false</boolean>
         <boolean path="docker">true</boolean>
         <boolean path="docker.native-image">false</boolean>

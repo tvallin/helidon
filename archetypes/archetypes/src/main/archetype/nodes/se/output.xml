@@ -59,7 +59,7 @@
         <templates engine="mustache" transformations="basedir,hbs">
             <directory>files</directory>
             <includes>
-                <include>src/*/resources/**/*.hbs</include>
+                <include>src/*/resources/*.hbs</include>
             </includes>
         </templates>
         <files transformations="basedir">

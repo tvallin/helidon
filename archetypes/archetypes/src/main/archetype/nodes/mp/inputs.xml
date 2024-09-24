@@ -40,11 +40,11 @@
                 <option value="custom"
                         name="Custom"
                         description="Custom Helidon MP project"/>
-                <option value="oci"
-                        name="OCI"
-                        description="Helidon MP application that integrates with Oracle Cloud Infrastructure">
-                    <exec src="nodes/quickstart/inputs.xml"/>
-                </option>
+<!--                <option value="oci"-->
+<!--                        name="OCI"-->
+<!--                        description="Helidon MP application that integrates with Oracle Cloud Infrastructure">-->
+<!--                    <exec src="nodes/oci/inputs.xml"/>-->
+<!--                </option>-->
             </enum>
         </inputs>
     </step>

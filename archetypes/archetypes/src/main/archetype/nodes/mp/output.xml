@@ -58,9 +58,12 @@
     <exec src="nodes/quickstart/output.xml" if="${app-type} == 'quickstart'"/>
 
     <output>
-        <file source="files/src/main/resources/META-INF/beans.xml"
-              target="${basedir}/src/main/resources/META-INF/beans.xml"/>
-
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/META-INF/beans.xml</include>
+            </includes>
+        </files>
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>

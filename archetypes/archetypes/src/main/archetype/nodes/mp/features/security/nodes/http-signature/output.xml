@@ -21,7 +21,12 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <output>
-        <file source="files/src/main/resources/keystore.p12" target="${basedir}/src/main/resources/keystore.p12"/>
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/keystore.p12</include>
+            </includes>
+        </files>
         <model>
             <list key="dependencies">
                 <map>

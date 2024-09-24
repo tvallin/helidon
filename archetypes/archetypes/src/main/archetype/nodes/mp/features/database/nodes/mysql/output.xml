@@ -21,8 +21,12 @@
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
     <output>
-        <file source="files/src/main/resources/META-INF/init_script.sql"
-              target="${basedir}/src/main/resources/META-INF/init_script.sql"/>
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/META-INF/init_script.sql</include>
+            </includes>
+        </files>
         <model>
             <value key="helidon-test">false</value>
             <value key="readme-description">Helidon MP application that uses the dbclient API with MySQL database.</value>

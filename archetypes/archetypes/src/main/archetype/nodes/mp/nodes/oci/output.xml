@@ -161,8 +161,12 @@ ocimetrics:
                 </list>
             </model>
         </templates>
-        <file source="/nodes/mp/features/common/files/src/main/resources/META-INF/beans.xml"
-              target="${basedir}/client/src/main/resources/META-INF/beans.xml" />
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/META-INF/beans.xml</include>
+            </includes>
+        </files>
         <files transformations="basedir">
             <directory>files</directory>
             <includes>

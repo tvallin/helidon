@@ -92,9 +92,17 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/main/**</include>
+                <include>src/main/java/**</include>
+                <include>src/main/resources/META-INF/services/io.helidon.dbclient.spi.DbMapperProvider.hbs</include>
             </includes>
         </templates>
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/pokemon-types.json</include>
+                <include>src/main/resources/pokemons.json</include>
+            </includes>
+        </files>
         <model>
             <value key="database">true</value>
             <value key="server">${db.server}</value>

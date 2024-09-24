@@ -32,8 +32,12 @@
                 <include>src/*/resources/**/static.js/google-app.js</include>
             </includes>
         </files>
-        <file source="files/src/main/resources/WEB/google-login.html"
-              target="${basedir}/src/main/resources/WEB/google-login.html"/>
+        <files transformations="basedir">
+            <directory>files</directory>
+            <includes>
+                <include>src/main/resources/WEB/google-login.html</include>
+            </includes>
+        </files>
         <model>
             <list key="security-server-paths">
                 <value file="files/src/main/resources/security-server-paths.yaml"/>
