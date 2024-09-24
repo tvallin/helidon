@@ -1,4 +1,3 @@
-
 # 1st stage, build the app
 FROM container-registry.oracle.com/java/jdk-no-fee-term:21 as build
 
@@ -18,32 +17,55 @@ WORKDIR /helidon
 # the pom
 ADD pom.xml .
 {{#multi-module}}
-{{#module-names}}ADD {{.}}/pom.xml {{.}}/pom.xml{{/module-names}}
+{{#module-names}}
+ADD {{.}}/pom.xml {{.}}/pom.xml
+{{/module-names}}
 {{/multi-module}}
 RUN mvn package \
-{{#native-image}}    -Pnative-image -Dnative.image.skip \\{{/native-image}}
-{{#jlink}}    -Pjlink-image -DskipJavaImage \\{{/jlink}}
-{{#eclipselink}}    -Declipselink.weave.skip \\{{/eclipselink}}
-{{#openapi-generator}}    -DskipOpenApiGenerate \\{{/openapi-generator}}
+{{#multi-module}}
+    -pl {{module-name}} -am \
+{{/multi-module}}
+{{#native-image}}
+    -Pnative-image -Dnative.image.skip \
+{{/native-image}}
+{{#jlink}}
+    -Pjlink-image -DskipJavaImage \
+{{/jlink}}
+{{#eclipselink}}
+    -Declipselink.weave.skip \
+{{/eclipselink}}
+{{#openapi-generator}}
+    -DskipOpenApiGenerate \
+{{/openapi-generator}}
     -Dmaven.test.skip
 
 # Do the Maven build!
 # Incremental docker builds will resume here when you change sources
 {{#multi-module}}
-{{#module-names}}ADD {{.}}/src {{.}}/src{{/module-names}}
+{{#module-names}}
+ADD {{.}}/src {{.}}/src
+{{/module-names}}
 RUN mvn package \
     -pl {{module-name}} -am \
-{{#native-image}}    -Pnative-image \\{{/native-image}}
-{{#jlink}}    -Pjlink-image \\{{/jlink}}
+{{#native-image}}
+    -Pnative-image \
+{{/native-image}}
+{{#jlink}}
+    -Pjlink-image \
+{{/jlink}}
     -Dmaven.test.skip
 {{/multi-module}}
-{{^module-dir}}
+{{^multi-module}}
 ADD src src
 RUN mvn package \
-{{#native-image}}    -Pnative-image \\{{/native-image}}
-{{#jlink}}    -Pjlink-image \\{{/jlink}}
+{{#native-image}}
+    -Pnative-image \
+{{/native-image}}
+{{#jlink}}
+    -Pjlink-image \
+{{/jlink}}
     -Dmaven.test.skip
-{{/module-dir}}
+{{/multi-module}}
 
 RUN echo "done!"
 
