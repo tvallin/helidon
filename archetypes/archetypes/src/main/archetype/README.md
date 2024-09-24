@@ -1,5 +1,8 @@
 rename readme-sections
+
 Replace wildcard on templates/template
+
+Update the target ${basedir}
 
 Dernières étapes :
 
