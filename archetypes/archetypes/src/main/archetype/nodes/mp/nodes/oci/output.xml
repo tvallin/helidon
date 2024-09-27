@@ -74,7 +74,6 @@
     </methods>
     <variables>
         <text path="module-dir">server</text>
-        <boolean path="multi-module">true</boolean>
     </variables>
     <call method="pre-processed-models"/>
     <call method="common"/>
@@ -284,50 +283,10 @@ ocimetrics:
                    template="mustache"
                    file="files/README.md.run-commands.hbs"/>
             <list key="readme-exercise-the-application">
-                <value><![CDATA[
-1. Use curl to access the client application
-   ```
-   curl -X GET http://localhost:8080/greet
-   {"message":"Hello World!","date":[2022,4,1]}
-
-   curl -X GET http://localhost:8080/greet/Joe
-   {"message":"Hello Joe!","date":[2022,4,1]}
-
-   curl -X PUT -H "Content-Type: application/json" -d '{"greeting" : "Ola"}' http://localhost:8080/greet/greeting
-   curl -X GET http://localhost:8080/greet
-   {"message":"Ola World!","date":[2022,4,8]}
-   ```
-2. Use curl to access the health checks:
-   ```
-   $ curl -X GET  http://localhost:8080/health/live
-   {"outcome":"UP","status":"UP","checks":[{"name":"CustomLivenessCheck","state":"UP","status":"UP","data":{"time":1646361485815}}]}
-   $ curl -X GET  http://localhost:8080/health/ready
-   {"outcome":"UP","status":"UP","checks":[{"name":"CustomReadinessCheck","state":"UP","status":"UP","data":{"time":1646361474774}}]}
-   ```]]>
-                </value>
+                <value file="files/README-exercise-application.md"/>
             </list>
             <list key="k8s-readme-sections">
-                <value><![CDATA[
-### Configure the application
-
-Make sure, your application has access to your OCI setup. One way, you can do so, if your kubernetes cluster is running locally, is by volume.
-
-Create a volume pointing to your OCI configuration file
-```yaml
-      volumes:
-        - name: oci-config
-          hostPath:
-            # directory location on host
-            path: <Directory with oci config file>
-```
-
-Mount this volume as part of your application containers specification
-```yaml
-        volumeMounts:
-        - mountPath: /root/.oci
-          name: oci-config
-```]]>
-                </value>
+                <value file="files/README-k8s.md"/>
             </list>
             <list key="poms">
                 <value>ADD pom.xml pom.xml</value>
