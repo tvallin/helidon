@@ -33,7 +33,7 @@
             </includes>
         </templates>
         <model>
-            <value key="jackson" order="100">true</value>
+            <value key="jackson">true</value>
             <list key="dependencies">
                 <map order="500">
                     <value key="groupId">com.fasterxml.jackson.core</value>

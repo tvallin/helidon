@@ -72,17 +72,8 @@
             </output>
         </method>
     </methods>
-    <variables>
-        <text path="module-dir">server</text>
-    </variables>
     <call method="pre-processed-models"/>
     <call method="common"/>
-    <exec src="/features/multi-module/output.xml"/>
-    <exec src="/features/kubernetes/output.xml"/>
-    <exec src="/features/verrazzano/output.xml"/>
-    <exec src="/nodes/mp/features/jpms/output.xml"/>
-    <exec src="/features/maven/output.xml"/>
-    <exec src="/features/customize-project/output.xml"/>
     <output>
         <templates engine="mustache" transformations="basedir,hbs">
             <directory>../../features/security/files</directory>
@@ -113,50 +104,10 @@
                     </map>
                 </list>
                 <list key="microprofile-config">
-                    <value><![CDATA[
-# Application properties. This is the default greeting
-app.greeting=Hello
-
-# OCI Monitoring configuration
-oci.monitoring.compartmentId=<your monitoring compartment id>
-oci.monitoring.namespace=<your monitoring namespace e.g. helidon_oci>
-
-# OCI Logging configuration
-oci.logging.id=<your oci custom log id>
-
-# OCI Authentication strategy
-oci.auth-strategy=config-file,instance-principals,resource-principal]]>
-                    </value>
+                    <value file="files/server/src/main/resources/META-INF/microprofile-config.properties"/>
                 </list>
                 <list key="yaml-config-entries">
-                    <value><![CDATA[
-# Helidon Metrics to OCI parameters
-ocimetrics:
-  # OCI compartment ID where the metrics will be sent
-  compartmentId: <your monitoring compartment id>
-  # OCI metric namespace
-  namespace: <your monitoring namespace e.g. helidon_oci>
-  # Delay in seconds before the 1st metrics transmission to OCI takes place.  Defaults to 1 second if not specified.
-  initialDelay: 10
-  # Interval in seconds between metrics transmission to OCI. Defaults to 60 seconds if not specified.
-  delay: 180
-  # Filter only the scopes that will be sent to OCI. This is optional and will default to all scopes if not specified.
-  scopes: [base, vendor, application]
-  # Enable or disable metric transmission to OCI. Defaults to true if not specified.
-  enabled: true]]>
-                    </value>
-                </list>
-                <list key="oci-logging-entries">
-                    <value template="mustache"><![CDATA[
-# If testing with the Unified Monitoring Agent, add java.util.logging.FileHandler in the handlers parameter and also
-# set java.util.logging.FileHandler.pattern to specify the filename where the logs will be saved and where the agent
-# will pull from and sent to the OCI Logging Service. For example, to save the logs in ${HOME}/helidon_log/helidon.log
-# file path, set java.util.logging.FileHandler.pattern like:
-# java.util.logging.FileHandler.pattern=%h/helidon_log/helidon.log
-#
-# Check https://docs.oracle.com/en-us/iaas/Content/Logging/Concepts/custom_logs.htm for more information on how to
-# set up Custom Logs that uses the Unified monitoring agent.]]>
-                    </value>
+                    <value file="files/server/src/main/resources/application.yaml"/>
                 </list>
             </model>
         </templates>

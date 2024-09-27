@@ -46,6 +46,8 @@
     -->
     <exec src="defaults.xml"/>
     <call method="transformations"/>
+    <!-- Has to be called here otherwise, the module name is not set and files generated under the aggregator dir instead of the module -->
+    <exec src="features/multi-module/output.xml" if="${multi-module}"/>
 
     <!-- flavor step -->
     <exec src="nodes/mp/output.xml" if="${flavor} == 'mp'"/>
@@ -56,7 +58,7 @@
     <exec src="features/kubernetes/output.xml" if="${k8s}"/>
     <exec src="features/verrazzano/output.xml" if="${v8o}"/>
     <exec src="features/jpms/output.xml" if="${jpms}"/>
-    <exec src="features/multi-module/output.xml" if="${multi-module}"/>
+
 
     <!-- customize step -->
     <exec src="features/customize-project/output.xml"/>

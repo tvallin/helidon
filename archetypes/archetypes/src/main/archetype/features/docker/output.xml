@@ -63,12 +63,6 @@
                     </model>
                 </templates>
                 <model>
-                    <list key="poms" if="!${multi-module}">
-                        <value>ADD pom.xml .</value>
-                    </list>
-                    <list key="src-dirs" if="!${multi-module}">
-                        <value>ADD src src</value>
-                    </list>
                     <list key="readme-sections">
                         <value order="50" template="mustache" file="files/README.md.hbs"/>
                     </list>
