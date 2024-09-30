@@ -61,13 +61,6 @@
                 </templates>
                 <model>
                     <value key="dot-helidon-schema-version">1.1.0</value>
-                    <list key="dependencies">
-                        <map>
-                            <value key="groupId">io.helidon.logging</value>
-                            <value key="artifactId">helidon-logging-jul</value>
-                            <value key="scope">runtime</value>
-                        </map>
-                    </list>
                 </model>
             </output>
         </method>
@@ -238,16 +231,6 @@
             </list>
             <list key="k8s-readme-sections">
                 <value file="files/README-k8s.md"/>
-            </list>
-            <list key="poms">
-                <value>ADD pom.xml pom.xml</value>
-                <value>ADD client/pom.xml client/pom.xml</value>
-                <value>ADD server/pom.xml server/pom.xml</value>
-            </list>
-            <list key="src-dirs">
-                <value>ADD client/src client/src</value>
-                <value>ADD server/src server/src</value>
-                <value>ADD spec/api.yaml spec/api.yaml</value>
             </list>
         </model>
     </output>

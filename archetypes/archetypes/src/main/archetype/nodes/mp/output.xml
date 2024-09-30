@@ -32,7 +32,7 @@
     </variables>
 
     <!-- media step -->
-    <exec src="features/media/output.xml"/>
+    <exec src="features/media/output.xml" if="${app-type} != 'oci'"/>
 
     <!-- security step -->
     <exec src="features/security/output.xml" if="${security}"/>
@@ -57,7 +57,7 @@
     <exec src="nodes/oci/output.xml" if="${app-type} == 'oci'"/>
     <exec src="nodes/quickstart/output.xml" if="${app-type} == 'quickstart'"/>
 
-    <output>
+    <output if="${app-type} != 'oci'">
         <files transformations="basedir">
             <directory>files</directory>
             <includes>

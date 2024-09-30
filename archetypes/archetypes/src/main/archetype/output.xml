@@ -39,6 +39,13 @@
                 </transformation>
             </output>
         </method>
+        <method name="oci-transformations">
+            <output if="${app-type} == 'oci'">
+                <transformation id="basedir-oci">
+                    <replace regex="^(.*)$" replacement="${basedir}/server/$1"/>
+                </transformation>
+            </output>
+        </method>
     </methods>
     <!--
         Set all variables with default values first.
@@ -46,6 +53,7 @@
     -->
     <exec src="defaults.xml"/>
     <call method="transformations"/>
+<!--    <call method="oci-transformations"/>-->
     <!-- Has to be called here otherwise, the module name is not set and files generated under the aggregator dir instead of the module -->
     <exec src="features/multi-module/output.xml" if="${multi-module}"/>
 
@@ -64,7 +72,7 @@
     <exec src="features/customize-project/output.xml"/>
 
     <output>
-        <templates engine="mustache" transformations="basedir,hbs,packaged">
+        <templates engine="mustache" transformations="basedir,hbs,packaged" if="${app-type} != 'oci'">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/*.java.hbs</include>
