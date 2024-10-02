@@ -23,11 +23,11 @@
 
     <exec src="nodes/json/output.xml" if="${media} contains 'json'"/>
     <exec src="nodes/multipart/output.xml" if="${media} contains 'multipart'"/>
-    <output>
+    <output if="!(${media} contains 'json')">
         <templates engine="mustache" transformations="basedir,packaged,hbs">
             <directory>files</directory>
             <includes>
-                <include>**/*.hbs</include>
+                <include>src/main/java/**/SimpleGreetResource.java.hbs</include>
             </includes>
         </templates>
         <model>

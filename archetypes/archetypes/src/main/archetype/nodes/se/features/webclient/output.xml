@@ -24,11 +24,12 @@
         <boolean path="requires-io-helidon-webclient">true</boolean>
         <boolean path="requires-io-helidon-webclient-http1">true</boolean>
     </variables>
+
     <output>
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/WebClientMain.java.hbs</include>
+                <include>src/main/java/**/WebClientMain.java.hbs</include>
             </includes>
         </templates>
         <model>

@@ -23,13 +23,15 @@
     <variables>
         <boolean path="requires-io-helidon-microprofile-telemetry">true</boolean>
     </variables>
+
     <exec src="nodes/jaeger/output.xml" if="${tracing.provider} == 'jaeger'"/>
     <exec src="nodes/zipkin/output.xml" if="${tracing.provider} == 'zipkin'"/>
+
     <output>
         <templates engine="mustache" transformations="basedir,packaged,hbs">
             <directory>files</directory>
             <includes>
-                <include>**/TracedResource.java.hbs</include>
+                <include>src/main/java/**/TracedResource.java.hbs</include>
             </includes>
         </templates>
         <model>

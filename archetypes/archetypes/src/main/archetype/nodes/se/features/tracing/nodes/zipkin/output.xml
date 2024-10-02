@@ -28,7 +28,7 @@
                 </map>
             </list>
             <list key="readme-sections">
-                <value file="/common/zipkin/README.md"/>
+                <value file="files/README.md"/>
             </list>
         </model>
     </output>

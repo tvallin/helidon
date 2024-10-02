@@ -24,14 +24,14 @@
     <variables>
         <boolean path="requires-jakarta-json">true</boolean>
     </variables>
+
     <output>
         <templates transformations="basedir,packaged,hbs" engine="mustache">
             <directory>files</directory>
             <includes>
-                <include>**/*.hbs</include>
+                <include>src/main/java/**/GreetService.java.hbs</include>
             </includes>
         </templates>
-
         <model>
             <list key="MainTest-other-imports">
                 <value>jakarta.json.JsonObject</value>

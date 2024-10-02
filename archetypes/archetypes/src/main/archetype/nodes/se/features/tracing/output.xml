@@ -28,11 +28,12 @@
 
     <exec src="nodes/jaeger/output.xml" if="${tracing.provider} == 'jaeger'"/>
     <exec src="nodes/zipkin/output.xml" if="${tracing.provider} == 'zipkin'"/>
+
     <output>
         <templates engine="mustache" transformations="basedir,hbs,packaged">
-            <directory>./files</directory>
+            <directory>files</directory>
             <includes>
-                <include>**/TracedService.java.*</include>
+                <include>src/main/java/**/TracedService.java.hbs</include>
             </includes>
         </templates>
         <model>

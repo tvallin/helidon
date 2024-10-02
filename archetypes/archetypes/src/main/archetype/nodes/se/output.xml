@@ -53,29 +53,18 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.java.hbs</include>
+                <include>src/main/java/**/Main.java.hbs</include>
+                <include>src/test/java/**/AbstractMainTest.java.hbs</include>
+                <include>src/test/java/**/MainIT.java.hbs</include>
+                <include>src/test/java/**/MainTest.java.hbs</include>
             </includes>
         </templates>
         <templates engine="mustache" transformations="basedir,hbs">
             <directory>files</directory>
             <includes>
-                <include>src/*/resources/*.hbs</include>
-            </includes>
-        </templates>
-        <files transformations="basedir">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/resources/**</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.hbs</exclude>
-            </excludes>
-        </files>
-        <templates engine="mustache" transformations="basedir,hbs,packaged">
-            <directory>files</directory>
-            <includes>
-                <include>README.md.hbs</include>
-                <include>src/main/java/**/Main.java.hbs</include>
+                <include>src/main/resources/application.yaml.hbs</include>
+                <include>src/main/resources/logging.properties.hbs</include>
+                <include>src/test/resources/application-test.yaml.hbs</include>
             </includes>
         </templates>
         <model>

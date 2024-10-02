@@ -27,8 +27,8 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/FtResource.java.hbs</include>
-                <include>src/*/java/**/FtResourceTest.java.hbs</include>
+                <include>src/main/java/**/FtResource.java.hbs</include>
+                <include>src/test/java/**/FtResourceTest.java.hbs</include>
             </includes>
         </templates>
         <model>

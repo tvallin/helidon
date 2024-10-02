@@ -29,7 +29,8 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.hbs</include>
+                <include>src/main/java/**/Message.java.hbs</include>
+                <include>src/main/java/**/SimpleGreetResource.java.hbs</include>
             </includes>
         </templates>
         <model>

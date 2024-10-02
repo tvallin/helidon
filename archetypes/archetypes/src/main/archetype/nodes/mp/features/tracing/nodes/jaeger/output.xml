@@ -29,7 +29,7 @@
                 </map>
             </list>
             <list key="readme-sections">
-                <value file="/common/jaeger/README.md"/>
+                <value file="/nodes/se/features/tracing/nodes/jaeger/files/README.md"/>
             </list>
         </model>
     </output>

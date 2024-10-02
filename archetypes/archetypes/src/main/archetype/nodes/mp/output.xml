@@ -67,12 +67,10 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/resources/**/*.hbs</include>
-                <include>src/*/java/**/*.hbs</include>
+                <include>src/main/resources/META-INF/microprofile-config.properties.hbs</include>
+                <include>src/test/resources/META-INF/microprofile-config.properties.hbs</include>
+                <include>src/test/java/**/MainTest.java.hbs</include>
             </includes>
-            <excludes>
-                <exclude>src/*/resources/**/application.yaml.hbs</exclude>
-            </excludes>
         </templates>
 
         <template source="files/src/main/resources/application.yaml.hbs"
@@ -87,8 +85,8 @@
         <model>
             <value key="app-type">${app-type}</value>
             <!-- TODO emulate a set and remove this -->
-            <list key="dependencies" if="${flavor} == 'mp' &amp;&amp; ${extra} contains 'fault-tolerance'">
-                <map if="!(${metrics}) || ${metrics.provider} == 'micrometer'">
+            <list key="dependencies">
+                <map>
                     <value key="groupId">io.helidon.microprofile.metrics</value>
                     <value key="artifactId">helidon-microprofile-metrics</value>
                 </map>

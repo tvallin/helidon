@@ -29,7 +29,7 @@
                 </map>
             </list>
             <list key="readme-sections">
-                <value file="/common/zipkin/README.md"/>
+                <value file="/nodes/se/features/tracing/nodes/zipkin/files/README.md"/>
             </list>
         </model>
     </output>

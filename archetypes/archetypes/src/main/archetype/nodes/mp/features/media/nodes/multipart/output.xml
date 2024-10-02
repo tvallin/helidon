@@ -26,11 +26,15 @@
         <boolean path="requires-jersey-media-multipart">true</boolean>
         <boolean path="requires-jakarta-json">true</boolean>
     </variables>
+
     <output>
-        <templates engine="mustache" transformations="basedir,hbs,packaged" if="${media} contains 'multipart'">
+        <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.hbs</include>
+                <include>src/main/java/**/FileService.java.hbs</include>
+                <include>src/main/java/**/FileStorage.java.hbs</include>
+                <include>src/main/java/**/MultiPartFeatureProvider.java.hbs</include>
+                <include>src/test/java/**/FileServiceTest.java.hbs</include>
             </includes>
         </templates>
         <model>

@@ -59,7 +59,6 @@
     <exec src="features/verrazzano/output.xml" if="${v8o}"/>
     <exec src="features/jpms/output.xml" if="${jpms}"/>
 
-
     <!-- customize step -->
     <exec src="features/customize-project/output.xml"/>
 
@@ -67,7 +66,7 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged" if="${app-type} != 'oci'">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/*.java.hbs</include>
+                <include>src/main/java/**/package-info.java.hbs</include>
             </includes>
         </templates>
         <templates engine="mustache" transformations="basedir,hbs,packaged">

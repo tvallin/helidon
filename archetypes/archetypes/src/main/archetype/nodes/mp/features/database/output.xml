@@ -26,6 +26,7 @@
         <boolean path="requires-jakarta-persistence">true</boolean>
         <boolean path="requires-jakarta-transaction">true</boolean>
     </variables>
+
     <exec src="nodes/hibernate/output.xml"  if="${db.jpa-impl} == 'hibernate'"/>
     <exec src="nodes/eclipselink/output.xml"  if="${db.jpa-impl} == 'eclipselink'"/>
     <exec src="nodes/hikaricp/output.xml"  if="${db.cp} == 'hikaricp'"/>
@@ -38,8 +39,11 @@
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
-                <include>src/main/java/**</include>
-                <include>src/*/resources/*/persistence.xml.hbs</include>
+                <include>src/main/java/**/Pokemon.java.hbs</include>
+                <include>src/main/java/**/PokemonResource.java.hbs</include>
+                <include>src/main/java/**/PokemonType.java.hbs</include>
+                <include>src/main/java/**/PokemonTypeResource.java.hbs</include>
+                <include>src/main/resources/**/persistence.xml.hbs</include>
             </includes>
         </templates>
         <model>
@@ -116,8 +120,7 @@
                 <value template="mustache" file="files/README.md.hbs"/>
             </list>
             <list key="gitignore">
-                <value>ObjectStore/</value>
-                <value>PutObjectStoreDirHere/</value>
+                <value file="files/gitignore"/>
             </list>
             <list key="readme-exercise-the-application">
                 <value file="files/README.md"/>

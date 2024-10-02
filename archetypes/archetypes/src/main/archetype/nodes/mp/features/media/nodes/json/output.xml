@@ -23,5 +23,4 @@
 
     <exec src="nodes/jackson/output.xml" if="${media.json-lib} contains 'jackson'"/>
     <exec src="nodes/jsonb/output.xml" if="${media.json-lib} contains 'jsonb'"/>
-    <exec src="nodes/jsonp/output.xml" if="${media.json-lib} contains 'jsonp'"/>
 </archetype-script>

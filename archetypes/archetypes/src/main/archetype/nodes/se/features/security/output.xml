@@ -20,10 +20,36 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
+    <variables>
+        <boolean path="requires-io-helidon-security-integration-common">true</boolean>
+        <boolean path="requires-io-helidon-webserver-security">true</boolean>
+    </variables>
+
     <exec src="nodes/oidc/output.xml" if="${security.atn} contains ['oidc']"/>
     <exec src="nodes/google/output.xml" if="${security.atn} contains ['google']"/>
     <exec src="nodes/jwt/output.xml" if="${security.atn} contains ['jwt']"/>
     <exec src="nodes/http-signature/output.xml" if="${security.atn} contains ['http-signature']"/>
     <exec src="nodes/abac/output.xml" if="${security.atz} contains ['abac']"/>
-    <exec src="features/common/output.xml"/>
+
+    <output>
+        <model>
+            <value key="security">true</value>
+            <list key="server-features">
+                <value template="mustache" file="files/src/main/resources/server-features.yaml.hbs"/>
+            </list>
+            <list key="dependencies">
+                <map>
+                    <value key="groupId">io.helidon.webserver</value>
+                    <value key="artifactId">helidon-webserver-security</value>
+                </map>
+            </list>
+            <list key="application-test-yaml">
+                <value file="files/src/test/resources/application.yaml"/>
+            </list>
+            <list key="application-yaml"
+                  if="!(${security.atn} contains 'http-signature' || ${security.atn} contains 'jwt')">
+                <value template="mustache" file="files/src/main/resources/application.yaml.hbs"/>
+            </list>
+        </model>
+    </output>
 </archetype-script>

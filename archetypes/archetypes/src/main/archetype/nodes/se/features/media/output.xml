@@ -24,15 +24,17 @@
     <variables>
         <text path="media.json-lib" if="!(${media} contains 'json')"/>
     </variables>
+
     <exec src="nodes/jackson/output.xml" if="${media.json-lib} contains 'jackson'"/>
     <exec src="nodes/jsonb/output.xml" if="${media.json-lib} contains 'jsonb'"/>
     <exec src="nodes/jsonp/output.xml" if="${media.json-lib} contains 'jsonp'"/>
     <exec src="nodes/multipart/output.xml" if="${media} contains 'multipart'"/>
+
     <output>
         <templates engine="mustache" transformations="basedir,hbs,packaged" if="!(${media} contains 'json')">
             <directory>files</directory>
             <includes>
-                <include>src/*/java/**/GreetService.java.hbs</include>
+                <include>src/main/java/**/GreetService.java.hbs</include>
             </includes>
         </templates>
         <model>

@@ -26,21 +26,20 @@
         <boolean path="requires-io-helidon-webserver-staticcontent">true</boolean>
         <boolean path="requires-jakarta-json">true</boolean>
     </variables>
+
     <output>
         <templates transformations="basedir,packaged,hbs" engine="mustache">
             <directory>files</directory>
             <includes>
-                <include>**/*.hbs</include>
+                <include>src/main/java/**/FileService.java.hbs</include>
             </includes>
         </templates>
-
         <files transformations="basedir">
             <directory>files</directory>
             <includes>
                 <include>src/main/resources/WEB/index.html</include>
             </includes>
         </files>
-
         <model>
             <list key="dependencies">
                 <map order="500">

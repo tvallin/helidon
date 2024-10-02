@@ -25,14 +25,15 @@
         <boolean path="requires-jakarta-json-bind">true</boolean>
         <boolean path="requires-jakarta-json">true</boolean>
     </variables>
+
     <output>
         <templates transformations="basedir,packaged,hbs" engine="mustache">
             <directory>files</directory>
             <includes>
-                <include>**/*.hbs</include>
+                <include>src/main/java/**/GreetService.java.hbs</include>
+                <include>src/main/java/**/Message.java.hbs</include>
             </includes>
         </templates>
-
         <model>
             <list key="dependencies">
                 <map order="500">
