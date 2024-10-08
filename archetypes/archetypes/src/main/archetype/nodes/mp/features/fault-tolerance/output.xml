@@ -38,6 +38,10 @@
                     <value key="groupId">io.helidon.microprofile</value>
                     <value key="artifactId">helidon-microprofile-fault-tolerance</value>
                 </map>
+                <map if="!${metrics}">
+                    <value key="groupId">io.helidon.microprofile.metrics</value>
+                    <value key="artifactId">helidon-microprofile-metrics</value>
+                </map>
             </list>
             <list key="maven-plugins">
                 <value file="files/maven-plugins.xml"/>

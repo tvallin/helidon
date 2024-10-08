@@ -23,6 +23,8 @@
     <variables>
         <text path="basedir">.</text>
 
+        <boolean path="requires-helidon-microprofile-metrics">false</boolean>
+
         <!-- modules variables -->
         <boolean path="requires-java-logging">false</boolean>
         <boolean path="requires-jakarta-annotation">false</boolean>

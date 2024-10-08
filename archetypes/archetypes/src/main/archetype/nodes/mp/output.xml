@@ -84,7 +84,7 @@
 
         <model>
             <value key="app-type">${app-type}</value>
-            <!-- TODO emulate a set and remove this -->
+            <value key="parent-artifactId">helidon-mp</value>
             <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.microprofile.metrics</value>
