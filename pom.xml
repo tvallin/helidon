@@ -141,6 +141,7 @@
         <version.plugin.version-plugin>2.3</version.plugin.version-plugin>
         <version.plugin.buildnumber>3.1.0</version.plugin.buildnumber>
         <version.plugin.wiremock>2.14.0</version.plugin.wiremock>
+        <version.plugin.nativeimage>0.10.2</version.plugin.nativeimage>
 
         <version.helidon-cli>3.0.0</version.helidon-cli>
 
@@ -852,6 +853,20 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>${version.plugin.ant}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${version.plugin.nativeimage}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>add-reachability-metadata</id>
+                            <goals>
+                                <goal>add-reachability-metadata</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
