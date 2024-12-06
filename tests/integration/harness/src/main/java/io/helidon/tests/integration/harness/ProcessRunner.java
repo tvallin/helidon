@@ -472,7 +472,7 @@ public abstract class ProcessRunner {
                 return new CommandBuilder("powershell")
                         .append("target/" + finalName + "-jri/bin/start.ps1")
                         .append(opts.stream()
-                                .map(option -> String.format("--jvm '%s'", option))
+                                .map(option -> String.format("--jvm '\"%s\"'", option))
                                 .collect(Collectors.joining(" ")))
                         .append(args)
                         .command();
