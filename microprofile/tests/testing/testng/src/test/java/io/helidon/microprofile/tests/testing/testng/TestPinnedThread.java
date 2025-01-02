@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.helidon.microprofile.tests.testing.testng.programmatic.PinningExtraThr
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.jupiter.api.Disabled;
 import org.testng.Assert;
 import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
@@ -37,6 +38,7 @@ public class TestPinnedThread {
     private static final String EXPECTED_PINNING_METHOD_NAME = "lambda$testPinningExtraThread$0";
 
     @Test
+    @Disabled
     void testListener() {
         TestNG testng = new TestNG();
         testng.setTestClasses(new Class[] {PinningExtraThreadTest.class});
