@@ -52,7 +52,7 @@
                         <variables>
                             <text path="helidon-version" transient="true">${project.version}</text>
                         </variables>
-                        <exec src="flavor.xml"/>
+                        <exec src="flavor.xml" foo="bar"/>
                     </entrypoint>
                     <inputFiltersFile>filters.properties</inputFiltersFile>
                     <validations>
