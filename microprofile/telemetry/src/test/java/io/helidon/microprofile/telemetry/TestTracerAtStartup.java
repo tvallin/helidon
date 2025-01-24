@@ -16,6 +16,7 @@
 package io.helidon.microprofile.telemetry;
 
 import io.helidon.microprofile.testing.junit5.AddConfig;
+import io.helidon.microprofile.testing.junit5.AddExtension;
 import io.helidon.microprofile.testing.junit5.HelidonTest;
 
 import org.junit.jupiter.api.Test;
@@ -28,10 +29,11 @@ import static org.hamcrest.Matchers.not;
 
 @HelidonTest
 @AddConfig(key = "otel.sdk.disabled", value = "false")
+@AddExtension(TestExtension.class)
 class TestTracerAtStartup {
 
     @Test
-    @DisabledOnOs(value = OS.WINDOWS, disabledReason = "https://github.com/helidon-io/helidon/issues/9513")
+    //@DisabledOnOs(value = OS.WINDOWS, disabledReason = "https://github.com/helidon-io/helidon/issues/9513")
     void checkForFullFeaturedTracerAtStartup() {
         assertThat("Global tracer from start-up extension",
                    TestExtension.globalTracerAtStartup.unwrap(io.opentelemetry.api.trace.Tracer.class).getClass().getName(),
