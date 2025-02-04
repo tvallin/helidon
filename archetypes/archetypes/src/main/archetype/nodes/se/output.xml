@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Oracle and/or its affiliates.
+    Copyright (c) 2024, 2025 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@
     <exec src="features/webclient/output.xml" if="${extra} contains 'webclient'"/>
     <exec src="features/cors/output.xml" if="${extra} contains 'cors'"/>
     <exec src="features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
+    <exec src="features/coherence/output.xml" if="${extra} contains 'coherence'"/>
 
     <!-- observability step -->
     <exec src="features/metrics/output.xml" if="${metrics}"/>
@@ -70,7 +71,12 @@
         <model>
             <value key="app-type">${app-type}</value>
             <value key="multi-module">${multi-module}</value>
-            <value key="mainClass">${package}.Main</value>
+            <list key="pom-properties">
+                <map>
+                    <value key="key">mainClass</value>
+                    <value key="value">${package}.Main</value>
+                </map>
+            </list>
             <value key="parent-artifactId">helidon-se</value>
             <list key="dependencies">
                 <map>

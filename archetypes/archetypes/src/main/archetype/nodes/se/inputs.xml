@@ -58,6 +58,7 @@
                 <option value="webclient" name="WebClient" description="HTTP client"/>
                 <option value="fault-tolerance" name="Fault Tolerance" description="System for building resilient applications"/>
                 <option value="cors" name="CORS" description="Cross-Origin Resource Sharing utilities"/>
+                <option value="coherence" name="Coherence" description="Cache data with coherence"/>
             </list>
         </inputs>
     </step>

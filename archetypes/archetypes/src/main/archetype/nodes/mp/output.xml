@@ -43,6 +43,7 @@
     <!-- extra step -->
     <exec src="features/fault-tolerance/output.xml" if="${extra} contains 'fault-tolerance'"/>
     <exec src="features/cors/output.xml" if="${extra} contains 'cors'"/>
+    <exec src="features/coherence/output.xml" if="${extra} contains 'coherence'"/>
 
     <!-- observability step -->
     <exec src="features/health/output.xml" if="${health}"/>

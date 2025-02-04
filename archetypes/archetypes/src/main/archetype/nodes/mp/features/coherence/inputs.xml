@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2024 Oracle and/or its affiliates.
+    Copyright (c) 2025 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@
 <archetype-script xmlns="https://helidon.io/archetype/2.0"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
+
+    <!--  Remove this file if we keep input as part of 'Extra'  -->
+
     <inputs>
-        <enum id="build-system" name="Select a Build System" optional="true" default="maven">
-            <option value="maven" name="Apache Maven"/>
-        </enum>
-        <text id="groupId" name="Project groupId" optional="true" default="com.examples"/>
-        <text id="artifactId" name="Project artifactId" optional="true" default="myproject"/>
-        <text id="version" name="Project version" optional="true" default="1.0-SNAPSHOT"/>
-        <text id="package" name="Java package name" optional="true" default="com.example.myproject"/>
+        <boolean id="coherence"
+                 name="Coherence"
+                 description="Cache data using coherence"
+                 default="false"
+                 optional="true"/>
     </inputs>
 </archetype-script>

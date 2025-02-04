@@ -85,6 +85,8 @@
                 <value if="${requires-org-jvnet-mimepull}">org.jvnet.mimepull</value>
                 <value if="${requires-com-fasterxml-jackson-annotation}">com.fasterxml.jackson.annotation</value>
                 <value if="${requires-com-fasterxml-jackson-core}">com.fasterxml.jackson.core</value>
+                <value if="${requires-com-oracle-coherence}">com.oracle.coherence</value>
+                <value if="${requires-com-oracle-coherence-cdi}">com.oracle.coherence.cdi</value>
             </list>
         </model>
     </output>

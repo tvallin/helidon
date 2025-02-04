@@ -24,23 +24,16 @@
         <boolean path="requires-io-helidon-faulttolerance">true</boolean>
     </variables>
     <output>
-<<<<<<<< HEAD:archetypes/archetypes/src/main/archetype/nodes/se/features/security/nodes/jwt/extra-output.xml
-        <templates engine="mustache" transformations="mustache,packaged" if="${extra} contains 'webclient'">
+        <templates engine="mustache" transformations="mustache,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/*/java/**/WebClientMain.java.mustache</include>
             </includes>
         </templates>
-        <templates engine="mustache" transformations="mustache,packaged" if="${extra} contains 'fault-tolerance'">
-            <directory>files</directory>
-            <includes>
-                <include>src/*/java/**/FtService.java.mustache</include>
-========
         <templates engine="mustache" transformations="basedir,hbs,packaged">
             <directory>files</directory>
             <includes>
                 <include>src/main/java/**/FtService.java.hbs</include>
->>>>>>>> b2f08018d0 (Create new archetype layout):archetypes/archetypes/src/main/archetype/nodes/se/features/fault-tolerance/output.xml
             </includes>
         </templates>
         <model>
@@ -57,7 +50,6 @@
                 <value>io.helidon.faulttolerance.CircuitBreakerOpenException</value>
                 <value>io.helidon.faulttolerance.TimeoutException</value>
             </list>
-<<<<<<<< HEAD:archetypes/archetypes/src/main/archetype/nodes/se/features/security/nodes/jwt/extra-output.xml
             <list key="Main-routing-builder" if="${extra} contains 'fault-tolerance'">
                 <value><![CDATA[.register("/", new FtService())
                 .error(BulkheadException.class,
@@ -69,22 +61,8 @@
                 .error(Throwable.class,
                         (req, res, ex) -> res.status(Status.INTERNAL_SERVER_ERROR_500)
                                 .send(ex.getClass().getName() + ": " + ex.getMessage()))]]>
-========
-            <list key="Main-routing-builder">
-                <value><![CDATA[
-            .register("/", new FtService())
-            .error(BulkheadException.class,
-                (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("bulkhead"))
-            .error(CircuitBreakerOpenException.class,
-                (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("circuit breaker"))
-            .error(TimeoutException.class,
-                (req, res, ex) -> res.status(Status.REQUEST_TIMEOUT_408).send("timeout"))
-            .error(Throwable.class,
-                (req, res, ex) -> res.status(Status.INTERNAL_SERVER_ERROR_500)
-                    .send(ex.getClass().getName() + ": " + ex.getMessage()))]]>
->>>>>>>> b2f08018d0 (Create new archetype layout):archetypes/archetypes/src/main/archetype/nodes/se/features/fault-tolerance/output.xml
-                </value>
-            </list>
+                <value/>
+            <list/>
             <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
@@ -223,17 +201,12 @@
             assertThat(clientResponse.status(), is(Status.REQUEST_TIMEOUT_408));
             assertThat(clientResponse.as(String.class), is("timeout"));
         }
-<<<<<<<< HEAD:archetypes/archetypes/src/main/archetype/nodes/se/features/security/nodes/jwt/extra-output.xml
     }
 ]]>
                 </value>
             </list>
             <list key="module-requires" if="${extra} contains 'fault-tolerance'">
                 <value>io.helidon.faulttolerance</value>
-========
-    }]]>
-                </value>
->>>>>>>> b2f08018d0 (Create new archetype layout):archetypes/archetypes/src/main/archetype/nodes/se/features/fault-tolerance/output.xml
             </list>
         </model>
     </output>

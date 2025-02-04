@@ -82,5 +82,7 @@
         <boolean path="requires-org-jvnet-mimepull">false</boolean>
         <boolean path="requires-com-fasterxml-jackson-annotation">false</boolean>
         <boolean path="requires-com-fasterxml-jackson-core">false</boolean>
+        <boolean path="requires-com-oracle-coherence">false</boolean>
+        <boolean path="requires-com-oracle-coherence-cdi">false</boolean>
     </variables>
 </archetype-script>
