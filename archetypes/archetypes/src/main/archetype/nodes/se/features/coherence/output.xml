@@ -75,8 +75,8 @@
                 </value>
             </list>
             <list key="Main-routing-builder">
-                <value><![CDATA[.register("/creditscore", new CoherenceService())
-]]>
+                <value><![CDATA[
+            .register("/creditscore", new CoherenceService())]]>
                 </value>
             </list>
             <list key="readme-exercise-the-application">

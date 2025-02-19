@@ -56,7 +56,6 @@
     <!-- packaging step -->
     <exec src="features/docker/output.xml" if="${docker}"/>
     <exec src="features/kubernetes/output.xml" if="${k8s}"/>
-    <exec src="features/verrazzano/output.xml" if="${v8o}"/>
     <exec src="features/jpms/output.xml" if="${jpms}"/>
 
     <!-- customize step -->

@@ -72,8 +72,7 @@
                         </value>
                     </list>
                     <list key="Main-server-builder">
-                        <value><![CDATA[
-                .addFeature(observe)]]>
+                        <value><![CDATA[                .addFeature(observe)]]>
                         </value>
                     </list>
                 </model>

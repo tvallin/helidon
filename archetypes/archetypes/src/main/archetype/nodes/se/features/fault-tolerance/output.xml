@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023, 2024 Oracle and/or its affiliates.
+    Copyright (c) 2023, 2025 Oracle and/or its affiliates.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@
                 <value>io.helidon.faulttolerance.CircuitBreakerOpenException</value>
                 <value>io.helidon.faulttolerance.TimeoutException</value>
             </list>
-            <list key="Main-routing-builder" if="${extra} contains 'fault-tolerance'">
+            <list key="Main-routing-builder">
                 <value><![CDATA[.register("/", new FtService())
                 .error(BulkheadException.class,
                         (req, res, ex) -> res.status(Status.SERVICE_UNAVAILABLE_503).send("bulkhead"))
@@ -61,8 +61,8 @@
                 .error(Throwable.class,
                         (req, res, ex) -> res.status(Status.INTERNAL_SERVER_ERROR_500)
                                 .send(ex.getClass().getName() + ": " + ex.getMessage()))]]>
-                <value/>
-            <list/>
+                </value>
+            </list>
             <list key="MainTest-tests">
                 <value><![CDATA[
     @Test
@@ -204,9 +204,6 @@
     }
 ]]>
                 </value>
-            </list>
-            <list key="module-requires" if="${extra} contains 'fault-tolerance'">
-                <value>io.helidon.faulttolerance</value>
             </list>
         </model>
     </output>
