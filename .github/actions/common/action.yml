@@ -51,6 +51,9 @@ inputs:
   free-space:
     description: Whether to aggressively free disk space on the runner
     default: 'false'
+  setup-java:
+    description: Setup java based on env.JAVA_VERSION variable
+    default: 'true'
 runs:
   using: "composite"
   steps:
@@ -78,6 +81,7 @@ runs:
         check-for-updates: 'false'
         set-java-home: 'false'
     - name: Set up JDK
+      if: ${{ inputs.setup-java == 'true' }}
       uses: actions/setup-java@v4.1.0
       with:
         distribution: ${{ env.JAVA_DISTRO }}
@@ -150,7 +154,7 @@ runs:
           **/target/failsafe-reports/**
           **/target/it/**/*.log
     - name: Archive artifacts
-      if: ${{ inputs.artifact-name != '' && inputs.artifact-path != ''  && always() }}
+      if: ${{ inputs.artifact-name != '' && inputs.artifact-path != '' && always() }}
       uses: actions/upload-artifact@v4
       with:
         if-no-files-found: 'ignore'
