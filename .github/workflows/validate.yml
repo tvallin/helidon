@@ -102,18 +102,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
-      - name: Set up JDK ea-stable
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: ea
-          version: stable
       - uses: ./.github/actions/common
         with:
           build-cache: read-write
           maven-cache: read-write
           cache-key-prefix: ${{ env.CACHE-KEY-PREFIX }}
-          setup-java: false
+          setup-latest-java: true
           run: |
             mvn ${MVN_ARGS} --version
             mvn ${MVN_ARGS} build-cache:go-offline
@@ -138,16 +132,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
-      - uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: ea
-          version: stable
       - uses: ./.github/actions/common
         with:
           build-cache: read-only
           cache-key-prefix: ${{ env.CACHE-KEY-PREFIX }}
-          setup-java: false
+          setup-latest-java: true
           test-artifact-name: tests-${{ matrix.moduleSet }}-${{ matrix.platform }}-latest-java
           run: |
             mvn --version
