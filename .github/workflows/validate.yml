@@ -32,6 +32,7 @@ env:
   JAVA_VERSION: 21
   GRAALVM_VERSION: 21.0.3
   JAVA_DISTRO: oracle
+  CACHE-KEY-PREFIX: latest-java-
   MVN_ARGS: |
     -B -fae -e
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
@@ -95,7 +96,6 @@ jobs:
               -Ptests \
               install
   build-latest-java:
-    needs: test-results
     timeout-minutes: 15
     runs-on: ubuntu-22.04
     steps:
@@ -112,6 +112,7 @@ jobs:
         with:
           build-cache: read-write
           maven-cache: read-write
+          cache-key-prefix: ${{ env.CACHE-KEY-PREFIX }}
           setup-java: false
           run: |
             mvn ${MVN_ARGS} --version
@@ -145,6 +146,7 @@ jobs:
       - uses: ./.github/actions/common
         with:
           build-cache: read-only
+          cache-key-prefix: ${{ env.CACHE-KEY-PREFIX }}
           setup-java: false
           test-artifact-name: tests-${{ matrix.moduleSet }}-${{ matrix.platform }}-latest-java
           run: |

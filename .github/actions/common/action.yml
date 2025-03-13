@@ -54,6 +54,9 @@ inputs:
   setup-java:
     description: Setup java based on env.JAVA_VERSION variable
     default: 'true'
+  cache-key-prefix:
+    description: Add a prefix to cache key
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -97,9 +100,9 @@ runs:
           !.m2/repository/io/helidon/**
         enableCrossOsArchive: true
         # only hash top-level poms to keep it fast
-        key: local-maven-${{ hashFiles('*/pom.xml', 'pom.xml') }}
+        key: ${{ inputs.cache-key-prefix }}local-maven-${{ hashFiles('*/pom.xml', 'pom.xml') }}
         restore-keys: |
-          local-maven-
+          ${{ inputs.cache-key-prefix }}local-maven-
     - name: Cache local Maven repository (read-only)
       if: ${{ inputs.maven-cache == 'read-only' }}
       uses: actions/cache/restore@v4.2.0
@@ -108,9 +111,9 @@ runs:
           .m2/repository/**/*.*
           !.m2/repository/io/helidon/**
         enableCrossOsArchive: true
-        key: local-maven-${{ hashFiles('*/pom.xml', 'pom.xml') }}
+        key: ${{ inputs.cache-key-prefix }}local-maven-${{ hashFiles('*/pom.xml', 'pom.xml') }}
         restore-keys: |
-          local-maven-
+          ${{ inputs.cache-key-prefix }}local-maven-
     - name: Build cache (read-write)
       if: ${{ inputs.build-cache == 'read-write' }}
       uses: actions/cache@v4.2.0
@@ -119,7 +122,7 @@ runs:
           ./**/target/**
           .m2/repository/io/helidon/**
         enableCrossOsArchive: true
-        key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.build-cache-id }}
+        key: ${{ inputs.cache-key-prefix }}build-cache-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.build-cache-id }}
         restore-keys: |
           build-cache-${{ github.run_id }}-${{ github.run_attempt }}-
           build-cache-${{ github.run_id }}-
@@ -132,10 +135,10 @@ runs:
           .m2/repository/io/helidon/**
         enableCrossOsArchive: true
         fail-on-cache-miss: true
-        key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.build-cache-id }}
+        key: ${{ inputs.cache-key-prefix }}build-cache-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.build-cache-id }}
         restore-keys: |
-          build-cache-${{ github.run_id }}-${{ github.run_attempt }}-
-          build-cache-${{ github.run_id }}-
+          ${{ inputs.cache-key-prefix }}build-cache-${{ github.run_id }}-${{ github.run_attempt }}-
+          ${{ inputs.cache-key-prefix }}build-cache-${{ github.run_id }}-
     - name: Exec
       env:
         MVN_ARGS: |
