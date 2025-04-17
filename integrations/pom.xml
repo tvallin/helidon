@@ -56,6 +56,7 @@
         <module>vault</module>
         <module>microstream</module>
         <module>langchain4j</module>
+        <module>mcp</module>
     </modules>
 
     <build>

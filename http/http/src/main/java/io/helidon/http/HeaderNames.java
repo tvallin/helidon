@@ -588,6 +588,16 @@ public final class HeaderNames {
     public static final HeaderName LOCATION = HeaderNameEnum.LOCATION;
     /**
      * The {@value} header name.
+     * Used to provide MCP session id to server.
+     */
+    public static final String MCP_SESSION_ID_NAME = Strings.MCP_SESSION_ID_NAME;
+    /**
+     * The {@value #MCP_SESSION_ID_NAME} header name.
+     * Used to provide MCP session id to server.
+     */
+    public static final HeaderName MCP_SESSION_ID = HeaderNameEnum.MCP_SESSION_ID;
+    /**
+     * The {@value} header name.
      * Implementation-specific fields that may have various effects anywhere along the request-response chain.
      */
     public static final String PRAGMA_NAME = Strings.PRAGMA_NAME;

@@ -1,0 +1,6 @@
+server:
+  mcp:
+    transport:
+    capabilities:
+    info:
+    instructions:

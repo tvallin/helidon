@@ -99,7 +99,8 @@ enum HeaderNameEnum implements HeaderName {
     X_FORWARDED_PORT(Strings.X_FORWARDED_PORT_NAME),
     X_FORWARDED_PREFIX(Strings.X_FORWARDED_PREFIX_NAME),
     X_FORWARDED_PROTO(Strings.X_FORWARDED_PROTO_NAME),
-    X_HELIDON_CN(Strings.X_HELIDON_CN_NAME);
+    X_HELIDON_CN(Strings.X_HELIDON_CN_NAME),
+    MCP_SESSION_ID(Strings.MCP_SESSION_ID_NAME);
 
     private static final Map<String, HeaderName> BY_NAME;
     private static final Map<String, HeaderName> BY_CAP_NAME;
@@ -227,6 +228,7 @@ enum HeaderNameEnum implements HeaderName {
         static final String X_FORWARDED_PREFIX_NAME = "X-Forwarded-Prefix";
         static final String X_FORWARDED_PROTO_NAME = "X-Forwarded-Proto";
         static final String X_HELIDON_CN_NAME = "X-HELIDON-CN";
+        static final String MCP_SESSION_ID_NAME = "Mcp-Session-Id";
 
         private Strings() {
         }
