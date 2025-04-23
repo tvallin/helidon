@@ -20,6 +20,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
+
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -67,10 +69,16 @@ public final class Mcp {
 		String annotations() default "";  //optional
 	}
 
+	@Target(PARAMETER)
+	@Retention(RUNTIME)
+	public @interface ToolTParam {
+		String value();
+	}
+
 	@Target(ElementType.TYPE)
 	@Retention(RUNTIME)
 	public @interface Server {
-
+		Class<? extends McpTransportProvider> value();
 	}
 
 }

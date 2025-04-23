@@ -16,164 +16,223 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import io.helidon.http.Status;
-import io.helidon.http.sse.SseEvent;
-import io.helidon.webserver.WebServer;
-import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.http.ServerRequest;
-import io.helidon.webserver.http.ServerResponse;
-import io.helidon.webserver.sse.SseSink;
+import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 
-import static io.helidon.http.HeaderNames.MCP_SESSION_ID;
-
 public class McpServerImpl implements McpServer {
 
-	private final WebServer server;
+	private static final System.Logger LOGGER = System.getLogger(McpServerImpl.class.getName());
+
 	private final McpServerConfig config;
+	private final McpTransportProvider transportProvider;
 	private final ObjectMapper mapper = new ObjectMapper();
-	private final Map<String, ClientRequestHandler<McpSchema.JSONRPCMessage>> sseRouting = new HashMap<>();
-	private final Map<String, McpServerSession> sessions = new ConcurrentHashMap<>();
+	private final Map<String, RequestHandler<?>> handlers = new HashMap<>();
+	private final ConcurrentHashMap<String, PromptComponent> prompts = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, ResourceComponent> resources = new ConcurrentHashMap<>();
+	private final CopyOnWriteArrayList<McpSchema.ResourceTemplate> resourceTemplates = new CopyOnWriteArrayList<>();
+	private final CopyOnWriteArrayList<ToolComponent> tools = new CopyOnWriteArrayList<>();
 
-	McpServerImpl(McpServerConfig config) {
+	public McpServerImpl(McpServerConfig config, McpTransportProvider provider) {
 		this.config = config;
-		this.server = WebServerConfig.builder()
-				.routing(routing -> routing
-						.get("/sse", this::get)
-						.post("/endpoint", this::post))
-				.build();
-		sseRouting();
-	}
+		this.transportProvider = provider;
 
-	/**
-	 * Handler to create a server session.
-	 *
-	 * @param request  server request
-	 * @param response server response
-	 */
-	private void get(ServerRequest request, ServerResponse response) {
-		String sessionId = UUID.randomUUID().toString();
-		SseEvent initialEvent = SseEvent.builder()
-				.name("endpoint")
-				.data(String.format("/endpoint?sessionId=%s", sessionId))
-				.build();
+		handlers.put(McpSchema.METHOD_PING, ping());
 
-		sessions.put(sessionId, new McpServerSession(sessionId, response.outputStream(), sseRouting, this::initialize));
-		response.sink(SseSink.TYPE).emit(initialEvent).close();
-	}
-
-	/**
-	 * Handler to forward client payload to proper session.
-	 *
-	 * @param request  server request
-	 * @param response server response
-	 */
-	private void post(ServerRequest request, ServerResponse response) {
-		AtomicReference<String> sessionId = new AtomicReference<>();
-
-		try {
-			sessionId.set(request.query().get("sessionId"));
-		} catch (NoSuchElementException exception) {
-			request.headers()
-					.find(MCP_SESSION_ID)
-					.ifPresentOrElse(header -> sessionId.set(header.values()),
-							() -> response.status(Status.BAD_REQUEST_400).send());
+		if (config.capabilities().tools().listChanged()) {
+			handlers.put(McpSchema.METHOD_TOOLS_LIST, toolsList());
+			handlers.put(McpSchema.METHOD_TOOLS_CALL, toolsCall());
 		}
 
-		McpServerSession session = sessions.get(sessionId.get());
-		if (session == null) {
-			response.status(Status.NOT_FOUND_404);
-			response.send();
-			return;
+		if (config.capabilities().resource().listChanged()) {
+			handlers.put(McpSchema.METHOD_RESOURCES_LIST, resourcesList());
+			handlers.put(McpSchema.METHOD_RESOURCES_READ, resourcesRead());
+			handlers.put(McpSchema.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
 		}
 
-		String content = request.content().as(String.class);
-		McpSchema.JSONRPCMessage message = deserializeJsonRpcMessage(content);
-		session.handle(message, response.sink(SseSink.TYPE));
-
-	}
-
-	static void write(OutputStream os, String event, String data) {
-		try {
-			os.write(("event: " + event + "\ndata: " + data + "\n\n").getBytes());
-			os.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		if (config.capabilities().promts().listChanged()) {
+			handlers.put(McpSchema.METHOD_PROMPT_LIST, promptsList());
+			handlers.put(McpSchema.METHOD_PROMPT_GET, promptsGet());
 		}
-	}
 
-	private void sseRouting() {
-		sseRouting.put(McpSchema.METHOD_PING, ClientRequestHandlers::ping);
-
-		// Add tools API handlers if the tool capability is enabled
-//		if (this.config.capabilities().tools().listChanged()) {
-//			requestHandlers.put(McpSchema.METHOD_TOOLS_LIST, toolsListRequestHandler());
-//			requestHandlers.put(McpSchema.METHOD_TOOLS_CALL, toolsCallRequestHandler());
-//		}
-//
-//		// Add resources API handlers if provided
-//		if (this.serverCapabilities.resources() != null) {
-//			requestHandlers.put(McpSchema.METHOD_RESOURCES_LIST, resourcesListRequestHandler());
-//			requestHandlers.put(McpSchema.METHOD_RESOURCES_READ, resourcesReadRequestHandler());
-//			requestHandlers.put(McpSchema.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateListRequestHandler());
-//		}
-//
-//		// Add prompts API handlers if provider exists
-//		if (this.serverCapabilities.prompts() != null) {
-//			requestHandlers.put(McpSchema.METHOD_PROMPT_LIST, promptsListRequestHandler());
-//			requestHandlers.put(McpSchema.METHOD_PROMPT_GET, promptsGetRequestHandler());
-//		}
-//
-//		// Add logging API handlers if the logging capability is enabled
-//		if (this.serverCapabilities.logging() != null) {
-//			requestHandlers.put(McpSchema.METHOD_LOGGING_SET_LEVEL, setLoggerRequestHandler());
-//		}
-
-	}
-
-	private McpSchema.JSONRPCMessage deserializeJsonRpcMessage(String content) {
-		try {
-			return McpSchema.deserializeJsonRpcMessage(mapper, content);
-		} catch (IOException e) {
-			throw new McpException("Failed to deserialize JSON RPC message");
+		if (config.capabilities().logging()) {
+			handlers.put(McpSchema.METHOD_LOGGING_SET_LEVEL, logging());
 		}
-	}
-
-
-
-	@Override
-	public McpServer start() {
-		server.start();
-		return this;
 	}
 
 	@Override
-	public String baseUri() {
-		return "http://localhost:" + server.port();
+	public ServerCapabilities getServerCapabilities() {
+		return this.config.capabilities();
+	}
+
+	@Override
+	public Implementation getServerInfo() {
+		return this.config.implementation();
+	}
+
+	@Override
+	public void start() {
+		this.transportProvider.setSessionFactory(
+				transport -> new McpServerSession(transport, this::initialize, this.handlers));
+	}
+
+	@Override
+	public void closeGracefully() {
+		this.transportProvider.closeGracefully();
+	}
+
+	@Override
+	public void close() {
+		this.transportProvider.close();
+	}
+
+	public void addTool(ToolComponent tool) {
+		this.tools.add(tool);
+	}
+
+	public void removeTool(ToolComponent tool) {
+		this.tools.remove(tool);
+	}
+
+	public void addResourceTemplate(McpSchema.ResourceTemplate resourceTemplate) {
+		this.resourceTemplates.add(resourceTemplate);
+	}
+
+	public void removeResourceTemplate(McpSchema.ResourceTemplate resourceTemplate) {
+		this.resourceTemplates.remove(resourceTemplate);
+	}
+
+	public void addResource(String resourceName, ResourceComponent resource) {
+		this.resources.put(resourceName, resource);
+	}
+
+	public void removeResource(String resourceName) {
+		this.resources.remove(resourceName);
+	}
+
+	public void addPrompt(PromptComponent prompt) {
+		this.prompts.put(prompt.prompt().name(), prompt);
+	}
+
+	public void removePrompt(String name) {
+		this.prompts.remove(name);
 	}
 
 	@Override
 	public McpServerConfig prototype() {
-		return config;
+		return this.config;
 	}
 
-	public McpSchema.InitializeResult initialize() {
+	RequestHandler<Object> ping() {
+		return null;
+	}
+
+	RequestHandler<McpSchema.ListToolsResult> toolsList() {
+		return (object) -> {
+			LOGGER.log(System.Logger.Level.INFO, "Tools list size: " + this.tools.size());
+			List<McpSchema.Tool> toolz = this.tools.stream().map(ToolComponent::tool).toList();
+			return new McpSchema.ListToolsResult(toolz, null);
+		};
+	}
+
+	//TODO
+	/**
+	 * Params is the arguments provided by the client to the tool (method signature).
+	 * McpSchema.Tool represent the tool definition and is selected by name.
+	 * Create an object that run the method with the params and return the result of it.
+	 * It is defined in McpSchema by Features with specification.
+	 *
+	 * @return Call tool result
+	 */
+	RequestHandler<McpSchema.CallToolResult> toolsCall() {
+		return (params) -> {
+			McpSchema.CallToolRequest callToolRequest = mapper.convertValue(params,
+					new TypeReference<McpSchema.CallToolRequest>() {
+					});
+
+			Optional<ToolComponent> tool = this.tools.stream()
+					.filter(tr -> callToolRequest.name().equals(tr.tool().name()))
+					.findAny();
+
+			if (tool.isEmpty()) {
+				return new McpSchema.CallToolResult(List.of(), true);
+			}
+			return tool.orElseThrow().fx().apply(callToolRequest.arguments());
+		};
+	}
+
+	RequestHandler<McpSchema.ListResourcesResult> resourcesList() {
+		return (params) -> {
+			var resources = this.resources.values().stream().map(ResourceComponent::resource).toList();
+			return new McpSchema.ListResourcesResult(resources, null);
+		};
+	}
+
+	RequestHandler<McpSchema.ReadResourceResult> resourcesRead() {
+		return (params) -> {
+			McpSchema.ReadResourceRequest resourceRequest = mapper.convertValue(params,
+					new TypeReference<McpSchema.ReadResourceRequest>() {
+					});
+			String resourceUri = resourceRequest.uri();
+			var resource = this.resources.get(resourceUri);
+			if (resource == null) {
+				//TODO - return an error
+				return new McpSchema.ReadResourceResult(List.of());
+			}
+			return resource.reader().apply(resourceRequest);
+		};
+	}
+
+	RequestHandler<McpSchema.ListResourceTemplatesResult> resourceTemplateList() {
+		return (param) -> new McpSchema.ListResourceTemplatesResult(this.resourceTemplates, null);
+	}
+
+	private RequestHandler<McpSchema.ListPromptsResult> promptsList() {
+		return (object) -> {
+			var promptsList = this.prompts.values().stream().map(PromptComponent::prompt).toList();
+			return new McpSchema.ListPromptsResult(promptsList, null);
+		};
+	}
+
+	/**
+	 * Same as tools, feature that process it and return prompt messages.
+	 * @return prompt result
+	 */
+	RequestHandler<McpSchema.GetPromptResult> promptsGet() {
+		return (params) -> {
+			McpSchema.GetPromptRequest promptRequest = mapper.convertValue(params,
+					new TypeReference<McpSchema.GetPromptRequest>() {
+					});
+			var prompt = prompts.get(promptRequest.name());
+			if (prompt == null) {
+				//TODO - return an error
+				return new McpSchema.GetPromptResult("Error", List.of());
+			}
+			return prompt.handler().apply(promptRequest);
+		};
+	}
+
+	//Todo - Change the logging level in the sessions
+	RequestHandler<McpSchema.LoggingMessageNotification> logging() {
+		return (param) -> new McpSchema.LoggingMessageNotification(McpSchema.LoggingLevel.INFO, "", "");
+	}
+
+	McpSchema.InitializeResult initialize(McpSchema.InitializeRequest initializeRequest) {
+		//TODO - Deal with the request and send result
+
 		return McpSchemaMapper.initializeResult(
 				McpSchema.LATEST_PROTOCOL_VERSION,
 				config.capabilities(),
 				config.implementation(),
 				config.instructions());
 	}
-
 }

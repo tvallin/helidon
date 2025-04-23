@@ -14,40 +14,18 @@
  * limitations under the License.
  */
 
-package io.helidon.integrations.mcp.server;
+package io.helidon.integrations.mcp.tests;
 
-@Mcp.Server
+import io.helidon.integrations.mcp.server.Mcp;
+import io.helidon.integrations.mcp.server.StdioTransportProvider;
+
+@Mcp.Server(StdioTransportProvider.class)
 class McpTest {
 
 	@Mcp.Tool(
 			name = "Weather Tool",
 			description = "Get weather from somewhere")
-	// TODO schema generated from method signature
-	String getWeather(String operation, int a, int b) {
-		String schema = """
-					{
-					  "type" : "object",
-					  "id" : "urn:jsonschema:Operation",
-					  "properties" : {
-						"operation" : {
-						  "type" : "string"
-						},
-						"a" : {
-						  "type" : "number"
-						},
-						"b" : {
-						  "type" : "number"
-						}
-					  }
-					}
-					""";
-		return "Sunny";
-	}
-
-	@Mcp.Tool(
-			name = "Weather Tool",
-			description = "Get weather from somewhere")
-	String getWeather1() {
+	String getWeather() {
 		return "Sunny";
 	}
 
@@ -55,6 +33,7 @@ class McpTest {
 			name = "Weather in town",
 			description = "Get the weather in a specific town")
 	//Todo - Check @V(paramName = "")
+	//Todo - Make sure prompt method return a String
 	String getWeatherInTown(@Mcp.PromptParam("town") String town) {
 		return "Sunny in " + town;
 	}

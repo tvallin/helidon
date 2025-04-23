@@ -20,5 +20,5 @@ module helidon.integrations.mcp.codegen {
 	exports io.helidon.integrations.mcp.codegen;
 
 	provides io.helidon.codegen.spi.CodegenExtensionProvider
-			with io.helidon.integrations.mcp.codegen.McpAiServiceCodegenProvider;
+			with io.helidon.integrations.mcp.codegen.McpCodegenProvider;
 }

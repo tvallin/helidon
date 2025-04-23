@@ -22,7 +22,11 @@ import io.helidon.builder.api.RuntimeType;
 public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 
 	static McpServer create(McpServerConfig serverConfig) {
-		return new McpServerImpl(serverConfig);
+		if ("stdio".equals(serverConfig.transport())) {
+			return new McpServerImpl(serverConfig, new StdioTransportProvider());
+		}
+		//Todo - return HTTP/SSE transport
+		return new McpServerImpl(serverConfig, new McpNoopTransportProvider());
 	}
 
 	static McpServer create(java.util.function.Consumer<McpServerConfig.Builder> consumer) {
@@ -38,9 +42,14 @@ public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 		return McpServerConfig.builder();
 	}
 
-	McpServer start();
+	ServerCapabilities getServerCapabilities();
 
-	String baseUri();
+	Implementation getServerInfo();
 
+	void start();
+
+	void closeGracefully();
+
+	void close();
 
 }

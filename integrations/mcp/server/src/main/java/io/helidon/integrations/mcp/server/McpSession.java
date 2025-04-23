@@ -16,20 +16,27 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.http.sse.SseEvent;
-import io.helidon.webserver.sse.SseSink;
-
-import io.modelcontextprotocol.spec.McpSchema;
+import io.helidon.integrations.mcp.server.spi.McpTransport;
 
 public interface McpSession {
 
-	SseSink sendRequest(SseEvent event);
+	<T> T sendRequest(String method, Object request, Class<T> clazz);
+
+	void sendNotification(String method, Object params);
 
 	/**
 	 * Handle incoming client message.
 	 *
 	 * @param message client message
 	 */
-	void handle(McpSchema.JSONRPCMessage message, SseSink sink);
+	<T> void handle(T message);
 
+	void closeGracefully();
+
+	void close();
+
+	@FunctionalInterface
+	interface Factory {
+		McpSession create(McpTransport transport);
+	}
 }

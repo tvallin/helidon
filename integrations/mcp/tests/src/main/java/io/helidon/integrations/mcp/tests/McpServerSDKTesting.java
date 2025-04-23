@@ -18,39 +18,42 @@ package io.helidon.integrations.mcp.tests;
 
 import java.util.List;
 
-import io.modelcontextprotocol.server.McpServer;
-import io.modelcontextprotocol.server.McpServerFeatures;
-import io.modelcontextprotocol.server.McpSyncServer;
-import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.helidon.integrations.mcp.server.Implementation;
+import io.helidon.integrations.mcp.server.ListChanged;
+import io.helidon.integrations.mcp.server.McpServerConfig;
+import io.helidon.integrations.mcp.server.McpServerImpl;
+import io.helidon.integrations.mcp.server.PromptComponent;
+import io.helidon.integrations.mcp.server.Resource;
+import io.helidon.integrations.mcp.server.ResourceComponent;
+import io.helidon.integrations.mcp.server.ServerCapabilities;
+import io.helidon.integrations.mcp.server.StdioTransportProvider;
+import io.helidon.integrations.mcp.server.ToolComponent;
+
 import io.modelcontextprotocol.spec.McpSchema;
 
 class McpServerSDKTesting {
 
 	public static void main(String[] args) {
-		McpSyncServer server = McpServer.sync(new StdioServerTransportProvider())
-				.serverInfo("Helidon MCP Server", "0.0.1")
-				.capabilities(McpSchema.ServerCapabilities.builder()
-						.resources(true, true)
-						.tools(true)
-						.prompts(true)
-						.logging()
+		McpServerImpl server = new McpServerImpl(McpServerConfig.builder()
+				.transport("stdio")
+				.capabilities(ServerCapabilities.builder()
+						.promts(ListChanged.builder()
+								.listChanged(true)
+								.build())
+						.resource(Resource.builder()
+								.listChanged(true)
+								.subscribe(true)
+								.build())
+						.tools(ListChanged.builder()
+								.listChanged(true)
+								.build())
 						.build())
-				.build();
-
-		server.addTool(createTool());
-		server.addResource(createResource());
-		server.addPrompt(createPrompt());
-
-		server.loggingNotification(McpSchema.LoggingMessageNotification.builder()
-				.level(McpSchema.LoggingLevel.INFO)
-				.logger("custom-logger")
-				.data("Server initialized")
-				.build());
-
-//		server.close();
-	}
-
-	static McpServerFeatures.SyncToolSpecification createTool() {
+				.implementation(Implementation.builder()
+						.name("Helidon MCP")
+						.version("0.0.1")
+						.build())
+				.instructions("")
+				.buildPrototype(), new StdioTransportProvider());
 		var schema = """
             {
               "type" : "object",
@@ -68,44 +71,31 @@ class McpServerSDKTesting {
               }
             }
             """;
-		return new McpServerFeatures.SyncToolSpecification(
-				new McpSchema.Tool("calculator", "Basic calculator", schema),
-				(exchange, arguments) -> {
-					// Tool implementation
-					StringBuilder sb = new StringBuilder();
-					arguments.forEach((k,v) -> sb.append("key - " + k)
-							.append("Value - " + v)
-							.append("\n"));
+		server.addTool(new ToolComponent(new McpSchema.Tool("calculator", "Basic calculator", schema),
+				(arguments) -> {
+					int a = Integer.parseInt(arguments.get("a").toString());
+					int b = Integer.parseInt(arguments.get("b").toString());
+					int result = a + b;
 					return new McpSchema.CallToolResult(List.of(
-							new McpSchema.TextContent(List.of(McpSchema.Role.USER), 2.0, sb.toString())
+							new McpSchema.TextContent(List.of(McpSchema.Role.USER), 2.0, String.valueOf(result))
 					), false);
-				}
-		);
-	}
+				}));
 
-	static McpServerFeatures.SyncResourceSpecification createResource() {
-		return new McpServerFeatures.SyncResourceSpecification(
-				new McpSchema.Resource("custom://resource", "name", "description", "mime-type", null),
-				(exchange, request) -> {
-					// Resource read implementation
-					return new McpSchema.ReadResourceResult(List.of(
-							new McpSchema.TextResourceContents("custom://resource", "plain/text", "Resource Text content")));
-				}
-		);
-	}
+		server.addPrompt(new PromptComponent(
+				new McpSchema.Prompt("greet", "A simple greeting prompt",
+						List.of(new McpSchema.PromptArgument("name", "name to be greeted", true))),
+				(request) -> {
+					String name = request.arguments().get("name").toString();
+					return new McpSchema.GetPromptResult("Hello", List.of(
+							new McpSchema.PromptMessage(McpSchema.Role.USER,
+									new McpSchema.TextContent("Can you nicely greet " + name + "?"))));
+				}));
 
-	static McpServerFeatures.SyncPromptSpecification createPrompt() {
-		return new McpServerFeatures.SyncPromptSpecification(
-				new McpSchema.Prompt("greeting", "A nice greeting prompt", List.of(
-						new McpSchema.PromptArgument("name", "Person to be greeted", true)
-				)),
-				(exchange, request) -> {
-					String name = (String) request.arguments().getOrDefault("name", "Anonymous");
-					// Prompt implementation
-					return new McpSchema.GetPromptResult("Desription",
-							List.of(new McpSchema.PromptMessage(McpSchema.Role.USER,
-									new McpSchema.TextContent(List.of(McpSchema.Role.USER), 2.0, "Say Hello to " + name))));
-				}
-		);
+		server.addResource("Helidon quickstart", new ResourceComponent(
+				new McpSchema.Resource("http://helidon.io/starter", "start", "Helidon starter", "application/zip", null),
+				(request) -> new McpSchema.ReadResourceResult(List.of(
+						new McpSchema.BlobResourceContents(request.uri(), "application/zip", "unknown")))));
+
+		server.start();
 	}
 }

@@ -16,145 +16,134 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.io.OutputStream;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
-import io.helidon.http.sse.SseEvent;
-import io.helidon.webserver.http.ServerResponse;
-import io.helidon.webserver.sse.SseSink;
+import io.helidon.integrations.mcp.server.spi.McpTransport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 
-import static io.helidon.integrations.mcp.server.McpServerImpl.write;
 import static io.helidon.integrations.mcp.server.McpServerSession.State.INITIALIZED;
 import static io.helidon.integrations.mcp.server.McpServerSession.State.INITIALIZING;
 import static io.helidon.integrations.mcp.server.McpServerSession.State.UNINITIALIZED;
 
 class McpServerSession implements McpSession {
 
-	private final String id;
-	private final ObjectMapper mapper = new ObjectMapper();
-	private final OutputStream outputStream;
-	private final Map<String, ClientRequestHandler<McpSchema.JSONRPCMessage>> messageHandlers;
-	private final Supplier<McpSchema.InitializeResult> initRequestHandler;
+	private static final System.Logger LOGGER = System.getLogger(McpServerSession.class.getName());
+
+	private final McpTransport transport;
+	private final InitializationHandler initializationHandler;
+	private final AtomicLong requestCounter = new AtomicLong(0);
+	private final Map<String, RequestHandler<?>> handlers;
 	private final AtomicReference<McpSchema.Implementation> clientInfo = new AtomicReference<>();
 	private final AtomicReference<McpSchema.ClientCapabilities> clientCapabilities = new AtomicReference<>();
+	private final ConcurrentHashMap<String, Class<?>> pendingResponses = new ConcurrentHashMap<>();
+
 
 	private State state = UNINITIALIZED;
 
-	McpServerSession(String id,
-					 OutputStream outputStream,
-					 Map<String, ClientRequestHandler<McpSchema.JSONRPCMessage>> messageHandlers,
-					 Supplier<McpSchema.InitializeResult> initRequestHandler) {
-		this.id = id;
-		this.outputStream = outputStream;
-		this.messageHandlers = messageHandlers;
-		this.initRequestHandler = initRequestHandler;
-
+	McpServerSession(McpTransport transport,
+					 InitializationHandler initializationHandler,
+					 Map<String, RequestHandler<?>> handlers) {
+		this.transport = transport;
+		this.handlers = handlers;
+		this.initializationHandler = initializationHandler;
 	}
 
 	@Override
-	public SseSink sendRequest(SseEvent event) {
+	public void handle(Object message) {
+		if (message instanceof McpSchema.JSONRPCResponse response) {
+			handleResponse(response);
+			return;
+		}
+		if (message instanceof McpSchema.JSONRPCRequest request) {
+			handleRequest(request);
+			return;
+		}
+		if (message instanceof McpSchema.JSONRPCNotification notification) {
+			handleNotification(notification);
+			return;
+		}
+		LOGGER.log(System.Logger.Level.DEBUG, "Unexpected message type: " + message.getClass());
+//		throw new McpException("Unexpected message type: " + message.getClass());
+	}
+
+	private void handleNotification(McpSchema.JSONRPCNotification notification) {
+		if (McpSchema.METHOD_NOTIFICATION_INITIALIZED.equals(notification.method())) {
+			state = INITIALIZED;
+		}
+	}
+
+	private void handleRequest(McpSchema.JSONRPCRequest request) {
+		if (McpSchema.METHOD_INITIALIZE.equals(request.method())) {
+			if (state == UNINITIALIZED) {
+				state = INITIALIZING;
+				McpSchema.InitializeRequest initializeRequest = transport.unmarshall(request.params(), McpSchema.InitializeRequest.class);
+				this.clientCapabilities.lazySet(initializeRequest.capabilities());
+				this.clientInfo.lazySet(initializeRequest.clientInfo());
+				McpSchema.InitializeResult result = initializationHandler.handle(initializeRequest);
+				McpSchema.JSONRPCResponse response = new McpSchema.JSONRPCResponse(
+						request.jsonrpc(),
+						request.id(),
+						result,
+						null);
+				transport.sendMessage(response);
+				return;
+			}
+		}
+		var handler = handlers.get(request.method());
+		if (handler == null) {
+			//TODO - send error
+			McpSchema.JSONRPCResponse.JSONRPCError error = McpException.toError("");
+			transport.sendMessage(new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), null, error));
+		}
+		var result = handler.handle(request.params());
+		transport.sendMessage(new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), result, null));
+	}
+
+	private void handleResponse(McpSchema.JSONRPCResponse response) {
+		//TODO - Can this throw a NPE ?
+		Class<?> clazz = pendingResponses.remove(response.id());
+		if (clazz == null) {
+			LOGGER.log(System.Logger.Level.DEBUG, "Unexpected response type: " + response.id());
+			return;
+		}
+		//handle(transport.unmarshall(response.result(), clazz));
+	}
+
+	@Override
+	public <T> T sendRequest(String method, Object request, Class<T> clazz) {
+		String requestId = generateId();
+		this.pendingResponses.put(requestId, clazz);
+		McpSchema.JSONRPCRequest jsonrpcRequest = new McpSchema.JSONRPCRequest(McpSchema.JSONRPC_VERSION, method,
+				requestId, request);
+		transport.sendMessage(jsonrpcRequest);
 		return null;
 	}
 
 	@Override
-	public void handle(McpSchema.JSONRPCMessage message, SseSink sink) {
-		if (message instanceof McpSchema.JSONRPCResponse response) {
-			handleResponse(response, sink);
-			return;
-		}
-		if (message instanceof McpSchema.JSONRPCRequest request) {
-			handleRequest(request, sink);
-			return;
-		}
-		if (message instanceof McpSchema.JSONRPCNotification) {
-			handleNotification();
-			return;
-		}
-		throw new McpException("Unexpected message type: " + message.getClass());
+	public void sendNotification(String method, Object params) {
+		//TODO - Shall we send the params as map ?
+		McpSchema.JSONRPCNotification jsonrpcNotification = new McpSchema.JSONRPCNotification(McpSchema.JSONRPC_VERSION,
+				method, null);
+		this.transport.sendMessage(jsonrpcNotification);
 	}
 
-	private void handleNotification() {
-		state = INITIALIZED;
+	@Override
+	public void closeGracefully() {
+		this.transport.closeGracefully();
 	}
 
-	private void handleRequest(McpSchema.JSONRPCRequest request, SseSink sink) {
-		if (McpSchema.METHOD_INITIALIZE.equals(request.method())) {
-			if (state == UNINITIALIZED) {
-				McpSchema.InitializeRequest initializeRequest = mapper.convertValue(request.params(), McpSchema.InitializeRequest.class);
-				this.clientCapabilities.lazySet(initializeRequest.capabilities());
-				this.clientInfo.lazySet(initializeRequest.clientInfo());
-				state = INITIALIZING;
-				McpSchema.InitializeResult result = initRequestHandler.get();
-				try {
-					McpSchema.JSONRPCResponse response = new McpSchema.JSONRPCResponse(
-							request.jsonrpc(),
-							request.id(),
-							result,
-							null);
-					String payload = mapper.writeValueAsString(response);
-					sink.emit(SseEvent.builder()
-							.name("message")
-							.data(payload)
-							.build())
-						.close();
-					return;
-				} catch (JsonProcessingException exception) {
-					throw new RuntimeException(exception);
-				}
-			}
-			sink.emit(SseEvent.builder()
-					.id(id)
-					.name("Error")
-					.data("Client initialization failed")
-					.build())
-					.close();
-		}
-		messageHandlers
-				.get(request.method())
-				.handle(request, request.params(), sink);
-
+	@Override
+	public void close() {
+		this.transport.close();
 	}
 
-	private void handleResponse(McpSchema.JSONRPCResponse response, SseSink sink) {
-		String id = (String) response.id();
-		if (Objects.equals(this.id, id)) {
-			//Todo - build this event
-				/*
-				{
-				  "jsonrpc": "2.0",
-				  "id": 1,
-				  "result": {
-					"protocolVersion": "2024-11-05",
-					"capabilities": {
-					  "logging": {},
-					  "prompts": {
-						"listChanged": true
-					  },
-					  "resources": {
-						"subscribe": true,
-						"listChanged": true
-					  },
-					  "tools": {
-						"listChanged": true
-					  }
-					},
-					"serverInfo": {
-					  "name": "ExampleServer",
-					  "version": "1.0.0"
-					},
-					"instructions": "Optional instructions for the client"
-				  }
-				}
-				 */
-			sink.emit(SseEvent.builder().build()).close();
-		}
+	private String generateId() {
+		return UUID.randomUUID().toString() + this.requestCounter.getAndIncrement();
 	}
 
 	enum State {

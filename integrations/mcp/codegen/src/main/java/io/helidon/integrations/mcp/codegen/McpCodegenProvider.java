@@ -9,11 +9,11 @@ import io.helidon.common.types.TypeName;
 
 import static io.helidon.integrations.mcp.codegen.McpTypes.MCP_SERVER;
 
-public class McpAiServiceCodegenProvider implements CodegenExtensionProvider {
+public class McpCodegenProvider implements CodegenExtensionProvider {
 	/**
 	 * Public no-arg constructor required by {@link java.util.ServiceLoader}.
 	 */
-	public McpAiServiceCodegenProvider() {
+	public McpCodegenProvider() {
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class McpAiServiceCodegenProvider implements CodegenExtensionProvider {
 
 	@Override
 	public CodegenExtension create(CodegenContext ctx, TypeName generator) {
-		return new McpServiceCodegen(ctx);
+		return new McpCodegen(ctx);
 	}
 }
 

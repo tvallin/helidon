@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package io.helidon.integrations.mcp.server;
+package io.helidon.integrations.mcp.server.spi;
 
-import io.helidon.webserver.sse.SseSink;
+public interface McpTransport {
 
-import io.modelcontextprotocol.spec.McpSchema;
+	<T> T unmarshall(Object params, Class<T> initializeRequestClass);
 
-public class ClientRequestHandlers {
+	void sendMessage(Object message);
 
-	private ClientRequestHandlers() {
-	}
+	/**
+	 * Closes the transport connection and releases any associated resources.
+	 */
+	void close();
 
-	static McpSchema.JSONRPCResponse ping(McpSchema.JSONRPCMessage message, Object params, SseSink sink) {
-		//TODO : BOOOOUUUUUUUHHH
-		McpSchema.JSONRPCRequest request = (McpSchema.JSONRPCRequest) message;
-		//TODO : BOOOOUUUUUUUHHH
-		return new McpSchema.JSONRPCResponse(McpSchema.JSONRPC_VERSION, request.id(), "", null);
-	}
+	/**
+	 * Closes the transport connection and releases any associated resources
+	 * asynchronously.
+	 */
+	void closeGracefully();
+
 }

@@ -29,8 +29,8 @@ interface ServerCapabilitiesBlueprint {
 	Map<String, Object> experimentation();
 
 	@Option.Configured
-	@Option.Default("")
-	String logging();
+	@Option.DefaultBoolean(false)
+	boolean logging();
 
 	@Option.Configured
 	ListChanged promts();

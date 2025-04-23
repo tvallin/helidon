@@ -24,8 +24,10 @@ import io.helidon.builder.api.Prototype;
 interface ImplementationBlueprint {
 
 	@Option.Configured
+	@Option.Default("Helidon MCP Server")
 	String name();
 
 	@Option.Configured
+	@Option.Default("1.0.0")
 	String version();
 }

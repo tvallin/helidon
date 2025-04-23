@@ -17,6 +17,7 @@
 package io.helidon.integrations.mcp.codegen;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import io.helidon.codegen.CodegenContext;
 import io.helidon.codegen.CodegenException;
@@ -27,16 +28,19 @@ import io.helidon.common.types.TypeInfo;
 
 import static io.helidon.integrations.mcp.codegen.McpTypes.MCP_SERVER;
 
-class McpServiceCodegen implements CodegenExtension {
+class McpCodegen implements CodegenExtension {
 
+	private final System.Logger LOGGER = System.getLogger(this.getClass().getName());
 	private final CodegenContext ctx;
 
-	McpServiceCodegen(CodegenContext ctx) {
+	McpCodegen(CodegenContext ctx) {
 		this.ctx = ctx;
 	}
 
 	@Override
 	public void process(RoundContext roundContext) {
+		LOGGER.log(System.Logger.Level.INFO, "Processing mcp codegen extension with context "
+				+ roundContext.types().stream().map(Object::toString).collect(Collectors.joining()));
 		Collection<TypeInfo> types = roundContext.annotatedTypes(MCP_SERVER);
 		for (TypeInfo type : types) {
 			process(roundContext, type);
@@ -44,9 +48,17 @@ class McpServiceCodegen implements CodegenExtension {
 	}
 
 	private void process(RoundContext roundCtx, TypeInfo type) {
-
-
+		if (type.kind() != ElementKind.CLASS) {
+			throw new CodegenException("Type annotated with " + MCP_SERVER.fqName() + " must be a class.",
+					type.originatingElementValue());
+		}
 	}
 
+	/**
+	 * Generate JSON-RPC schema out of method signature.
+	 */
+	private static class SchemaGenerator {
+
+	}
 
 }

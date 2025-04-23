@@ -16,14 +16,10 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.webserver.sse.SseSink;
 
-public interface ClientRequestHandler<T> {
-	/**
-	 * Handles a request from the client.
-	 *
-	 * @param request request from the client
-	 * @param params  the parameters of the request.
-	 */
-	void handle(T request, Object params, SseSink sink);
+public class RequestHandlers {
+
+	private RequestHandlers() {
+	}
+
 }

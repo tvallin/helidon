@@ -16,22 +16,11 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.http.sse.SseEvent;
-
-import io.modelcontextprotocol.spec.McpSchema;
-
-class McpException extends RuntimeException {
-
-	McpException(String message) {
-		super(message);
-	}
-
-	static McpSchema.JSONRPCResponse.JSONRPCError toError(String message) {
-		return new McpSchema.JSONRPCResponse.JSONRPCError(500, message, null);
-	}
-
-	SseEvent.Builder sseEventBuilder() {
-		return SseEvent.builder()
-				.name("Error");
-	}
+public interface RequestHandler<T> {
+	/**
+	 * Handles a request from the client.
+	 *
+	 * @param params  the parameters of the request.
+	 */
+	T handle(Object params);
 }
