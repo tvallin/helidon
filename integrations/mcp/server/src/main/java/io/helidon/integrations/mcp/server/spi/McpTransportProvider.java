@@ -16,34 +16,33 @@
 
 package io.helidon.integrations.mcp.server.spi;
 
-import io.helidon.integrations.mcp.server.McpSession;
+import java.util.Map;
 
+import io.helidon.integrations.mcp.server.McpSession;
 
 public interface McpTransportProvider {
 	/**
-	 * Sets the session factory that will be used to create sessions for new clients. An
-	 * implementation of the MCP server MUST call this method before any MCP interactions
-	 * take place.
-	 * @param factory the session factory to be used for initiating client sessions
+	 * Sets the session factory that will be used to create sessions for new clients.
+	 *
+	 * @param factory the session factory to be used
 	 */
 	void setSessionFactory(McpSession.Factory factory);
 
 	/**
 	 * Sends a notification to all connected clients.
+	 *
 	 * @param method the name of the notification method to be called on the clients
 	 * @param params parameters to be sent with the notification
-	 * @return a Mono that completes when the notification has been broadcast
 	 */
-	void notifyClients(String method, Object params);
+	void notifyClients(String method, Map<String, Object> params);
 
 	/**
-	 * Close transport once all operations are processed.
+	 * Close the sessions.
 	 */
 	void closeGracefully();
 
 	/**
-	 * Immediately closes all the transports with connected clients and releases any
-	 * associated resources.
+	 * Close the sessions.
 	 */
 	void close();
 }

@@ -15,6 +15,8 @@
 */
 package io.helidon.integrations.mcp.server;
 
+import java.util.Map;
+
 import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
 import io.modelcontextprotocol.spec.McpSchema;
 
@@ -41,7 +43,7 @@ public class MockMcpServerTransportProvider implements McpTransportProvider {
 	}
 
 	@Override
-	public void notifyClients(String method, Object params) {
+	public void notifyClients(String method, Map<String, Object> params) {
 		session.sendNotification(method, params);
 	}
 

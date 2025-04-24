@@ -29,4 +29,5 @@ module io.helidon.integrations.mcp.server {
 
 	exports io.helidon.integrations.mcp.server;
 	exports io.helidon.integrations.mcp.server.spi;
+	exports io.helidon.integrations.mcp.server.transport;
 }

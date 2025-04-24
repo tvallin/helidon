@@ -36,7 +36,7 @@ interface ServerCapabilitiesBlueprint {
 	ListChanged promts();
 
 	@Option.Configured
-	Resource resource();
+	Resource resources();
 
 	@Option.Configured
 	ListChanged tools();

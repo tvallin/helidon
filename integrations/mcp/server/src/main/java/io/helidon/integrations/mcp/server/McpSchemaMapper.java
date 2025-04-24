@@ -82,7 +82,7 @@ public class McpSchemaMapper implements MapperProvider {
 				capabilities.experimentation(),
 				new McpSchema.ServerCapabilities.LoggingCapabilities(),
 				prompts(capabilities.promts()),
-				resource(capabilities.resource()),
+				resource(capabilities.resources()),
 				tools(capabilities.tools()));
 	}
 

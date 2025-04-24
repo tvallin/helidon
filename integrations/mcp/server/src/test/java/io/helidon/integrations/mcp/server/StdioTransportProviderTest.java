@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import io.helidon.integrations.mcp.server.spi.McpTransport;
+import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;

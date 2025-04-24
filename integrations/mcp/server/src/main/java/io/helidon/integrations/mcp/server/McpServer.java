@@ -17,6 +17,8 @@
 package io.helidon.integrations.mcp.server;
 
 import io.helidon.builder.api.RuntimeType;
+import io.helidon.integrations.mcp.server.transport.HelidonTransportProvider;
+import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
 
 @RuntimeType.PrototypedBy(McpServerConfig.class)
 public interface McpServer extends RuntimeType.Api<McpServerConfig> {
@@ -26,7 +28,7 @@ public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 			return new McpServerImpl(serverConfig, new StdioTransportProvider());
 		}
 		//Todo - return HTTP/SSE transport
-		return new McpServerImpl(serverConfig, new McpNoopTransportProvider());
+		return new McpServerImpl(serverConfig, new HelidonTransportProvider());
 	}
 
 	static McpServer create(java.util.function.Consumer<McpServerConfig.Builder> consumer) {
@@ -51,5 +53,14 @@ public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 	void closeGracefully();
 
 	void close();
+
+	interface RequestHandler<T> {
+		/**
+		 * Handles a request from the client.
+		 *
+		 * @param params the parameters of the request.
+		 */
+		T handle(Object params);
+	}
 
 }

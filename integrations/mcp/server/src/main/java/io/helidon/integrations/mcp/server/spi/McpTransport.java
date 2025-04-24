@@ -18,18 +18,29 @@ package io.helidon.integrations.mcp.server.spi;
 
 public interface McpTransport {
 
-	<T> T unmarshall(Object params, Class<T> initializeRequestClass);
+	/**
+	 * Cast provided object to the procided class.
+	 *
+	 * @param object object to cast
+	 * @param clazz  class to cast the object to
+	 * @return the casted object
+	 */
+	<T> T unmarshall(Object object, Class<T> clazz);
 
+	/**
+	 * Send a message from the server to the client.
+	 *
+	 * @param message message to be sent
+	 */
 	void sendMessage(Object message);
 
 	/**
-	 * Closes the transport connection and releases any associated resources.
+	 * Closes the transport connection.
 	 */
 	void close();
 
 	/**
-	 * Closes the transport connection and releases any associated resources
-	 * asynchronously.
+	 * Closes the transport connection.
 	 */
 	void closeGracefully();
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.helidon.integrations.mcp.server;
+package io.helidon.integrations.mcp.server.transport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,11 +22,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.helidon.integrations.mcp.server.McpSession;
 import io.helidon.integrations.mcp.server.spi.McpTransport;
 import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
 
@@ -49,7 +48,7 @@ public class StdioTransportProvider implements McpTransportProvider {
 		this.closing = new AtomicBoolean(false);
 	}
 
-	StdioTransportProvider(InputStream is, OutputStream os) {
+	public StdioTransportProvider(InputStream is, OutputStream os) {
 		this.inputStream = is;
 		this.outputStream = os;
 		this.closing = new AtomicBoolean(false);
@@ -63,7 +62,7 @@ public class StdioTransportProvider implements McpTransportProvider {
 	}
 
 	@Override
-	public void notifyClients(String method, Object params) {
+	public void notifyClients(String method, Map<String, Object> params) {
 		this.session.sendNotification(method, params);
 	}
 
@@ -78,8 +77,6 @@ public class StdioTransportProvider implements McpTransportProvider {
 	}
 
 	private class StdioTransport implements McpTransport {
-
-		private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 		private final ObjectMapper mapper = new ObjectMapper();
 
 		StdioTransport() {
@@ -111,13 +108,11 @@ public class StdioTransportProvider implements McpTransportProvider {
 
 		@Override
 		public void close() {
-			executor.shutdownNow();
 			closing.set(true);
 		}
 
 		@Override
 		public void closeGracefully() {
-			executor.shutdown();
 			closing.set(true);
 		}
 
@@ -154,7 +149,6 @@ public class StdioTransportProvider implements McpTransportProvider {
 				if (session != null) {
 					session.close();
 				}
-				executor.shutdown();
 				LOGGER.log(System.Logger.Level.INFO, "Session closed.");
 			}
 		}

@@ -1,6 +1,16 @@
 server:
   mcp:
-    transport:
+    transport: "http" # or "stdio"
     capabilities:
+      logging: true
+      prompts:
+        listChanged: true
+      resources:
+        subscribe: true
+        listChanged: true
+      tools:
+        listChanged: true
     info:
-    instructions:
+      name: Helidon MCP Server
+      version: 0.0.1
+    instructions: ""

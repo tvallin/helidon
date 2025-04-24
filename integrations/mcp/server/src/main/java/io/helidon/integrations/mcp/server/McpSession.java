@@ -16,13 +16,27 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.Map;
+
 import io.helidon.integrations.mcp.server.spi.McpTransport;
 
 public interface McpSession {
 
-	<T> T sendRequest(String method, Object request, Class<T> clazz);
+	/**
+	 * Send request to the client.
+	 *
+	 * @param method request method
+	 * @param params request params
+	 */
+	void sendRequest(String method, Object params);
 
-	void sendNotification(String method, Object params);
+	/**
+	 * Send notification to the clients.
+	 *
+	 * @param method notification method
+	 * @param params notification parameters
+	 */
+	void sendNotification(String method, Map<String, Object> params);
 
 	/**
 	 * Handle incoming client message.

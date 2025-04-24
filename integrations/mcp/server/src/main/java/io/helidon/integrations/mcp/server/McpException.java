@@ -20,9 +20,9 @@ import io.helidon.http.sse.SseEvent;
 
 import io.modelcontextprotocol.spec.McpSchema;
 
-class McpException extends RuntimeException {
+public class McpException extends RuntimeException {
 
-	McpException(String message) {
+	public McpException(String message) {
 		super(message);
 	}
 

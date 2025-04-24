@@ -26,7 +26,7 @@ import io.helidon.integrations.mcp.server.PromptComponent;
 import io.helidon.integrations.mcp.server.Resource;
 import io.helidon.integrations.mcp.server.ResourceComponent;
 import io.helidon.integrations.mcp.server.ServerCapabilities;
-import io.helidon.integrations.mcp.server.StdioTransportProvider;
+import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
 import io.helidon.integrations.mcp.server.ToolComponent;
 
 import io.modelcontextprotocol.spec.McpSchema;
@@ -92,7 +92,11 @@ class McpServerSDKTesting {
 				}));
 
 		server.addResource("Helidon quickstart", new ResourceComponent(
-				new McpSchema.Resource("http://helidon.io/starter", "start", "Helidon starter", "application/zip", null),
+				new McpSchema.Resource("http://helidon.io/starter",
+						"start",
+						"Helidon starter",
+						"application/zip",
+						null),
 				(request) -> new McpSchema.ReadResourceResult(List.of(
 						new McpSchema.BlobResourceContents(request.uri(), "application/zip", "unknown")))));
 

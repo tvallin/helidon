@@ -17,7 +17,7 @@
 package io.helidon.integrations.mcp.tests;
 
 import io.helidon.integrations.mcp.server.Mcp;
-import io.helidon.integrations.mcp.server.StdioTransportProvider;
+import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
 
 @Mcp.Server(StdioTransportProvider.class)
 class McpTest {
@@ -32,8 +32,6 @@ class McpTest {
 	@Mcp.Prompt(
 			name = "Weather in town",
 			description = "Get the weather in a specific town")
-	//Todo - Check @V(paramName = "")
-	//Todo - Make sure prompt method return a String
 	String getWeatherInTown(@Mcp.PromptParam("town") String town) {
 		return "Sunny in " + town;
 	}

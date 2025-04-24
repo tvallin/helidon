@@ -16,41 +16,39 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.helidon.integrations.mcp.server.spi.McpTransport;
+import io.helidon.integrations.mcp.server.McpServer.RequestHandler;
 
 import io.modelcontextprotocol.spec.McpSchema;
 
-import static io.helidon.integrations.mcp.server.McpServerSession.State.INITIALIZED;
-import static io.helidon.integrations.mcp.server.McpServerSession.State.INITIALIZING;
-import static io.helidon.integrations.mcp.server.McpServerSession.State.UNINITIALIZED;
+import static io.helidon.integrations.mcp.server.McpSessionImpl.State.INITIALIZED;
+import static io.helidon.integrations.mcp.server.McpSessionImpl.State.INITIALIZING;
+import static io.helidon.integrations.mcp.server.McpSessionImpl.State.UNINITIALIZED;
 
-class McpServerSession implements McpSession {
+class McpSessionImpl implements McpSession {
 
-	private static final System.Logger LOGGER = System.getLogger(McpServerSession.class.getName());
+	private static final System.Logger LOGGER = System.getLogger(McpSessionImpl.class.getName());
 
 	private final McpTransport transport;
-	private final InitializationHandler initializationHandler;
 	private final AtomicLong requestCounter = new AtomicLong(0);
 	private final Map<String, RequestHandler<?>> handlers;
 	private final AtomicReference<McpSchema.Implementation> clientInfo = new AtomicReference<>();
 	private final AtomicReference<McpSchema.ClientCapabilities> clientCapabilities = new AtomicReference<>();
-	private final ConcurrentHashMap<String, Class<?>> pendingResponses = new ConcurrentHashMap<>();
-
+	private final List<String> pendingResponses = new ArrayList<>();
 
 	private State state = UNINITIALIZED;
 
-	McpServerSession(McpTransport transport,
-					 InitializationHandler initializationHandler,
-					 Map<String, RequestHandler<?>> handlers) {
+	McpSessionImpl(McpTransport transport,
+				   Map<String, RequestHandler<?>> handlers) {
 		this.transport = transport;
 		this.handlers = handlers;
-		this.initializationHandler = initializationHandler;
 	}
 
 	@Override
@@ -81,17 +79,9 @@ class McpServerSession implements McpSession {
 		if (McpSchema.METHOD_INITIALIZE.equals(request.method())) {
 			if (state == UNINITIALIZED) {
 				state = INITIALIZING;
-				McpSchema.InitializeRequest initializeRequest = transport.unmarshall(request.params(), McpSchema.InitializeRequest.class);
+				var initializeRequest = transport.unmarshall(request.params(), McpSchema.InitializeRequest.class);
 				this.clientCapabilities.lazySet(initializeRequest.capabilities());
 				this.clientInfo.lazySet(initializeRequest.clientInfo());
-				McpSchema.InitializeResult result = initializationHandler.handle(initializeRequest);
-				McpSchema.JSONRPCResponse response = new McpSchema.JSONRPCResponse(
-						request.jsonrpc(),
-						request.id(),
-						result,
-						null);
-				transport.sendMessage(response);
-				return;
 			}
 		}
 		var handler = handlers.get(request.method());
@@ -105,30 +95,27 @@ class McpServerSession implements McpSession {
 	}
 
 	private void handleResponse(McpSchema.JSONRPCResponse response) {
-		//TODO - Can this throw a NPE ?
-		Class<?> clazz = pendingResponses.remove(response.id());
-		if (clazz == null) {
-			LOGGER.log(System.Logger.Level.DEBUG, "Unexpected response type: " + response.id());
+		boolean expected = pendingResponses.remove(response.id().toString());
+		if (expected) {
 			return;
 		}
+		LOGGER.log(System.Logger.Level.DEBUG, "Unexpected response type: " + response.id());
 		//handle(transport.unmarshall(response.result(), clazz));
 	}
 
 	@Override
-	public <T> T sendRequest(String method, Object request, Class<T> clazz) {
+	public void sendRequest(String method, Object params) {
 		String requestId = generateId();
-		this.pendingResponses.put(requestId, clazz);
+		this.pendingResponses.add(requestId);
 		McpSchema.JSONRPCRequest jsonrpcRequest = new McpSchema.JSONRPCRequest(McpSchema.JSONRPC_VERSION, method,
-				requestId, request);
+				requestId, params);
 		transport.sendMessage(jsonrpcRequest);
-		return null;
 	}
 
 	@Override
-	public void sendNotification(String method, Object params) {
-		//TODO - Shall we send the params as map ?
+	public void sendNotification(String method, Map<String, Object> params) {
 		McpSchema.JSONRPCNotification jsonrpcNotification = new McpSchema.JSONRPCNotification(McpSchema.JSONRPC_VERSION,
-				method, null);
+				method, params);
 		this.transport.sendMessage(jsonrpcNotification);
 	}
 

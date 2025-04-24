@@ -16,6 +16,7 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,19 +42,21 @@ public class McpServerImpl implements McpServer {
 	private final ConcurrentHashMap<String, ResourceComponent> resources = new ConcurrentHashMap<>();
 	private final CopyOnWriteArrayList<McpSchema.ResourceTemplate> resourceTemplates = new CopyOnWriteArrayList<>();
 	private final CopyOnWriteArrayList<ToolComponent> tools = new CopyOnWriteArrayList<>();
+	private List<String> protocoleVersions = new ArrayList<>();
 
 	public McpServerImpl(McpServerConfig config, McpTransportProvider provider) {
 		this.config = config;
 		this.transportProvider = provider;
 
 		handlers.put(McpSchema.METHOD_PING, ping());
+		handlers.put(McpSchema.METHOD_INITIALIZE, initialize());
 
 		if (config.capabilities().tools().listChanged()) {
 			handlers.put(McpSchema.METHOD_TOOLS_LIST, toolsList());
 			handlers.put(McpSchema.METHOD_TOOLS_CALL, toolsCall());
 		}
 
-		if (config.capabilities().resource().listChanged()) {
+		if (config.capabilities().resources().listChanged()) {
 			handlers.put(McpSchema.METHOD_RESOURCES_LIST, resourcesList());
 			handlers.put(McpSchema.METHOD_RESOURCES_READ, resourcesRead());
 			handlers.put(McpSchema.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
@@ -82,7 +85,7 @@ public class McpServerImpl implements McpServer {
 	@Override
 	public void start() {
 		this.transportProvider.setSessionFactory(
-				transport -> new McpServerSession(transport, this::initialize, this.handlers));
+				transport -> new McpSessionImpl(transport, this.handlers));
 	}
 
 	@Override
@@ -226,13 +229,20 @@ public class McpServerImpl implements McpServer {
 		return (param) -> new McpSchema.LoggingMessageNotification(McpSchema.LoggingLevel.INFO, "", "");
 	}
 
-	McpSchema.InitializeResult initialize(McpSchema.InitializeRequest initializeRequest) {
-		//TODO - Deal with the request and send result
+	private RequestHandler<McpSchema.InitializeResult> initialize() {
+		return (param) -> {
+			McpSchema.InitializeRequest request = mapper.convertValue(param, new TypeReference<>() {});
+			String protocoleVersion = this.protocoleVersions.getLast();
 
-		return McpSchemaMapper.initializeResult(
-				McpSchema.LATEST_PROTOCOL_VERSION,
-				config.capabilities(),
-				config.implementation(),
-				config.instructions());
+			if (this.protocoleVersions.contains(request.protocolVersion())) {
+				protocoleVersion = request.protocolVersion();
+			}
+
+			return McpSchemaMapper.initializeResult(
+					protocoleVersion,
+					config.capabilities(),
+					config.implementation(),
+					config.instructions());
+		};
 	}
 }

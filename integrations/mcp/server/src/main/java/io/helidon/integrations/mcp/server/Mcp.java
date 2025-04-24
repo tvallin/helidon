@@ -39,6 +39,7 @@ public final class Mcp {
 		String description() default "none"; 	//optional
 	}
 
+	//TODO - Remove this
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface ResourceTemplate {
