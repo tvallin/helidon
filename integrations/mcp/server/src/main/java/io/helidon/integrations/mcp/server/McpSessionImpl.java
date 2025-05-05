@@ -17,15 +17,19 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 
-import io.helidon.integrations.mcp.server.spi.McpTransport;
-import io.helidon.integrations.mcp.server.McpServer.RequestHandler;
+import io.helidon.common.UncheckedException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 
 import static io.helidon.integrations.mcp.server.McpSessionImpl.State.INITIALIZED;
@@ -36,62 +40,90 @@ class McpSessionImpl implements McpSession {
 
 	private static final System.Logger LOGGER = System.getLogger(McpSessionImpl.class.getName());
 
-	private final McpTransport transport;
-	private final AtomicLong requestCounter = new AtomicLong(0);
-	private final Map<String, RequestHandler<?>> handlers;
+	private final Map<String, McpServer.RequestHandler<?>> handlers;
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final List<String> pendingResponses = new ArrayList<>();
+	private final AtomicBoolean active = new AtomicBoolean(true);
+	private final BlockingQueue<McpSchema.JSONRPCMessage> queue = new LinkedBlockingQueue<>();
 	private final AtomicReference<McpSchema.Implementation> clientInfo = new AtomicReference<>();
 	private final AtomicReference<McpSchema.ClientCapabilities> clientCapabilities = new AtomicReference<>();
-	private final List<String> pendingResponses = new ArrayList<>();
 
 	private State state = UNINITIALIZED;
 
-	McpSessionImpl(McpTransport transport,
-				   Map<String, RequestHandler<?>> handlers) {
-		this.transport = transport;
+	McpSessionImpl(Map<String, McpServer.RequestHandler<?>> handlers) {
 		this.handlers = handlers;
 	}
 
 	@Override
-	public void handle(Object message) {
-		if (message instanceof McpSchema.JSONRPCResponse response) {
-			handleResponse(response);
+	public void poll(Consumer<McpSchema.JSONRPCMessage> consumer) {
+		while (active.get()) {
+			try {
+				McpSchema.JSONRPCMessage message = queue.take();
+//				if (message instanceof ClosingMessage) {
+//					break;
+//				}
+				consumer.accept(message);
+			} catch (InterruptedException e) {
+				throw new UncheckedException(e);
+			}
+		}
+	}
+
+	@Override
+	public void send(McpSchema.JSONRPCMessage event) {
+		try {
+			if (event instanceof McpSchema.JSONRPCResponse response) {
+				handleResponse(response);
+				return;
+			}
+			if (event instanceof McpSchema.JSONRPCNotification notification) {
+				handleNotification(notification);
+				return;
+			}
+			if (event instanceof McpSchema.JSONRPCRequest request) {
+				event = handleRequest(request);
+			}
+			queue.put(event);
+		} catch (InterruptedException e) {
+			throw new UncheckedException(e);
+		}
+	}
+
+	@Override
+	public void disonnect() {
+		LOGGER.log(System.Logger.Level.INFO, "Disconnect session");
+		if (active.compareAndSet(true, false)) {
+			//queue.offer(ClosingMessage)
 			return;
 		}
-		if (message instanceof McpSchema.JSONRPCRequest request) {
-			handleRequest(request);
-			return;
-		}
-		if (message instanceof McpSchema.JSONRPCNotification notification) {
-			handleNotification(notification);
-			return;
-		}
-		LOGGER.log(System.Logger.Level.DEBUG, "Unexpected message type: " + message.getClass());
-//		throw new McpException("Unexpected message type: " + message.getClass());
+		LOGGER.log(System.Logger.Level.DEBUG, "Session is already disconnected.");
 	}
 
 	private void handleNotification(McpSchema.JSONRPCNotification notification) {
 		if (McpSchema.METHOD_NOTIFICATION_INITIALIZED.equals(notification.method())) {
 			state = INITIALIZED;
 		}
+		if ("notifications/cancelled".equals(notification.method())) {
+			this.disonnect();
+		}
 	}
 
-	private void handleRequest(McpSchema.JSONRPCRequest request) {
+	private McpSchema.JSONRPCResponse handleRequest(McpSchema.JSONRPCRequest request) {
 		if (McpSchema.METHOD_INITIALIZE.equals(request.method())) {
 			if (state == UNINITIALIZED) {
 				state = INITIALIZING;
-				var initializeRequest = transport.unmarshall(request.params(), McpSchema.InitializeRequest.class);
+				var initializeRequest = mapper.convertValue(request.params(), McpSchema.InitializeRequest.class);
 				this.clientCapabilities.lazySet(initializeRequest.capabilities());
 				this.clientInfo.lazySet(initializeRequest.clientInfo());
 			}
 		}
 		var handler = handlers.get(request.method());
 		if (handler == null) {
-			//TODO - send error
-			McpSchema.JSONRPCResponse.JSONRPCError error = McpException.toError("");
-			transport.sendMessage(new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), null, error));
+			var error = McpException.toError("Required method is not supported: " + request.method());
+			return new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), null, error);
 		}
 		var result = handler.handle(request.params());
-		transport.sendMessage(new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), result, null));
+		return new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), result, null);
 	}
 
 	private void handleResponse(McpSchema.JSONRPCResponse response) {
@@ -100,37 +132,6 @@ class McpSessionImpl implements McpSession {
 			return;
 		}
 		LOGGER.log(System.Logger.Level.DEBUG, "Unexpected response type: " + response.id());
-		//handle(transport.unmarshall(response.result(), clazz));
-	}
-
-	@Override
-	public void sendRequest(String method, Object params) {
-		String requestId = generateId();
-		this.pendingResponses.add(requestId);
-		McpSchema.JSONRPCRequest jsonrpcRequest = new McpSchema.JSONRPCRequest(McpSchema.JSONRPC_VERSION, method,
-				requestId, params);
-		transport.sendMessage(jsonrpcRequest);
-	}
-
-	@Override
-	public void sendNotification(String method, Map<String, Object> params) {
-		McpSchema.JSONRPCNotification jsonrpcNotification = new McpSchema.JSONRPCNotification(McpSchema.JSONRPC_VERSION,
-				method, params);
-		this.transport.sendMessage(jsonrpcNotification);
-	}
-
-	@Override
-	public void closeGracefully() {
-		this.transport.closeGracefully();
-	}
-
-	@Override
-	public void close() {
-		this.transport.close();
-	}
-
-	private String generateId() {
-		return UUID.randomUUID().toString() + this.requestCounter.getAndIncrement();
 	}
 
 	enum State {

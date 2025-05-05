@@ -20,11 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,18 +34,17 @@ public class McpServerImpl implements McpServer {
 	private static final System.Logger LOGGER = System.getLogger(McpServerImpl.class.getName());
 
 	private final McpServerConfig config;
-	private final McpTransportProvider transportProvider;
 	private final ObjectMapper mapper = new ObjectMapper();
+	private final List<String> protocoleVersions = new ArrayList<>();
 	private final Map<String, RequestHandler<?>> handlers = new HashMap<>();
 	private final ConcurrentHashMap<String, PromptComponent> prompts = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<String, ResourceComponent> resources = new ConcurrentHashMap<>();
 	private final CopyOnWriteArrayList<McpSchema.ResourceTemplate> resourceTemplates = new CopyOnWriteArrayList<>();
 	private final CopyOnWriteArrayList<ToolComponent> tools = new CopyOnWriteArrayList<>();
-	private List<String> protocoleVersions = new ArrayList<>();
 
-	public McpServerImpl(McpServerConfig config, McpTransportProvider provider) {
+	public McpServerImpl(McpServerConfig config) {
 		this.config = config;
-		this.transportProvider = provider;
+		this.protocoleVersions.add("2024-11-05");
 
 		handlers.put(McpSchema.METHOD_PING, ping());
 		handlers.put(McpSchema.METHOD_INITIALIZE, initialize());
@@ -62,7 +60,7 @@ public class McpServerImpl implements McpServer {
 			handlers.put(McpSchema.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
 		}
 
-		if (config.capabilities().promts().listChanged()) {
+		if (config.capabilities().prompts().listChanged()) {
 			handlers.put(McpSchema.METHOD_PROMPT_LIST, promptsList());
 			handlers.put(McpSchema.METHOD_PROMPT_GET, promptsGet());
 		}
@@ -70,32 +68,25 @@ public class McpServerImpl implements McpServer {
 		if (config.capabilities().logging()) {
 			handlers.put(McpSchema.METHOD_LOGGING_SET_LEVEL, logging());
 		}
+
+		tools.addAll(config.tools());
+		config.resources().stream().filter(it -> it.resource() != null).forEach(resource -> this.resources.put(resource.resource().name(), resource));
+		config.prompts().stream().filter(it -> it.prompt() != null).forEach(prompt -> this.prompts.put(prompt.prompt().name(), prompt));
 	}
 
 	@Override
-	public ServerCapabilities getServerCapabilities() {
+	public Capabilities capabilities() {
 		return this.config.capabilities();
 	}
 
 	@Override
-	public Implementation getServerInfo() {
+	public Implementation serverInfo() {
 		return this.config.implementation();
 	}
 
 	@Override
-	public void start() {
-		this.transportProvider.setSessionFactory(
-				transport -> new McpSessionImpl(transport, this.handlers));
-	}
-
-	@Override
-	public void closeGracefully() {
-		this.transportProvider.closeGracefully();
-	}
-
-	@Override
-	public void close() {
-		this.transportProvider.close();
+	public Map<String, RequestHandler<?>> handlers() {
+		return this.handlers;
 	}
 
 	public void addTool(ToolComponent tool) {
@@ -114,8 +105,8 @@ public class McpServerImpl implements McpServer {
 		this.resourceTemplates.remove(resourceTemplate);
 	}
 
-	public void addResource(String resourceName, ResourceComponent resource) {
-		this.resources.put(resourceName, resource);
+	public void addResource(ResourceComponent resource) {
+		this.resources.put(resource.resource().name(), resource);
 	}
 
 	public void removeResource(String resourceName) {
@@ -141,13 +132,11 @@ public class McpServerImpl implements McpServer {
 
 	RequestHandler<McpSchema.ListToolsResult> toolsList() {
 		return (object) -> {
-			LOGGER.log(System.Logger.Level.INFO, "Tools list size: " + this.tools.size());
-			List<McpSchema.Tool> toolz = this.tools.stream().map(ToolComponent::tool).toList();
+			List<McpSchema.Tool> toolz = this.tools.stream().filter(Objects::nonNull).map(ToolComponent::tool).toList();
 			return new McpSchema.ListToolsResult(toolz, null);
 		};
 	}
 
-	//TODO
 	/**
 	 * Params is the arguments provided by the client to the tool (method signature).
 	 * McpSchema.Tool represent the tool definition and is selected by name.
@@ -158,9 +147,7 @@ public class McpServerImpl implements McpServer {
 	 */
 	RequestHandler<McpSchema.CallToolResult> toolsCall() {
 		return (params) -> {
-			McpSchema.CallToolRequest callToolRequest = mapper.convertValue(params,
-					new TypeReference<McpSchema.CallToolRequest>() {
-					});
+			McpSchema.CallToolRequest callToolRequest = mapper.convertValue(params, new TypeReference<>() {});
 
 			Optional<ToolComponent> tool = this.tools.stream()
 					.filter(tr -> callToolRequest.name().equals(tr.tool().name()))
@@ -169,7 +156,10 @@ public class McpServerImpl implements McpServer {
 			if (tool.isEmpty()) {
 				return new McpSchema.CallToolResult(List.of(), true);
 			}
-			return tool.orElseThrow().fx().apply(callToolRequest.arguments());
+			String result = tool.orElseThrow().handler().apply(callToolRequest.arguments());
+			List<McpSchema.Content> content = List.of(
+					new McpSchema.TextContent(List.of(McpSchema.Role.USER), 2.0, result));
+			return new McpSchema.CallToolResult(content, false);
 		};
 	}
 
@@ -182,16 +172,15 @@ public class McpServerImpl implements McpServer {
 
 	RequestHandler<McpSchema.ReadResourceResult> resourcesRead() {
 		return (params) -> {
-			McpSchema.ReadResourceRequest resourceRequest = mapper.convertValue(params,
-					new TypeReference<McpSchema.ReadResourceRequest>() {
-					});
+			McpSchema.ReadResourceRequest resourceRequest = mapper.convertValue(params, new TypeReference<>() {});
 			String resourceUri = resourceRequest.uri();
 			var resource = this.resources.get(resourceUri);
 			if (resource == null) {
-				//TODO - return an error
 				return new McpSchema.ReadResourceResult(List.of());
 			}
-			return resource.reader().apply(resourceRequest);
+			String content = resource.reader().apply(resourceRequest.uri());
+			return new McpSchema.ReadResourceResult(List.of(
+					new McpSchema.TextResourceContents(resourceRequest.uri(), "plain/text", content)));
 		};
 	}
 
@@ -212,15 +201,16 @@ public class McpServerImpl implements McpServer {
 	 */
 	RequestHandler<McpSchema.GetPromptResult> promptsGet() {
 		return (params) -> {
-			McpSchema.GetPromptRequest promptRequest = mapper.convertValue(params,
-					new TypeReference<McpSchema.GetPromptRequest>() {
-					});
+			McpSchema.GetPromptRequest promptRequest = mapper.convertValue(params, new TypeReference<>() {});
 			var prompt = prompts.get(promptRequest.name());
 			if (prompt == null) {
 				//TODO - return an error
 				return new McpSchema.GetPromptResult("Error", List.of());
 			}
-			return prompt.handler().apply(promptRequest);
+			String content = prompt.handler().apply(promptRequest.arguments());
+			return new McpSchema.GetPromptResult("Hello", List.of(
+					new McpSchema.PromptMessage(McpSchema.Role.USER,
+							new McpSchema.TextContent(content))));
 		};
 	}
 

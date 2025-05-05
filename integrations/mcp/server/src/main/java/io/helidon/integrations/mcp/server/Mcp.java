@@ -20,8 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import io.helidon.integrations.mcp.server.spi.McpTransportProvider;
-
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -37,16 +35,6 @@ public final class Mcp {
 		String uri();
 		String name();
 		String description() default "none"; 	//optional
-	}
-
-	//TODO - Remove this
-	@Target(METHOD)
-	@Retention(RUNTIME)
-	public @interface ResourceTemplate {
-		String uriTemplate(); // "resource://{param}/test"
-		String name();
-		String description() default "none"; 	//optional
-		String mimeType() default "unknown";	//optional
 	}
 
 	@Target(METHOD)
@@ -79,7 +67,8 @@ public final class Mcp {
 	@Target(ElementType.TYPE)
 	@Retention(RUNTIME)
 	public @interface Server {
-		Class<? extends McpTransportProvider> value();
+		String name() default "Helidon MCP Server";
+		String version() default "0.0.1";
 	}
 
 }

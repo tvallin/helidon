@@ -22,12 +22,9 @@ module io.helidon.integrations.mcp.server {
 	requires io.helidon.common;
 	requires io.helidon.common.resumable;
 
-	requires jakarta.json;
 	requires com.fasterxml.jackson.databind;
 	requires io.modelcontextprotocol.sdk.mcp;
 	requires java.logging;
 
 	exports io.helidon.integrations.mcp.server;
-	exports io.helidon.integrations.mcp.server.spi;
-	exports io.helidon.integrations.mcp.server.transport;
 }

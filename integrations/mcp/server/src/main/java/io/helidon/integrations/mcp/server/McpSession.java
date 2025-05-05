@@ -17,40 +17,19 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
-import io.helidon.integrations.mcp.server.spi.McpTransport;
+import io.modelcontextprotocol.spec.McpSchema;
 
 public interface McpSession {
 
-	/**
-	 * Send request to the client.
-	 *
-	 * @param method request method
-	 * @param params request params
-	 */
-	void sendRequest(String method, Object params);
+	void poll(Consumer<McpSchema.JSONRPCMessage> consumer);
 
-	/**
-	 * Send notification to the clients.
-	 *
-	 * @param method notification method
-	 * @param params notification parameters
-	 */
-	void sendNotification(String method, Map<String, Object> params);
+	void send(McpSchema.JSONRPCMessage message);
 
-	/**
-	 * Handle incoming client message.
-	 *
-	 * @param message client message
-	 */
-	<T> void handle(T message);
+	void disonnect();
 
-	void closeGracefully();
-
-	void close();
-
-	@FunctionalInterface
-	interface Factory {
-		McpSession create(McpTransport transport);
+	static McpSession create(Map<String, McpServer.RequestHandler<?>> handlers) {
+		return new McpSessionImpl(handlers);
 	}
 }

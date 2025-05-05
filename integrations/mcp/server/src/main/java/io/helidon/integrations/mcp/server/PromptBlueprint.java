@@ -16,44 +16,14 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
-import static io.helidon.integrations.mcp.server.McpServerConfigBlueprint.CONFIG_ROOT;
-
-@Prototype.Configured(CONFIG_ROOT)
+@Prototype.Configured
 @Prototype.Blueprint
-interface McpServerConfigBlueprint extends Prototype.Factory<McpServer>{
-
-	/**
-	 * The default configuration prefix.
-	 */
-	String CONFIG_ROOT = "mcp.server";
+interface PromptBlueprint {
 
 	@Option.Configured
-	@Option.Default("http")
-	String transport();
-
-	@Option.Configured
-	Capabilities capabilities();
-
-	@Option.Configured
-	Implementation implementation();
-
-	@Option.Configured
-	@Option.Default("")
-	String instructions();
-
-	@Option.Configured
-	List<ToolComponent> tools();
-
-	@Option.Configured
-	List<PromptComponent> prompts();
-
-	@Option.Configured
-	List<ResourceComponent> resources();
-
+	@Option.DefaultBoolean(false)
+	boolean listChanged();
 }

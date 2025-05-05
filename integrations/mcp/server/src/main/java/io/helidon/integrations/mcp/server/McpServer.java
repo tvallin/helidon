@@ -16,19 +16,18 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.List;
+import java.util.Map;
+
 import io.helidon.builder.api.RuntimeType;
-import io.helidon.integrations.mcp.server.transport.HelidonTransportProvider;
-import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
+
+import io.modelcontextprotocol.spec.McpSchema;
 
 @RuntimeType.PrototypedBy(McpServerConfig.class)
 public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 
 	static McpServer create(McpServerConfig serverConfig) {
-		if ("stdio".equals(serverConfig.transport())) {
-			return new McpServerImpl(serverConfig, new StdioTransportProvider());
-		}
-		//Todo - return HTTP/SSE transport
-		return new McpServerImpl(serverConfig, new HelidonTransportProvider());
+		return new McpServerImpl(serverConfig);
 	}
 
 	static McpServer create(java.util.function.Consumer<McpServerConfig.Builder> consumer) {
@@ -41,18 +40,40 @@ public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 	 * @return builder
 	 */
 	static McpServerConfig.Builder builder() {
-		return McpServerConfig.builder();
+		return McpServerConfig.builder()
+				.capabilities(capabilities -> capabilities
+						.prompts(prompts -> prompts.listChanged(false))
+						.tools(tools -> tools.listChanged(false))
+						.resources(resources -> resources.listChanged(false)))
+				.implementation(implementation -> implementation
+						.name("mcp-server")
+						.version("0.0.1"))
+				.tools(List.of(new ToolComponent(null, null)))
+				.prompts(List.of(new PromptComponent(null, null)))
+				.resources(List.of(new ResourceComponent(null, null)));
 	}
 
-	ServerCapabilities getServerCapabilities();
+	Capabilities capabilities();
 
-	Implementation getServerInfo();
+	Implementation serverInfo();
 
-	void start();
+	Map<String, RequestHandler<?>> handlers();
 
-	void closeGracefully();
+	void addTool(ToolComponent tool);
 
-	void close();
+	void removeTool(ToolComponent tool);
+
+	void addResourceTemplate(McpSchema.ResourceTemplate resourceTemplate);
+
+	void removeResourceTemplate(McpSchema.ResourceTemplate resourceTemplate);
+
+	void addResource(ResourceComponent resource);
+
+	void removeResource(String resourceName);
+
+	void addPrompt(PromptComponent prompt);
+
+	void removePrompt(String name);
 
 	interface RequestHandler<T> {
 		/**

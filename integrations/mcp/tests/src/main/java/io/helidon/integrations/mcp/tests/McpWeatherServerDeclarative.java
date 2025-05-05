@@ -17,39 +17,31 @@
 package io.helidon.integrations.mcp.tests;
 
 import io.helidon.integrations.mcp.server.Mcp;
-import io.helidon.integrations.mcp.server.transport.StdioTransportProvider;
 
-@Mcp.Server(StdioTransportProvider.class)
-class McpTest {
+@Mcp.Server(name = "Helidon MCP Server",
+		version = "0.0.1")
+class McpWeatherServerDeclarative {
 
 	@Mcp.Tool(
-			name = "Weather Tool",
-			description = "Get weather from somewhere")
-	String getWeather() {
-		return "Sunny";
+			name = "Weather Alert",
+			description = "Get weather alert from state")
+	String weatherAlert(@Mcp.ToolTParam("state") String state) {
+		//Fetch alert for mentioned state
+		return "Hurricane in " + state;
 	}
 
 	@Mcp.Prompt(
 			name = "Weather in town",
 			description = "Get the weather in a specific town")
-	String getWeatherInTown(@Mcp.PromptParam("town") String town) {
-		return "Sunny in " + town;
+	String weatherInTown(@Mcp.PromptParam("town") String town) {
+		return "What is the weather like in {{town}}";
 	}
 
 	@Mcp.Resource(
-			uri = "https://helidon.io/stater",
+			uri = "https://api.weather.gov/alerts",
 			name = "weather-report",
-			description = "Get a general weather report")
-	String getWeatherReport() {
-		return "Sunny everywhere";
-	}
-
-	@Mcp.ResourceTemplate(
-			uriTemplate = "uri",
-			name = "RT",
-			description = "Resource Template")
-	String resourceTemplate() {
-		return "resourceTemplate";
+			description = "Get the list of all alerts")
+	void weatherAlerts() {
 	}
 
 }

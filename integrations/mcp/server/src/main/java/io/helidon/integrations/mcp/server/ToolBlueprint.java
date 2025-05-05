@@ -21,7 +21,7 @@ import io.helidon.builder.api.Prototype;
 
 @Prototype.Configured
 @Prototype.Blueprint
-interface ListChangedBlueprint {
+interface ToolBlueprint {
 
 	@Option.Configured
 	@Option.DefaultBoolean(false)

@@ -14,34 +14,19 @@
  * limitations under the License.
  */
 
-package io.helidon.integrations.mcp.server.spi;
+package io.helidon.integrations.mcp.server;
 
-public interface McpTransport {
+import io.helidon.common.config.Config;
+import io.helidon.webserver.spi.ServerFeatureProvider;
 
-	/**
-	 * Cast provided object to the procided class.
-	 *
-	 * @param object object to cast
-	 * @param clazz  class to cast the object to
-	 * @return the casted object
-	 */
-	<T> T unmarshall(Object object, Class<T> clazz);
+public class McpServerFeatureProvider implements ServerFeatureProvider<McpServerFeature> {
+	@Override
+	public String configKey() {
+		return "mcp";
+	}
 
-	/**
-	 * Send a message from the server to the client.
-	 *
-	 * @param message message to be sent
-	 */
-	void sendMessage(Object message);
-
-	/**
-	 * Closes the transport connection.
-	 */
-	void close();
-
-	/**
-	 * Closes the transport connection.
-	 */
-	void closeGracefully();
-
+	@Override
+	public McpServerFeature create(Config config, String name) {
+		return null;
+	}
 }

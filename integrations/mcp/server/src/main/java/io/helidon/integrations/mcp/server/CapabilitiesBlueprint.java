@@ -23,7 +23,7 @@ import io.helidon.builder.api.Prototype;
 
 @Prototype.Configured
 @Prototype.Blueprint
-interface ServerCapabilitiesBlueprint {
+interface CapabilitiesBlueprint {
 
 	@Option.Configured
 	Map<String, Object> experimentation();
@@ -33,11 +33,11 @@ interface ServerCapabilitiesBlueprint {
 	boolean logging();
 
 	@Option.Configured
-	ListChanged promts();
+	Prompt prompts();
 
 	@Option.Configured
 	Resource resources();
 
 	@Option.Configured
-	ListChanged tools();
+	Tool tools();
 }
