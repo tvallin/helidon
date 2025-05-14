@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,14 +36,14 @@ public class McpServerImpl implements McpServer {
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final List<String> protocoleVersions = new ArrayList<>();
 	private final Map<String, RequestHandler<?>> handlers = new HashMap<>();
-	private final ConcurrentHashMap<String, PromptComponent> prompts = new ConcurrentHashMap<>();
-	private final ConcurrentHashMap<String, ResourceComponent> resources = new ConcurrentHashMap<>();
+	private final CopyOnWriteArrayList<PromptComponent> prompts = new CopyOnWriteArrayList<>();
+	private final CopyOnWriteArrayList<ResourceComponent> resources = new CopyOnWriteArrayList<>();
 	private final CopyOnWriteArrayList<McpSchema.ResourceTemplate> resourceTemplates = new CopyOnWriteArrayList<>();
 	private final CopyOnWriteArrayList<ToolComponent> tools = new CopyOnWriteArrayList<>();
 
 	public McpServerImpl(McpServerConfig config) {
 		this.config = config;
-		this.protocoleVersions.add("2024-11-05");
+		this.protocoleVersions.add(PROTOCOLE_VERSION);
 
 		handlers.put(McpSchema.METHOD_PING, ping());
 		handlers.put(McpSchema.METHOD_INITIALIZE, initialize());
@@ -60,6 +59,11 @@ public class McpServerImpl implements McpServer {
 			handlers.put(McpSchema.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
 		}
 
+		if (config.capabilities().resources().subscribe()) {
+			handlers.put(McpSchema.METHOD_RESOURCES_SUBSCRIBE, resourceSubscribe());
+			handlers.put(McpSchema.METHOD_RESOURCES_UNSUBSCRIBE, resourceUnsubscribe());
+		}
+
 		if (config.capabilities().prompts().listChanged()) {
 			handlers.put(McpSchema.METHOD_PROMPT_LIST, promptsList());
 			handlers.put(McpSchema.METHOD_PROMPT_GET, promptsGet());
@@ -69,9 +73,18 @@ public class McpServerImpl implements McpServer {
 			handlers.put(McpSchema.METHOD_LOGGING_SET_LEVEL, logging());
 		}
 
-		tools.addAll(config.tools());
-		config.resources().stream().filter(it -> it.resource() != null).forEach(resource -> this.resources.put(resource.resource().name(), resource));
-		config.prompts().stream().filter(it -> it.prompt() != null).forEach(prompt -> this.prompts.put(prompt.prompt().name(), prompt));
+		this.tools.addAll(config.tools());
+		this.resources.addAll(config.resources());
+		this.prompts.addAll(config.prompts());
+	}
+
+	//TODO - How to maintain list of client subscription ?
+	private RequestHandler<?> resourceUnsubscribe() {
+		return null;
+	}
+
+	private RequestHandler<?> resourceSubscribe() {
+		return null;
 	}
 
 	@Override
@@ -106,19 +119,25 @@ public class McpServerImpl implements McpServer {
 	}
 
 	public void addResource(ResourceComponent resource) {
-		this.resources.put(resource.resource().name(), resource);
+		this.resources.add(resource);
 	}
 
 	public void removeResource(String resourceName) {
-		this.resources.remove(resourceName);
+		Optional<ResourceComponent> resource = this.resources.stream()
+				.filter(component -> component.resource().name().equals(resourceName))
+				.findFirst();
+		resource.ifPresent(this.resources::remove);
 	}
 
 	public void addPrompt(PromptComponent prompt) {
-		this.prompts.put(prompt.prompt().name(), prompt);
+		this.prompts.add(prompt);
 	}
 
 	public void removePrompt(String name) {
-		this.prompts.remove(name);
+		Optional<PromptComponent> prompt = this.prompts.stream()
+				.filter(component -> component.prompt().name().equals(name))
+				.findFirst();
+		prompt.ifPresent(this.prompts::remove);
 	}
 
 	@Override
@@ -127,7 +146,7 @@ public class McpServerImpl implements McpServer {
 	}
 
 	RequestHandler<Object> ping() {
-		return null;
+		return object -> "pong";
 	}
 
 	RequestHandler<McpSchema.ListToolsResult> toolsList() {
@@ -165,7 +184,7 @@ public class McpServerImpl implements McpServer {
 
 	RequestHandler<McpSchema.ListResourcesResult> resourcesList() {
 		return (params) -> {
-			var resources = this.resources.values().stream().map(ResourceComponent::resource).toList();
+			var resources = this.resources.stream().map(ResourceComponent::resource).toList();
 			return new McpSchema.ListResourcesResult(resources, null);
 		};
 	}
@@ -174,11 +193,15 @@ public class McpServerImpl implements McpServer {
 		return (params) -> {
 			McpSchema.ReadResourceRequest resourceRequest = mapper.convertValue(params, new TypeReference<>() {});
 			String resourceUri = resourceRequest.uri();
-			var resource = this.resources.get(resourceUri);
-			if (resource == null) {
+			Optional<ResourceComponent> resource = this.resources.stream()
+					.filter(it -> Objects.equals(it.resource().uri(), resourceUri))
+					.findFirst();
+			if (resource.isEmpty()) {
 				return new McpSchema.ReadResourceResult(List.of());
 			}
-			String content = resource.reader().apply(resourceRequest.uri());
+			String content = resource.orElseThrow(() -> new McpException("Resource not found: " + resourceUri))
+					.reader()
+					.apply(resourceRequest.uri());
 			return new McpSchema.ReadResourceResult(List.of(
 					new McpSchema.TextResourceContents(resourceRequest.uri(), "plain/text", content)));
 		};
@@ -190,7 +213,7 @@ public class McpServerImpl implements McpServer {
 
 	private RequestHandler<McpSchema.ListPromptsResult> promptsList() {
 		return (object) -> {
-			var promptsList = this.prompts.values().stream().map(PromptComponent::prompt).toList();
+			var promptsList = this.prompts.stream().map(PromptComponent::prompt).toList();
 			return new McpSchema.ListPromptsResult(promptsList, null);
 		};
 	}
@@ -202,15 +225,18 @@ public class McpServerImpl implements McpServer {
 	RequestHandler<McpSchema.GetPromptResult> promptsGet() {
 		return (params) -> {
 			McpSchema.GetPromptRequest promptRequest = mapper.convertValue(params, new TypeReference<>() {});
-			var prompt = prompts.get(promptRequest.name());
-			if (prompt == null) {
+			var prompt = this.prompts.stream()
+					.filter(component -> Objects.equals(component.prompt().name(), promptRequest.name()))
+					.findFirst();
+			if (prompt.isEmpty()) {
 				//TODO - return an error
 				return new McpSchema.GetPromptResult("Error", List.of());
 			}
-			String content = prompt.handler().apply(promptRequest.arguments());
-			return new McpSchema.GetPromptResult("Hello", List.of(
-					new McpSchema.PromptMessage(McpSchema.Role.USER,
-							new McpSchema.TextContent(content))));
+			String content = prompt.orElseThrow(() -> new McpException("Prompt not found"))
+					.handler()
+					.apply(promptRequest.arguments());
+			return new McpSchema.GetPromptResult(prompt.orElseThrow().prompt().description(), List.of(
+					new McpSchema.PromptMessage(McpSchema.Role.USER, new McpSchema.TextContent(content))));
 		};
 	}
 

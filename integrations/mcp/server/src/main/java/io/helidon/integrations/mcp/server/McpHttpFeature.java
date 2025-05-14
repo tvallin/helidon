@@ -66,7 +66,6 @@ public class McpHttpFeature implements HttpFeature {
 	}
 
 	private void message(ServerRequest request, ServerResponse response) {
-		LOGGER.log(System.Logger.Level.INFO, "Message received from claude.");
 		String sessionId = request.query().get("sessionId");
 
 		McpSession session = sessions.get(sessionId);
@@ -78,13 +77,13 @@ public class McpHttpFeature implements HttpFeature {
 
 		String content = request.content().as(String.class);
 		McpSchema.JSONRPCMessage message = deserializeJsonRpcMessage(content);
+		LOGGER.log(System.Logger.Level.INFO, "Message received : {0}", message.toString());
 		session.send(message);
 		response.status(Status.OK_200);
 		response.send();
 	}
 
 	private void sse(ServerRequest request, ServerResponse response) {
-		LOGGER.log(System.Logger.Level.INFO, "Sse connection received from claude.");
 		String sessionId = UUID.randomUUID().toString();
 		McpSession session = McpSession.create(server.handlers());
 		sessions.put(sessionId, session);
@@ -94,12 +93,10 @@ public class McpHttpFeature implements HttpFeature {
 					.name("endpoint")
 					.data("/mcp/message?sessionId=" + sessionId)
 					.build());
-			session.poll((message -> {
-				sink.emit(SseEvent.builder()
-						.name("message")
-						.data(message)
-						.build());
-			}));
+			session.poll(message -> sink.emit(SseEvent.builder()
+					.name("message")
+					.data(message)
+					.build()));
 		}
 	}
 
@@ -120,7 +117,7 @@ public class McpHttpFeature implements HttpFeature {
 			builderConsumer.accept(builder);
 			this.server = builder.build();
 			return this;
-		};
+		}
 
 		public McpHttpFeature build() {
 			return new McpHttpFeature(this);

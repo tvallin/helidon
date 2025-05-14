@@ -26,6 +26,8 @@ import io.modelcontextprotocol.spec.McpSchema;
 @RuntimeType.PrototypedBy(McpServerConfig.class)
 public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 
+	static final String PROTOCOLE_VERSION = "2024-11-05";
+
 	static McpServer create(McpServerConfig serverConfig) {
 		return new McpServerImpl(serverConfig);
 	}
@@ -40,17 +42,7 @@ public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 	 * @return builder
 	 */
 	static McpServerConfig.Builder builder() {
-		return McpServerConfig.builder()
-				.capabilities(capabilities -> capabilities
-						.prompts(prompts -> prompts.listChanged(false))
-						.tools(tools -> tools.listChanged(false))
-						.resources(resources -> resources.listChanged(false)))
-				.implementation(implementation -> implementation
-						.name("mcp-server")
-						.version("0.0.1"))
-				.tools(List.of(new ToolComponent(null, null)))
-				.prompts(List.of(new PromptComponent(null, null)))
-				.resources(List.of(new ResourceComponent(null, null)));
+		return McpServerConfig.builder();
 	}
 
 	Capabilities capabilities();

@@ -33,76 +33,130 @@ import io.modelcontextprotocol.spec.McpSchema;
 
 class McpWeatherServerSe {
 
-	public static void main(String[] args) {
-		WebServer.builder()
-				.port(8080)
-				.routing(routing -> routing.addFeature(McpHttpFeature.builder()
-						.mcpServer(builder -> builder
-								.implementation(Implementation.builder()
-										.name("Helidon MCP Server")
-										.version("0.0.1")
-										.build())
-								.capabilities(Capabilities.builder()
-										.resources(Resource.builder()
-												.listChanged(true)
-												.subscribe(true)
-												.build())
-										.prompts(Prompt.builder()
-												.listChanged(true))
-										.tools(Tool.builder()
-												.listChanged(true)
-												.build()))
-								.addTools(createTools())
-								.addPrompts(createPrompts())
-								.addResources(createResources()))
-						.build()))
-				.build()
-				.start();
-	}
+    public static final String SERVER_NAME = "Helidon MCP Server";
+    public static final String SERVER_VERSION = "0.0.1";
 
-	private static List<ResourceComponent> createResources() {
-		return List.of(ResourceComponent.builder()
-				.uri("file:///Users/tvallin/Documents/alerts.txt")
-				.name("alerts-list")
-				.description("Get the list of all alerts")
-				.reader(uri -> "Alerts")
-				.build());
-	}
+    public static final String TOOL_NAME = "weather-alerts";
+    public static final String TOOL_DESCRIPTION = "Get weather from town";
 
-	private static List<ToolComponent> createTools() {
-		String schema = """
-				{
-				  "type" : "object",
-				  "id" : "urn:jsonschema:weather",
-				  "properties" : {
-				    "town" : {
-				      "type" : "string"
-				    }
-				  }
-				}
-				""";
-		return List.of(
-				ToolComponent.builder()
-						.name("weather alerts")
-						.description("Get weather alert from state")
-						.schema(schema)
-						.handler(arguments -> {
-							String town = arguments.get("town").toString();
-							return "Hurricane in " + town;
-						})
-						.build());
-	}
+    public static final String PROMPT_NAME = "Weather in town";
+    public static final String PROMPT_DESCRIPTION = "Get the weather in a specific town";
+    public static final String PROMPT_ARGUMENT_NAME = "town";
+    public static final String PROMPT_ARGUMENT_DESCRIPTION = "town's name";
 
-	private static List<PromptComponent> createPrompts() {
-		return List.of(
-				PromptComponent.builder()
-						.name("Weather in town")
-						.description("Get the weather in a specific town")
-						.promptArgument(new McpSchema.PromptArgument("town", "town's name", true))
-						.handler(request -> {
-							String town = request.get("town").toString();
-							return "What is the weather like in " + town + " ?";
-						})
-						.build());
-	}
+    public static final String RESOURCE_URI = "file:///Users/tvallin/Documents/alerts.txt";
+    public static final String RESOURCE_NAME = "alerts-list";
+    public static final String RESOURCE_DESCRIPTION = "Get the list of all weather alerts";
+
+    private static WebServer server;
+
+    public static void main(String[] args) {
+        server = WebServer.builder()
+                .port(8081)
+                .routing(routing -> routing.addFeature(McpHttpFeature.builder()
+                        .mcpServer(builder -> builder
+                                .implementation(Implementation.builder()
+                                        //TODO - check wether it is server version or "API" version ?
+                                        .name(SERVER_NAME)
+                                        .version(SERVER_VERSION)
+                                        .build())
+                                .capabilities(Capabilities.builder()
+                                        .resources(Resource.builder()
+                                                //TODO - Double check that.
+                                                .listChanged(true)
+                                                .subscribe(true)
+                                                .build())
+                                        .prompts(Prompt.builder()
+                                                .listChanged(true))
+                                        .tools(Tool.builder()
+                                                .listChanged(true)
+                                                .build()))
+                                .addTools(createTools())
+                                .addPrompts(createPrompts())
+                                .addResources(createResources()))
+                        .build()))
+                .build()
+                .start();
+    }
+
+    public static WebServer server() {
+        return server;
+    }
+
+    private static List<ResourceComponent> createResources() {
+        return List.of(ResourceComponent.builder()
+                .uri(RESOURCE_URI)
+                .name(RESOURCE_NAME)
+                .description(RESOURCE_DESCRIPTION)
+                .reader(uri -> "There are severe weather alerts in Praha")
+                .build());
+    }
+
+    private static List<ToolComponent> createTools() {
+        return List.of(createWeatherTool(), createCoffeShopTool());
+    }
+
+    private static ToolComponent createWeatherTool() {
+        String schema = """
+                {
+                  "type" : "object",
+                  "id" : "urn:jsonschema:Weather",
+                  "required": ["town"],
+                  "properties" : {
+                    "town" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+                """;
+        return ToolComponent.builder()
+                .name(TOOL_NAME)
+                .description(TOOL_DESCRIPTION)
+                .schema(schema)
+                .handler(arguments -> {
+                    String town = arguments.get("town").toString();
+                    return "There is a hurricane in " + town;
+                })
+                .build();
+    }
+
+    private static ToolComponent createCoffeShopTool() {
+        String schema = """
+                {
+                	"type": "object",
+                	"required": ["day"],
+                	"properties" : {
+                		"day" : {
+                			"type" : "string"
+                		}
+                	}
+                }
+                """;
+        return ToolComponent.builder()
+                .name("opening-hours")
+                .description("Get the coffee shop opening hours")
+                .schema(schema)
+                .handler(arguments -> {
+                    String day = arguments.get("day").toString();
+                    return """
+                            The coffee shop opening hours for %s:
+                            Open: 10:00 AM
+                            Closes: 21:00 PM
+                            """.formatted(day);
+                })
+                .build();
+    }
+
+    private static List<PromptComponent> createPrompts() {
+        return List.of(
+                PromptComponent.builder()
+                        .name(PROMPT_NAME)
+                        .description(PROMPT_DESCRIPTION)
+                        .promptArgument(new McpSchema.PromptArgument(PROMPT_ARGUMENT_NAME, PROMPT_ARGUMENT_DESCRIPTION, true))
+                        .handler(request -> {
+                            String town = request.get("town").toString();
+                            return "What is the weather like in " + town + " ?";
+                        })
+                        .build());
+    }
 }

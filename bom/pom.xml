@@ -1054,6 +1054,11 @@
                 <version>${helidon.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.helidon.integrations.mcp</groupId>
+                <artifactId>helidon-integrations-mcp-server</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.helidon.integrations.langchain4j</groupId>
                 <artifactId>helidon-integrations-langchain4j</artifactId>
                 <version>${helidon.version}</version>

@@ -60,7 +60,7 @@ public final class Mcp {
 
 	@Target(PARAMETER)
 	@Retention(RUNTIME)
-	public @interface ToolTParam {
+	public @interface ToolParam {
 		String value();
 	}
 

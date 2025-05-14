@@ -17,7 +17,6 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;

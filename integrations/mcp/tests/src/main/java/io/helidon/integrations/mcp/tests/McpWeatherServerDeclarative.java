@@ -18,14 +18,14 @@ package io.helidon.integrations.mcp.tests;
 
 import io.helidon.integrations.mcp.server.Mcp;
 
-@Mcp.Server(name = "Helidon MCP Server",
-		version = "0.0.1")
+@SuppressWarnings("unused")
+@Mcp.Server
 class McpWeatherServerDeclarative {
 
 	@Mcp.Tool(
 			name = "Weather Alert",
 			description = "Get weather alert from state")
-	String weatherAlert(@Mcp.ToolTParam("state") String state) {
+	String weatherAlert(@Mcp.ToolParam("state") String state) {
 		//Fetch alert for mentioned state
 		return "Hurricane in " + state;
 	}
