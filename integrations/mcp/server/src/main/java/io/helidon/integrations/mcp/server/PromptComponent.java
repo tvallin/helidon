@@ -24,11 +24,10 @@ public record PromptComponent(McpSchema.Prompt prompt,
 
 	public static class Builder {
 
-		private final List<McpSchema.PromptArgument> promptArguments = new ArrayList<>();
-
 		private String name;
 		private String description;
 		private Function<Map<String, Object>, String>  handler;
+		private final List<McpSchema.PromptArgument> promptArguments = new ArrayList<>();
 
 		public Builder name(String name) {
 			this.name = name;

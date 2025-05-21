@@ -71,4 +71,18 @@ public final class Mcp {
 		String version() default "0.0.1";
 	}
 
+	@Target(ElementType.TYPE)
+	@Retention(RUNTIME)
+	public @interface Notification {
+		String[] value();
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RUNTIME)
+	public @interface Subscribe {
+		String[] value();
+	}
+
+
+
 }

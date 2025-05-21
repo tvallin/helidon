@@ -44,6 +44,10 @@
 			<artifactId>helidon-webserver-sse</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.helidon.webclient</groupId>
+			<artifactId>helidon-webclient</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>io.helidon.http.media</groupId>
 			<artifactId>helidon-http-media-jackson</artifactId>
 		</dependency>

@@ -24,13 +24,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import io.helidon.common.media.type.MediaTypes;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 
 public class McpServerImpl implements McpServer {
-
-	private static final System.Logger LOGGER = System.getLogger(McpServerImpl.class.getName());
 
 	private final McpServerConfig config;
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -76,25 +76,6 @@ public class McpServerImpl implements McpServer {
 		this.tools.addAll(config.tools());
 		this.resources.addAll(config.resources());
 		this.prompts.addAll(config.prompts());
-	}
-
-	//TODO - How to maintain list of client subscription ?
-	private RequestHandler<?> resourceUnsubscribe() {
-		return null;
-	}
-
-	private RequestHandler<?> resourceSubscribe() {
-		return null;
-	}
-
-	@Override
-	public Capabilities capabilities() {
-		return this.config.capabilities();
-	}
-
-	@Override
-	public Implementation serverInfo() {
-		return this.config.implementation();
 	}
 
 	@Override
@@ -143,6 +124,15 @@ public class McpServerImpl implements McpServer {
 	@Override
 	public McpServerConfig prototype() {
 		return this.config;
+	}
+
+	//TODO - How to maintain list of client subscription ?
+	private RequestHandler<?> resourceUnsubscribe() {
+		return null;
+	}
+
+	private RequestHandler<?> resourceSubscribe() {
+		return null;
 	}
 
 	RequestHandler<Object> ping() {
@@ -199,11 +189,8 @@ public class McpServerImpl implements McpServer {
 			if (resource.isEmpty()) {
 				return new McpSchema.ReadResourceResult(List.of());
 			}
-			String content = resource.orElseThrow(() -> new McpException("Resource not found: " + resourceUri))
-					.reader()
-					.apply(resourceRequest.uri());
-			return new McpSchema.ReadResourceResult(List.of(
-					new McpSchema.TextResourceContents(resourceRequest.uri(), "plain/text", content)));
+			McpSchema.ResourceContents content = ResourceReader.get(resourceUri).read();
+			return new McpSchema.ReadResourceResult(List.of(content));
 		};
 	}
 

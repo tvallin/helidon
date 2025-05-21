@@ -25,6 +25,7 @@ module io.helidon.integrations.mcp.server {
 	requires com.fasterxml.jackson.databind;
 	requires io.modelcontextprotocol.sdk.mcp;
 	requires java.logging;
+    requires io.helidon.webclient.api;
 
-	exports io.helidon.integrations.mcp.server;
+    exports io.helidon.integrations.mcp.server;
 }

@@ -1,6 +1,7 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.modelcontextprotocol.spec.McpSchema;
@@ -30,6 +31,18 @@ public record ToolComponent(
 
 		public Builder description(String description) {
 			this.description = description;
+			return this;
+		}
+
+		public Builder schema(InputSchema.Builder schema) {
+			this.schema = schema.build().asString();
+			return this;
+		}
+
+		public Builder schema(Consumer<InputSchema.Builder> schema) {
+			InputSchema.Builder builder = InputSchema.builder();
+			schema.accept(builder);
+			this.schema = builder.build().asString();
 			return this;
 		}
 

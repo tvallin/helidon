@@ -13,29 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+module helidon.integrations.mcp.tests.se {
+	requires io.helidon.integrations.mcp.server;
+	requires io.modelcontextprotocol.sdk.mcp;
+	requires io.helidon.webserver;
+	requires io.helidon.http.media.jackson;
+	requires io.helidon.service.registry;
 
-package io.helidon.integrations.mcp.server;
-
-import io.helidon.http.sse.SseEvent;
-
-import io.modelcontextprotocol.spec.McpSchema;
-
-public class McpException extends RuntimeException {
-
-	public McpException(String message) {
-		super(message);
-	}
-
-	public McpException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	static McpSchema.JSONRPCResponse.JSONRPCError toError(String message) {
-		return new McpSchema.JSONRPCResponse.JSONRPCError(500, message, null);
-	}
-
-	SseEvent.Builder sseEventBuilder() {
-		return SseEvent.builder()
-				.name("Error");
-	}
+	exports io.helidon.integrations.mcp.tests.se;
 }

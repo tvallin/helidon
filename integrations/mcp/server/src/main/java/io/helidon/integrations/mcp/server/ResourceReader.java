@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.helidon.integrations.mcp.server;
-
-import io.helidon.http.sse.SseEvent;
 
 import io.modelcontextprotocol.spec.McpSchema;
 
-public class McpException extends RuntimeException {
+@FunctionalInterface
+public interface ResourceReader {
 
-	public McpException(String message) {
-		super(message);
-	}
+    McpSchema.ResourceContents read();
 
-	public McpException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	static McpSchema.JSONRPCResponse.JSONRPCError toError(String message) {
-		return new McpSchema.JSONRPCResponse.JSONRPCError(500, message, null);
-	}
-
-	SseEvent.Builder sseEventBuilder() {
-		return SseEvent.builder()
-				.name("Error");
-	}
+    static ResourceReader get(String uri) {
+        if (uri.startsWith("http")) {
+            return new BinaryResourceReader(uri);
+        }
+        if (uri.startsWith("file")) {
+            return new FileResourceReader(uri);
+        }
+        throw new McpException("No Resource Reader available for URI: " + uri);
+    }
 }

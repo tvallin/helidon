@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import io.helidon.config.Config;
 import io.helidon.http.Status;
 import io.helidon.http.sse.SseEvent;
+import io.helidon.service.registry.Service;
 import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.http.ServerRequest;
@@ -36,92 +37,98 @@ import io.helidon.webserver.sse.SseSink;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 
+@Service.Singleton
 public class McpHttpFeature implements HttpFeature {
 
-	private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
 
-	private final McpServer server;
-	private final ObjectMapper mapper = new ObjectMapper();
-	private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
+    private final McpServer server;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
-	public McpHttpFeature(Builder builder) {
-		this.server = builder.server;
-	}
+    public McpHttpFeature(Builder builder) {
+        this.server = builder.server;
+    }
 
-	public static Builder builder() {
-		return new Builder();
-	}
+    @Service.Inject
+    public McpHttpFeature(McpServer server) {
+        this.server = server;
+    }
 
-	@Override
-	public void setup(HttpRouting.Builder routing) {
-		routing.get("/sse", this::sse)
-				.post("/mcp/message", this::message)
-				.post("/disconnect", this::disconnect);
-	}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-	private void disconnect(ServerRequest request, ServerResponse response) {
-		String sessionId = request.query().get("sessionId");
-		McpSession session = sessions.remove(sessionId);
-		session.disonnect();
-	}
+    @Override
+    public void setup(HttpRouting.Builder routing) {
+        routing.get("/sse", this::sse)
+                .post("/mcp/message", this::message)
+                .post("/disconnect", this::disconnect);
+    }
 
-	private void message(ServerRequest request, ServerResponse response) {
-		String sessionId = request.query().get("sessionId");
+    private void disconnect(ServerRequest request, ServerResponse response) {
+        String sessionId = request.query().get("sessionId");
+        McpSession session = sessions.remove(sessionId);
+        session.disonnect();
+    }
 
-		McpSession session = sessions.get(sessionId);
-		if (session == null) {
-			response.status(Status.NOT_FOUND_404);
-			response.send();
-			return;
-		}
+    private void message(ServerRequest request, ServerResponse response) {
+        String sessionId = request.query().get("sessionId");
 
-		String content = request.content().as(String.class);
-		McpSchema.JSONRPCMessage message = deserializeJsonRpcMessage(content);
-		LOGGER.log(System.Logger.Level.INFO, "Message received : {0}", message.toString());
-		session.send(message);
-		response.status(Status.OK_200);
-		response.send();
-	}
+        McpSession session = sessions.get(sessionId);
+        if (session == null) {
+            response.status(Status.NOT_FOUND_404);
+            response.send();
+            return;
+        }
 
-	private void sse(ServerRequest request, ServerResponse response) {
-		String sessionId = UUID.randomUUID().toString();
-		McpSession session = McpSession.create(server.handlers());
-		sessions.put(sessionId, session);
+        String content = request.content().as(String.class);
+        McpSchema.JSONRPCMessage message = deserializeJsonRpcMessage(content);
+        LOGGER.log(System.Logger.Level.INFO, "Message received : {0}", message.toString());
+        session.send(message);
+        response.status(Status.OK_200);
+        response.send();
+    }
 
-		try (SseSink sink = response.sink(SseSink.TYPE)) {
-			sink.emit(SseEvent.builder()
-					.name("endpoint")
-					.data("/mcp/message?sessionId=" + sessionId)
-					.build());
-			session.poll(message -> sink.emit(SseEvent.builder()
-					.name("message")
-					.data(message)
-					.build()));
-		}
-	}
+    private void sse(ServerRequest request, ServerResponse response) {
+        String sessionId = UUID.randomUUID().toString();
+        McpSession session = McpSession.create(server.handlers());
+        sessions.put(sessionId, session);
 
-	private McpSchema.JSONRPCMessage deserializeJsonRpcMessage(String content) {
-		try {
-			return McpSchema.deserializeJsonRpcMessage(mapper, content);
-		} catch (IOException e) {
-			throw new McpException("Failed to deserialize JSON RPC message");
-		}
-	}
+        try (SseSink sink = response.sink(SseSink.TYPE)) {
+            sink.emit(SseEvent.builder()
+                    .name("endpoint")
+                    .data("/mcp/message?sessionId=" + sessionId)
+                    .build());
+            session.poll(message -> sink.emit(SseEvent.builder()
+                    .name("message")
+                    .data(message)
+                    .build()));
+        }
+    }
 
-	public static class Builder {
+    private McpSchema.JSONRPCMessage deserializeJsonRpcMessage(String content) {
+        try {
+            return McpSchema.deserializeJsonRpcMessage(mapper, content);
+        } catch (IOException e) {
+            throw new McpException("Failed to deserialize JSON RPC message");
+        }
+    }
 
-		private McpServer server;
+    public static class Builder {
 
-		public Builder mcpServer(Consumer<McpServerConfig.Builder> builderConsumer) {
-			McpServerConfig.Builder builder = McpServer.builder();
-			builderConsumer.accept(builder);
-			this.server = builder.build();
-			return this;
-		}
+        private McpServer server;
 
-		public McpHttpFeature build() {
-			return new McpHttpFeature(this);
-		}
-	}
+        public Builder mcpServer(Consumer<McpServerConfig.Builder> builderConsumer) {
+            McpServerConfig.Builder builder = McpServer.builder();
+            builderConsumer.accept(builder);
+            this.server = builder.build();
+            return this;
+        }
+
+        public McpHttpFeature build() {
+            return new McpHttpFeature(this);
+        }
+    }
 
 }
