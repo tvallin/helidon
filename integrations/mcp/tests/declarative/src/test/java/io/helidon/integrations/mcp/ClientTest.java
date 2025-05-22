@@ -18,8 +18,6 @@ package io.helidon.integrations.mcp;
 
 import java.net.URI;
 
-import io.helidon.service.registry.ServiceRegistry;
-import io.helidon.webserver.WebServer;
 import io.helidon.webserver.testing.junit5.ServerTest;
 
 import dev.langchain4j.mcp.client.DefaultMcpClient;

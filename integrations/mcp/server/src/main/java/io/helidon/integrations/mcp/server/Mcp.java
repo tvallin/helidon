@@ -44,12 +44,6 @@ public final class Mcp {
 		String description() default "none"; //optional
 	}
 
-	@Target(PARAMETER)
-	@Retention(RUNTIME)
-	public @interface PromptParam {
-		String value();
-	}
-
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Tool {
@@ -60,7 +54,7 @@ public final class Mcp {
 
 	@Target(PARAMETER)
 	@Retention(RUNTIME)
-	public @interface ToolParam {
+	public @interface Param {
 		String value();
 	}
 
@@ -69,19 +63,9 @@ public final class Mcp {
 	public @interface Server {
 		String name() default "Helidon MCP Server";
 		String version() default "0.0.1";
+		CapabilitiesTemp[] capabilities() default {};
 	}
 
-	@Target(ElementType.TYPE)
-	@Retention(RUNTIME)
-	public @interface Notification {
-		String[] value();
-	}
-
-	@Target(ElementType.TYPE)
-	@Retention(RUNTIME)
-	public @interface Subscribe {
-		String[] value();
-	}
 
 
 

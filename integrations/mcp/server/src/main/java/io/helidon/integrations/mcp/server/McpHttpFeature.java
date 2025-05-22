@@ -46,17 +46,25 @@ public class McpHttpFeature implements HttpFeature {
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
-    public McpHttpFeature(Builder builder) {
-        this.server = builder.server;
-    }
-
     @Service.Inject
     public McpHttpFeature(McpServer server) {
         this.server = server;
     }
 
+    public McpHttpFeature(McpServerAPI... server) {
+        this.server = null;
+    }
+
+    public McpHttpFeature(Builder builder) {
+        this.server = builder.server;
+    }
+
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static McpHttpFeature create(McpServerAPI... servers) {
+        return new McpHttpFeature(servers);
     }
 
     @Override

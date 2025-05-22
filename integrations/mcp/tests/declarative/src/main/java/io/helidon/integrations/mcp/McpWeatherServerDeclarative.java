@@ -18,31 +18,42 @@ package io.helidon.integrations.mcp;
 
 import io.helidon.integrations.mcp.server.Mcp;
 
-@SuppressWarnings("unused")
-@Mcp.Server
-@Mcp.Notification({"resource", "tool", "prompt"})
-@Mcp.Subscribe({"resource"})
+import static io.helidon.integrations.mcp.server.CapabilitiesTemp.PROMPT_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.CapabilitiesTemp.RESOURCE_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.CapabilitiesTemp.RESOURCE_SUBSCRIBE;
+import static io.helidon.integrations.mcp.server.CapabilitiesTemp.TOOL_LIST_CHANGED;
+
+@Mcp.Server(
+        name = "mcp-weather-server",
+        version = "1.0.0",
+        capabilities = {
+                TOOL_LIST_CHANGED,
+                RESOURCE_LIST_CHANGED,
+                RESOURCE_SUBSCRIBE,
+                PROMPT_LIST_CHANGED
+        })
+//@Mcp.Capabilities(TOOL_LIST_CHANGED, RESOURCE_LIST_CHANGED)
 class McpWeatherServerDeclarative {
 
-	@Mcp.Tool(
-			name = "Weather Alert",
-			description = "Get weather alert from state")
-	String weatherAlert(@Mcp.ToolParam("state") String state) {
-		return "Hurricane in " + state;
-	}
+    @Mcp.Tool(
+            name = "Weather Alert",
+            description = "Get weather alert from state")
+    String weatherAlert(@Mcp.Param("state's name") String state) {
+        return "Hurricane in " + state;
+    }
 
-	@Mcp.Prompt(
-			name = "Weather in town",
-			description = "Get the weather in a specific town")
-	String weatherInTown(@Mcp.PromptParam("town") String town) {
-		return "What is the weather like in " + town;
-	}
+    @Mcp.Prompt(
+            name = "Weather in town",
+            description = "Get the weather in a specific town")
+    String weatherInTown(@Mcp.Param("town's name") String town) {
+        return "What is the weather like in {{town}}";
+    }
 
-	@Mcp.Resource(
-			uri = "https://api.weather.gov/alerts",
-			name = "weather-report",
-			description = "Get the list of all alerts")
-	void weatherAlerts() {
-	}
+    @Mcp.Resource(
+            uri = "https://api.weather.gov/{path}",
+            name = "weather-report",
+            description = "Get the list of all alerts")
+    void weatherAlerts() {
+    }
 
 }

@@ -27,7 +27,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 @RuntimeType.PrototypedBy(McpServerConfig.class)
 public interface McpServer extends RuntimeType.Api<McpServerConfig> {
 
-    static final String PROTOCOLE_VERSION = "2024-11-05";
+    String PROTOCOLE_VERSION = "2024-11-05";
 
     static McpServer create(McpServerConfig serverConfig) {
         return new McpServerImpl(serverConfig);
