@@ -13,130 +13,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.helidon.integrations.mcp.tests.se;
 
-import java.util.List;
-
+import io.helidon.common.config.Config;
+import io.helidon.common.parameters.Parameters;
 import io.helidon.integrations.mcp.server.Capabilities;
-import io.helidon.integrations.mcp.server.Implementation;
-import io.helidon.integrations.mcp.server.InputSchema;
 import io.helidon.integrations.mcp.server.McpHttpFeature;
+import io.helidon.integrations.mcp.server.McpRouting;
+import io.helidon.integrations.mcp.server.McpServerConfig;
+import io.helidon.integrations.mcp.server.McpServerInfo;
 import io.helidon.integrations.mcp.server.Prompt;
-import io.helidon.integrations.mcp.server.PromptComponent;
+import io.helidon.integrations.mcp.server.PromptArgument;
+import io.helidon.integrations.mcp.server.PromptInfo;
 import io.helidon.integrations.mcp.server.Resource;
-import io.helidon.integrations.mcp.server.ResourceComponent;
+import io.helidon.integrations.mcp.server.ResourceInfo;
 import io.helidon.integrations.mcp.server.Tool;
-import io.helidon.integrations.mcp.server.ToolComponent;
+import io.helidon.integrations.mcp.server.ToolInfo;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
-
-import io.modelcontextprotocol.spec.McpSchema;
 
 class McpWeatherServerSe {
 
-    public static final String SERVER_NAME = "Helidon MCP Server";
-    public static final String SERVER_VERSION = "0.0.1";
-
-    public static final String TOOL_NAME = "weather-alerts";
-    public static final String TOOL_DESCRIPTION = "Get weather from town";
-
-    public static final String PROMPT_NAME = "Weather in town";
-    public static final String PROMPT_DESCRIPTION = "Get the weather in a specific town";
-    public static final String PROMPT_ARGUMENT_NAME = "town";
-    public static final String PROMPT_ARGUMENT_DESCRIPTION = "town's name";
-
-    public static final String RESOURCE_URI = "file:///Users/tvallin/Documents/alerts.txt";
-    public static final String RESOURCE_NAME = "alerts-list";
-    public static final String RESOURCE_DESCRIPTION = "Get the list of all weather alerts";
-
-    private static WebServer server;
-
     public static void main(String[] args) {
-        server = WebServer.builder()
-                .port(8081)
-                .routing(routing -> routing.addFeature(McpHttpFeature.builder()
-                        .mcpServer(builder -> builder
-                                .implementation(Implementation.builder()
-                                        //TODO - check wether it is server version or "API" version ?
-                                        .name(SERVER_NAME)
-                                        .version(SERVER_VERSION)
-                                        .build())
-                                .capabilities(Capabilities.builder()
-                                        .resources(Resource.builder()
-                                                //TODO - Double check that.
-                                                .listChanged(true)
-                                                .subscribe(true)
-                                                .build())
-                                        .prompts(Prompt.builder()
-                                                .listChanged(true))
-                                        .tools(Tool.builder()
-                                                .listChanged(true)
-                                                .build()))
-                                .addTools(createTools())
-                                .addPrompts(createPrompts())
-                                .addResources(createResources()))
-                        .build()))
+        var config = Services.get(Config.class);
+
+        WebServer.builder()
+                .config(config.get("server"))
+                .routing(routing -> routing.addFeature(McpHttpFeature.create(new McpWeatherConfig())))
                 .build()
                 .start();
     }
 
-    public static WebServer server() {
-        return server;
+    static class McpWeatherConfig implements McpServerConfig {
+
+        @Override
+        public McpServerInfo info() {
+            return McpServerInfo.create("mcp-server", "0.0.1", Capabilities.TOOL_LIST_CHANGED);
+        }
+
+        @Override
+        public void setup(McpRouting.Builder routing) {
+            routing.register(new WeatherTool())
+                    .register(new WeatherResource())
+                    .register(new WeatherPrompt());
+        }
     }
 
-    private static List<ResourceComponent> createResources() {
-        return List.of(ResourceComponent.builder()
-                .uri(RESOURCE_URI)
-                .name(RESOURCE_NAME)
-                .description(RESOURCE_DESCRIPTION)
-                .build());
+    static class WeatherTool implements Tool {
+
+        @Override
+        public ToolInfo info() {
+            return ToolInfo.builder()
+                    .name("tool-weater")
+                    .description("Get the weather in a specific town")
+                    .requiredProperties("town")
+                    .properties("town", "string")
+                    .build();
+        }
+
+        @Override
+        public String process(Parameters parameters) {
+            return "It is sunny in " + parameters.get("town");
+        }
     }
 
-    private static List<ToolComponent> createTools() {
-        return List.of(createWeatherTool(), createCoffeShopTool());
+    static class WeatherPrompt implements Prompt {
+
+        @Override
+        public PromptInfo info() {
+            return PromptInfo.builder()
+                    .name("prompt-weather")
+                    .description("Get the weather in a specific town")
+                    .arguments(PromptArgument.create("town", "The name of the town", false))
+                    .build();
+        }
+
+        @Override
+        public String prompt(Parameters parameters) {
+            return "It is sunny in " + parameters.get("town");
+        }
     }
 
-    private static ToolComponent createWeatherTool() {
-        return ToolComponent.builder()
-                .name(TOOL_NAME)
-                .description(TOOL_DESCRIPTION)
-                .schema(InputSchema.builder()
-                        .required("town")
-                        .properties("town", "string"))
-                .handler(arguments -> {
-                    String town = arguments.get("town").toString();
-                    return "There is a hurricane in " + town;
-                })
-                .build();
-    }
+    static class WeatherResource implements Resource {
 
-    private static ToolComponent createCoffeShopTool() {
-        return ToolComponent.builder()
-                .name("opening-hours")
-                .description("Get the coffee shop opening hours")
-                .schema(InputSchema.builder()
-                        .required("day")
-                        .properties("day", "string"))
-                .handler(arguments -> {
-                    String day = arguments.get("day").toString();
-                    return """
-                            The coffee shop opening hours for %s:
-                            Open: 10:00 AM
-                            Closes: 21:00 PM
-                            """.formatted(day);
-                })
-                .build();
-    }
+        @Override
+        public ResourceInfo info() {
+            return ResourceInfo.create("file:///tmp/", "temp-file", "This is a temporary file");
+        }
 
-    private static List<PromptComponent> createPrompts() {
-        return List.of(
-                PromptComponent.builder()
-                        .name(PROMPT_NAME)
-                        .description(PROMPT_DESCRIPTION)
-                        .promptArgument(new McpSchema.PromptArgument(PROMPT_ARGUMENT_NAME, PROMPT_ARGUMENT_DESCRIPTION, true))
-                        .handler(request -> {
-                            String town = request.get("town").toString();
-                            return "What is the weather like in " + town + " ?";
-                        })
-                        .build());
+        @Override
+        public String read() {
+            return null;
+        }
     }
 }

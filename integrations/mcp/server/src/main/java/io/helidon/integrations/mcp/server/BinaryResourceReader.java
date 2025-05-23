@@ -19,9 +19,7 @@ import io.helidon.http.HeaderNames;
 import io.helidon.webclient.api.HttpClientResponse;
 import io.helidon.webclient.api.WebClient;
 
-import io.modelcontextprotocol.spec.McpSchema;
-
-public class BinaryResourceReader implements ResourceReader {
+class BinaryResourceReader implements ResourceReader {
 
     private final String uri;
 
@@ -30,7 +28,7 @@ public class BinaryResourceReader implements ResourceReader {
     }
 
     @Override
-    public McpSchema.ResourceContents read() {
+    public McpJsonRPC.ResourceContents read() {
         if (uri.startsWith("http")) {
             return new HttpResourceReader(uri).read();
         }
@@ -46,14 +44,14 @@ public class BinaryResourceReader implements ResourceReader {
         }
 
         @Override
-        public McpSchema.ResourceContents read() {
+        public McpJsonRPC.ResourceContents read() {
             WebClient client = WebClient.builder()
                     .baseUri(uri)
                     .build();
             try (HttpClientResponse request = client.get().request()) {
                 String mimeType = request.headers().get(HeaderNames.CONTENT_TYPE).get();
                 String data = request.entity().as(String.class);
-                return new McpSchema.BlobResourceContents(uri, mimeType, data);
+                return new McpJsonRPC.BlobResourceContents(uri, mimeType, data);
             }
         }
     }

@@ -83,10 +83,10 @@ include::{sourcedir}/se/guides/UpgradeSnippets.java[tag=snippet_3, indent=0]
 
 == Resource Class When Loaded from Config
 
-The configuration approach to `ResourceTemp` class was using prefixes which was not aligned with our approach to configuration.
+The configuration approach to `Resource` class was using prefixes which was not aligned with our approach to configuration.
 All usages were refactored as follows:
 
-1. The `ResourceTemp` class expects a config node `resource` that will be used to read it
+1. The `Resource` class expects a config node `resource` that will be used to read it
 2. The feature set remains unchanged - we support path, classpath, url, content as plain text, and content as base64
 3. Classes using resources are changed as well, such as `KeyConfig` - see details below
 
@@ -121,14 +121,14 @@ The new JSON MediaSupport classes are:
 
 == Security: OidcConfig
 
-Configuration has been updated to use the new `ResourceTemp` approach:
+Configuration has been updated to use the new `Resource` approach:
 
 1. `oidc-metadata.resource` is the new key for loading `oidc-metadata` from local resource
 2. `sign-jwk.resource` is the new key for loading signing JWK resource
 
 == Security: JwtProvider and JwtAuthProvider
 
-Configuration has been updated to use the new `ResourceTemp` approach:
+Configuration has been updated to use the new `Resource` approach:
 
 1. `jwk.resource` is the new key for loading JWK for verifying signatures
 2. `jwt.resource` is also used for outbound as key for loading JWK for signing tokens
@@ -172,7 +172,7 @@ pem:
 
 == GrpcTlsDescriptor
 
-Configuration has been updated to use the new `ResourceTemp` approach:
+Configuration has been updated to use the new `Resource` approach:
 
 1. `tls-cert.resource` is the new key for certificate
 2. `tls-key.resource` is the new key for private key

@@ -18,10 +18,10 @@ package io.helidon.integrations.mcp;
 
 import io.helidon.integrations.mcp.server.Mcp;
 
-import static io.helidon.integrations.mcp.server.CapabilitiesTemp.PROMPT_LIST_CHANGED;
-import static io.helidon.integrations.mcp.server.CapabilitiesTemp.RESOURCE_LIST_CHANGED;
-import static io.helidon.integrations.mcp.server.CapabilitiesTemp.RESOURCE_SUBSCRIBE;
-import static io.helidon.integrations.mcp.server.CapabilitiesTemp.TOOL_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.Capabilities.PROMPT_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.Capabilities.RESOURCE_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.Capabilities.RESOURCE_SUBSCRIBE;
+import static io.helidon.integrations.mcp.server.Capabilities.TOOL_LIST_CHANGED;
 
 @Mcp.Server(
         name = "mcp-weather-server",

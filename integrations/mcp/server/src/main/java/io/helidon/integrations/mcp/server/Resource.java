@@ -16,14 +16,21 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.builder.api.Option;
-import io.helidon.builder.api.Prototype;
+/**
+ * MCP resource definition.
+ */
+public interface Resource {
+    /**
+     * Resource information.
+     *
+     * @return {@link ResourceInfo}
+     */
+    ResourceInfo info();
 
-@Prototype.Configured
-@Prototype.Blueprint
-interface ToolBlueprint {
-
-	@Option.Configured
-	@Option.DefaultBoolean(false)
-	boolean listChanged();
+    /**
+     * Resource reader.
+     *
+     * @return resource content as a {@link String}
+     */
+    String read();
 }

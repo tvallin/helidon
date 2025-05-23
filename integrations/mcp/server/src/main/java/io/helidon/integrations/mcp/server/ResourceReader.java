@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.integrations.mcp.server;
 
-import io.modelcontextprotocol.spec.McpSchema;
+package io.helidon.integrations.mcp.server;
 
 @FunctionalInterface
 public interface ResourceReader {
 
-    McpSchema.ResourceContents read();
+    McpJsonRPC.ResourceContents read();
 
     static ResourceReader get(String uri) {
         if (uri.startsWith("http")) {

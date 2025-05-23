@@ -17,14 +17,10 @@
 package io.helidon.integrations.mcp.server;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-import java.util.logging.Logger;
 
-import io.helidon.config.Config;
 import io.helidon.http.Status;
 import io.helidon.http.sse.SseEvent;
 import io.helidon.service.registry.Service;
@@ -35,7 +31,6 @@ import io.helidon.webserver.http.ServerResponse;
 import io.helidon.webserver.sse.SseSink;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.spec.McpSchema;
 
 @Service.Singleton
 public class McpHttpFeature implements HttpFeature {
@@ -47,23 +42,15 @@ public class McpHttpFeature implements HttpFeature {
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
     @Service.Inject
-    public McpHttpFeature(McpServer server) {
-        this.server = server;
+    public McpHttpFeature(McpServerConfig server) {
+        this.server = McpServer.create(server);
     }
 
-    public McpHttpFeature(McpServerAPI... server) {
+    public McpHttpFeature(McpServerConfig... server) {
         this.server = null;
     }
 
-    public McpHttpFeature(Builder builder) {
-        this.server = builder.server;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static McpHttpFeature create(McpServerAPI... servers) {
+    public static McpHttpFeature create(McpServerConfig... servers) {
         return new McpHttpFeature(servers);
     }
 
@@ -78,24 +65,6 @@ public class McpHttpFeature implements HttpFeature {
         String sessionId = request.query().get("sessionId");
         McpSession session = sessions.remove(sessionId);
         session.disonnect();
-    }
-
-    private void message(ServerRequest request, ServerResponse response) {
-        String sessionId = request.query().get("sessionId");
-
-        McpSession session = sessions.get(sessionId);
-        if (session == null) {
-            response.status(Status.NOT_FOUND_404);
-            response.send();
-            return;
-        }
-
-        String content = request.content().as(String.class);
-        McpSchema.JSONRPCMessage message = deserializeJsonRpcMessage(content);
-        LOGGER.log(System.Logger.Level.INFO, "Message received : {0}", message.toString());
-        session.send(message);
-        response.status(Status.OK_200);
-        response.send();
     }
 
     private void sse(ServerRequest request, ServerResponse response) {
@@ -115,27 +84,31 @@ public class McpHttpFeature implements HttpFeature {
         }
     }
 
-    private McpSchema.JSONRPCMessage deserializeJsonRpcMessage(String content) {
-        try {
-            return McpSchema.deserializeJsonRpcMessage(mapper, content);
-        } catch (IOException e) {
-            throw new McpException("Failed to deserialize JSON RPC message");
+    private void message(ServerRequest request, ServerResponse response) {
+        String sessionId = request.query().get("sessionId");
+
+        McpSession session = sessions.get(sessionId);
+        if (session == null) {
+            response.status(Status.NOT_FOUND_404);
+            response.send();
+            return;
         }
+
+        String jsonRpc = request.content().as(String.class);
+        McpJsonRPC.JSONRPCMessage message = deserializeJsonRpcMessage(jsonRpc);
+        if (LOGGER.isLoggable(System.Logger.Level.DEBUG)) {
+            LOGGER.log(System.Logger.Level.INFO, "Message received : %s", message.toString());
+        }
+        session.send(message);
+        response.status(Status.OK_200);
+        response.send();
     }
 
-    public static class Builder {
-
-        private McpServer server;
-
-        public Builder mcpServer(Consumer<McpServerConfig.Builder> builderConsumer) {
-            McpServerConfig.Builder builder = McpServer.builder();
-            builderConsumer.accept(builder);
-            this.server = builder.build();
-            return this;
-        }
-
-        public McpHttpFeature build() {
-            return new McpHttpFeature(this);
+    private McpJsonRPC.JSONRPCMessage deserializeJsonRpcMessage(String content) {
+        try {
+            return McpJsonRPC.deserializeJsonRpcMessage(mapper, content);
+        } catch (IOException e) {
+            throw new McpException("Failed to deserialize JSON RPC message");
         }
     }
 

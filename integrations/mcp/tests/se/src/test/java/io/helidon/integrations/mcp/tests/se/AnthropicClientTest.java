@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.integrations.mcp.server.McpServer.PROTOCOLE_VERSION;
+import static io.helidon.integrations.mcp.server.McpServerConfig.PROTOCOL_VERSION;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_DESCRIPTION;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_NAME;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_DESCRIPTION;
@@ -83,7 +83,7 @@ class AnthropicClientTest {
 		var tools = capabilities.tools();
 		assertThat(tools.listChanged(), is(true));
 		assertThat(result.instructions(), is(""));
-		assertThat(result.protocolVersion(), is(PROTOCOLE_VERSION));
+		assertThat(result.protocolVersion(), is(PROTOCOL_VERSION));
 
 		client.close();
 	}

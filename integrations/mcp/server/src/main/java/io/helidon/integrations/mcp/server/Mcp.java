@@ -63,7 +63,7 @@ public final class Mcp {
 	public @interface Server {
 		String name() default "Helidon MCP Server";
 		String version() default "0.0.1";
-		CapabilitiesTemp[] capabilities() default {};
+		Capabilities[] capabilities() default {};
 	}
 
 

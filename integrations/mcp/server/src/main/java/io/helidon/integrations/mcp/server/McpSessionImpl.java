@@ -17,7 +17,6 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -25,13 +24,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 import io.helidon.common.UncheckedException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.spec.McpSchema;
 
+import static io.helidon.integrations.mcp.server.McpJsonRPC.METHOD_NOTIFICATION_CANCELED;
 import static io.helidon.integrations.mcp.server.McpSessionImpl.State.INITIALIZED;
 import static io.helidon.integrations.mcp.server.McpSessionImpl.State.INITIALIZING;
 import static io.helidon.integrations.mcp.server.McpSessionImpl.State.UNINITIALIZED;
@@ -40,25 +38,25 @@ class McpSessionImpl implements McpSession {
 
 	private static final System.Logger LOGGER = System.getLogger(McpSessionImpl.class.getName());
 
-	private final Map<String, McpServer.RequestHandler<?>> handlers;
+	private final Map<String, McpServer.JsonRPCHandler<?>> handlers;
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final List<String> pendingResponses = new ArrayList<>();
 	private final AtomicBoolean active = new AtomicBoolean(true);
-	private final BlockingQueue<McpSchema.JSONRPCMessage> queue = new LinkedBlockingQueue<>();
-	private final AtomicReference<McpSchema.Implementation> clientInfo = new AtomicReference<>();
-	private final AtomicReference<McpSchema.ClientCapabilities> clientCapabilities = new AtomicReference<>();
+	private final BlockingQueue<McpJsonRPC.JSONRPCMessage> queue = new LinkedBlockingQueue<>();
+	private final AtomicReference<McpJsonRPC.Implementation> clientInfo = new AtomicReference<>();
+	private final AtomicReference<McpJsonRPC.ClientCapabilities> clientCapabilities = new AtomicReference<>();
 
 	private State state = UNINITIALIZED;
 
-	McpSessionImpl(Map<String, McpServer.RequestHandler<?>> handlers) {
+	McpSessionImpl(Map<String, McpServer.JsonRPCHandler<?>> handlers) {
 		this.handlers = handlers;
 	}
 
 	@Override
-	public void poll(Consumer<McpSchema.JSONRPCMessage> consumer) {
+	public void poll(Consumer<McpJsonRPC.JSONRPCMessage> consumer) {
 		while (active.get()) {
 			try {
-				McpSchema.JSONRPCMessage message = queue.take();
+				McpJsonRPC.JSONRPCMessage message = queue.take();
 //				if (message instanceof ClosingMessage) {
 //					break;
 //				}
@@ -70,17 +68,17 @@ class McpSessionImpl implements McpSession {
 	}
 
 	@Override
-	public void send(McpSchema.JSONRPCMessage event) {
+	public void send(McpJsonRPC.JSONRPCMessage event) {
 		try {
-			if (event instanceof McpSchema.JSONRPCResponse response) {
+			if (event instanceof McpJsonRPC.JSONRPCResponse response) {
 				handleResponse(response);
 				return;
 			}
-			if (event instanceof McpSchema.JSONRPCNotification notification) {
+			if (event instanceof McpJsonRPC.JSONRPCNotification notification) {
 				handleNotification(notification);
 				return;
 			}
-			if (event instanceof McpSchema.JSONRPCRequest request) {
+			if (event instanceof McpJsonRPC.JSONRPCRequest request) {
 				event = handleRequest(request);
 			}
 			queue.put(event);
@@ -99,20 +97,20 @@ class McpSessionImpl implements McpSession {
 		LOGGER.log(System.Logger.Level.DEBUG, "Session is already disconnected.");
 	}
 
-	private void handleNotification(McpSchema.JSONRPCNotification notification) {
-		if (McpSchema.METHOD_NOTIFICATION_INITIALIZED.equals(notification.method())) {
+	private void handleNotification(McpJsonRPC.JSONRPCNotification notification) {
+		if (McpJsonRPC.METHOD_NOTIFICATION_INITIALIZED.equals(notification.method())) {
 			state = INITIALIZED;
 		}
-		if ("notifications/cancelled".equals(notification.method())) {
+		if (METHOD_NOTIFICATION_CANCELED.equals(notification.method())) {
 			this.disonnect();
 		}
 	}
 
-	private McpSchema.JSONRPCResponse handleRequest(McpSchema.JSONRPCRequest request) {
-		if (McpSchema.METHOD_INITIALIZE.equals(request.method())) {
+	private McpJsonRPC.JSONRPCResponse handleRequest(McpJsonRPC.JSONRPCRequest request) {
+		if (McpJsonRPC.METHOD_INITIALIZE.equals(request.method())) {
 			if (state == UNINITIALIZED) {
 				state = INITIALIZING;
-				var initializeRequest = mapper.convertValue(request.params(), McpSchema.InitializeRequest.class);
+				var initializeRequest = mapper.convertValue(request.params(), McpJsonRPC.InitializeRequest.class);
 				this.clientCapabilities.lazySet(initializeRequest.capabilities());
 				this.clientInfo.lazySet(initializeRequest.clientInfo());
 			}
@@ -120,13 +118,13 @@ class McpSessionImpl implements McpSession {
 		var handler = handlers.get(request.method());
 		if (handler == null) {
 			var error = McpException.toError("Required method is not supported: " + request.method());
-			return new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), null, error);
+			return new McpJsonRPC.JSONRPCResponse(request.jsonrpc(), request.id(), null, error);
 		}
 		var result = handler.handle(request.params());
-		return new McpSchema.JSONRPCResponse(request.jsonrpc(), request.id(), result, null);
+		return new McpJsonRPC.JSONRPCResponse(request.jsonrpc(), request.id(), result, null);
 	}
 
-	private void handleResponse(McpSchema.JSONRPCResponse response) {
+	private void handleResponse(McpJsonRPC.JSONRPCResponse response) {
 		boolean expected = pendingResponses.remove(response.id().toString());
 		if (expected) {
 			return;

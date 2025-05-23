@@ -16,18 +16,27 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.builder.api.Option;
-import io.helidon.builder.api.Prototype;
+/**
+ * MCP server configuration.
+ */
+public interface McpServerConfig {
 
-@Prototype.Configured
-@Prototype.Blueprint
-interface ImplementationBlueprint {
+    /**
+     * Protocol version support by the server.
+     */
+    String PROTOCOL_VERSION = "2024-11-05";
 
-	@Option.Configured
-	@Option.Default("Helidon MCP Server")
-	String name();
+    /**
+     * Server information.
+     *
+     * @return {@link McpServerInfo}
+     */
+    McpServerInfo info();
 
-	@Option.Configured
-	@Option.Default("1.0.0")
-	String version();
+    /**
+     * Register {@link Tool}, {@link Prompt} and {@link Resource} to the server.
+     *
+     * @param routing server routing
+     */
+    void setup(McpRouting.Builder routing);
 }

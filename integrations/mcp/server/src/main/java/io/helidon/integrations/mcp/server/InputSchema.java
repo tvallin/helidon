@@ -32,10 +32,6 @@ public class InputSchema {
         return new Builder();
     }
 
-    public String asString() {
-        return schema.toString();
-    }
-
     public static class Builder {
 
         private final String type;

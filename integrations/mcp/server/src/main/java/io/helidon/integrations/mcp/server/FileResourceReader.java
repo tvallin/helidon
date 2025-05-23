@@ -29,9 +29,7 @@ import java.util.stream.Collectors;
 
 import io.helidon.common.media.type.MediaTypes;
 
-import io.modelcontextprotocol.spec.McpSchema;
-
-public class FileResourceReader implements ResourceReader {
+class FileResourceReader implements ResourceReader {
 
     private final Path path;
     private final String uri;
@@ -42,7 +40,7 @@ public class FileResourceReader implements ResourceReader {
     }
 
     @Override
-    public McpSchema.ResourceContents read() {
+    public McpJsonRPC.ResourceContents read() {
         try (FileInputStream fis = new FileInputStream(path.toFile())) {
             FileLock lock = null;
             try {
@@ -53,7 +51,7 @@ public class FileResourceReader implements ResourceReader {
             try {
                 try (BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                     String content = bufferedReader.lines().collect(Collectors.joining("\n"));
-                    return new McpSchema.TextResourceContents(uri, MediaTypes.TEXT_PLAIN_VALUE, content);
+                    return new McpJsonRPC.TextResourceContents(uri, MediaTypes.TEXT_PLAIN_VALUE, content);
                 } catch (IOException e) {
                     throw new McpException(String.format("Cannot read from path '%s'", path), e);
                 }

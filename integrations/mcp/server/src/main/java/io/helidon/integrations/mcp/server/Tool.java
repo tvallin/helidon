@@ -16,18 +16,24 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.builder.api.Option;
-import io.helidon.builder.api.Prototype;
+import io.helidon.common.parameters.Parameters;
 
-@Prototype.Configured
-@Prototype.Blueprint
-interface ResourceBlueprint {
+/**
+ * MCP tool definition.
+ */
+public interface Tool {
+    /**
+     * Tool information.
+     *
+     * @return {@link ToolInfo}
+     */
+    ToolInfo info();
 
-	@Option.Configured
-	@Option.DefaultBoolean(false)
-	boolean subscribe();
-
-	@Option.Configured
-	@Option.DefaultBoolean(false)
-	boolean listChanged();
+    /**
+     * Tool execution logic with client provided parameters.
+     *
+     * @param parameters client parameters
+     * @return tool execution result as a {@link String}
+     */
+    String process(Parameters parameters);
 }

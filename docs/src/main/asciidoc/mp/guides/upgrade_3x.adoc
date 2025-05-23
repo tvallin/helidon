@@ -166,7 +166,7 @@ NOTE: See xref:{rootdir}/mp/integrations/oci.adoc#oci-compatibility[Resolving co
 
 Deprecations in the following classes:
 
-* `ResourceTemp` - old configuration approach (since 2.0)
+* `Resource` - old configuration approach (since 2.0)
 * `ThreadPoolSupplier` - Named thread pools (since 2.4.2)
 
 More information in the following link:https://github.com/oracle/helidon/issues/4363[Task].

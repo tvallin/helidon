@@ -16,17 +16,24 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.config.Config;
-import io.helidon.webserver.spi.ServerFeatureProvider;
+import io.helidon.common.parameters.Parameters;
 
-public class McpServerFeatureProvider implements ServerFeatureProvider<McpServerFeature> {
-	@Override
-	public String configKey() {
-		return "mcp";
-	}
+/**
+ * MCP Prompt definition.
+ */
+public interface Prompt {
+    /**
+     * Prompt information.
+     *
+     * @return {@link PromptInfo}
+     */
+    PromptInfo info();
 
-	@Override
-	public McpServerFeature create(Config config, String name) {
-		return null;
-	}
+    /**
+     * Create prompt based on parameters.
+     *
+     * @param parameters client parameters
+     * @return prompt as {@link String}
+     */
+    String prompt(Parameters parameters);
 }

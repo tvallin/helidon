@@ -17,143 +17,217 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-import io.helidon.builder.api.RuntimeType;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.modelcontextprotocol.spec.McpSchema;
+final class McpServer {
 
-@RuntimeType.PrototypedBy(McpServerConfig.class)
-public interface McpServer extends RuntimeType.Api<McpServerConfig> {
+	private static final String PROTOCOLE_VERSION = "2024-11-05";
 
-    String PROTOCOLE_VERSION = "2024-11-05";
+	private final McpRouting routing;
+	private final McpServerInfo info;
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final List<String> protocolVersions = new ArrayList<>();
+	private final Map<String, JsonRPCHandler<?>> handlers = new HashMap<>();
 
-    static McpServer create(McpServerConfig serverConfig) {
-        return new McpServerImpl(serverConfig);
-    }
+	public McpServer(McpServerConfig server) {
+		McpRouting.Builder routing = McpRouting.builder();
+		Set<Capabilities> capabilities = server.info().capabilities();
 
-    static McpServer create(java.util.function.Consumer<McpServerConfig.Builder> consumer) {
-        return builder().update(consumer).build();
-    }
+		this.info = server.info();
+		this.protocolVersions.add(PROTOCOLE_VERSION);
 
-    /**
-     * A new builder to set up server.
-     *
-     * @return builder
-     */
-    static McpServerConfig.Builder builder() {
-        return McpServerConfig.builder();
-    }
+		handlers.put(McpJsonRPC.METHOD_PING, ping());
+		handlers.put(McpJsonRPC.METHOD_INITIALIZE, initialize());
 
-    static McpServer.Builder fluentBuilder() {
-        return new McpServer.Builder();
-    }
+		if (capabilities.contains(Capabilities.TOOL_LIST_CHANGED)) {
+			handlers.put(McpJsonRPC.METHOD_TOOLS_LIST, toolsList());
+			handlers.put(McpJsonRPC.METHOD_TOOLS_CALL, toolsCall());
+		}
 
-    Map<String, RequestHandler<?>> handlers();
+		if (capabilities.contains(Capabilities.RESOURCE_LIST_CHANGED)) {
+			handlers.put(McpJsonRPC.METHOD_RESOURCES_LIST, resourcesList());
+			handlers.put(McpJsonRPC.METHOD_RESOURCES_READ, resourcesRead());
+			handlers.put(McpJsonRPC.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
+		}
 
-    void addTool(ToolComponent tool);
+		if (capabilities.contains(Capabilities.RESOURCE_SUBSCRIBE)) {
+			handlers.put(McpJsonRPC.METHOD_RESOURCES_SUBSCRIBE, resourceSubscribe());
+			handlers.put(McpJsonRPC.METHOD_RESOURCES_UNSUBSCRIBE, resourceUnsubscribe());
+		}
 
-    void removeTool(ToolComponent tool);
+		if (capabilities.contains(Capabilities.PROMPT_LIST_CHANGED)) {
+			handlers.put(McpJsonRPC.METHOD_PROMPT_LIST, promptsList());
+			handlers.put(McpJsonRPC.METHOD_PROMPT_GET, promptsGet());
+		}
 
-    void addResourceTemplate(McpSchema.ResourceTemplate resourceTemplate);
+		if (capabilities.contains(Capabilities.LOGGING)) {
+			handlers.put(McpJsonRPC.METHOD_LOGGING_SET_LEVEL, logging());
+		}
 
-    void removeResourceTemplate(McpSchema.ResourceTemplate resourceTemplate);
+		server.setup(routing);
+		this.routing = routing.build();
+	}
 
-    void addResource(ResourceComponent resource);
+	static McpServer create(McpServerConfig... server) {
+		return new McpServer(server[0]);
+	}
 
-    void removeResource(String resourceName);
+	public Map<String, JsonRPCHandler<?>> handlers() {
+		return this.handlers;
+	}
 
-    void addPrompt(PromptComponent prompt);
+	public void addTool(Tool tool) {
+		this.routing.tools().add(tool);
+	}
 
-    void removePrompt(String name);
+	public void removeTool(Tool tool) {
+		this.routing.tools().remove(tool);
+	}
 
-    interface RequestHandler<T> {
-        /**
-         * Handles a request from the client.
-         *
-         * @param params the parameters of the request.
-         */
-        T handle(Object params);
-    }
+	public void addResource(Resource resource) {
+		this.routing.resources().add(resource);
+	}
 
-    class Builder {
-        String name = "mcp-server";
-        String version = "0.0.1";
-        boolean toolChange = false;
-        boolean promptChange = false;
-        boolean resourceChange = false;
-        boolean resourceSubscribe = false;
-        final List<ToolComponent> tools = new ArrayList<>();
-        final List<PromptComponent> prompts = new ArrayList<>();
-        final List<ResourceComponent> resources = new ArrayList<>();
+	public void addPrompt(Prompt prompt) {
+		this.routing.prompts().add(prompt);
+	}
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
+	//TODO - How to maintain list of client subscription ?
+	private JsonRPCHandler<?> resourceUnsubscribe() {
+		return null;
+	}
 
-        public Builder version(String version) {
-            this.version = version;
-            return this;
-        }
+	private JsonRPCHandler<?> resourceSubscribe() {
+		return null;
+	}
 
-        public Builder toolChange(boolean toolChange) {
-            this.toolChange = toolChange;
-            return this;
-        }
+	JsonRPCHandler<Object> ping() {
+		return object -> "pong";
+	}
 
-        public Builder promptChange(boolean promptChange) {
-            this.promptChange = promptChange;
-            return this;
-        }
+	JsonRPCHandler<McpJsonRPC.ListToolsResult> toolsList() {
+		return (object) -> {
+			List<McpJsonRPC.Tool> toolz = this.routing.tools().stream()
+					.filter(Objects::nonNull)
+					.map(tool -> tool.info().name())
+					.toList();
+			return new McpJsonRPC.ListToolsResult(toolz, null);
+		};
+	}
 
-        public Builder resourceChange(boolean resourceChange) {
-            this.resourceChange = resourceChange;
-            return this;
-        }
+	/**
+	 * Params is the arguments provided by the client to the tool (method signature).
+	 * McpJsonRPC.Tool represent the tool definition and is selected by name.
+	 * Create an object that run the method with the params and return the result of it.
+	 * It is defined in McpJsonRPC by Features with specification.
+	 *
+	 * @return Call tool result
+	 */
+	JsonRPCHandler<McpJsonRPC.CallToolResult> toolsCall() {
+		return (params) -> {
+			McpJsonRPC.CallToolRequest callToolRequest = mapper.convertValue(params, new TypeReference<>() {});
 
-        public Builder resourceSubscribe(boolean resourceSubscribe) {
-            this.resourceSubscribe = resourceSubscribe;
-            return this;
-        }
+			Optional<Tool> tool = this.routing.tools().stream()
+					.filter(tr -> callToolRequest.name().equals(tr.info().name()))
+					.findAny();
 
-        public Builder addTool(ToolComponent tool) {
-            tools.add(tool);
-            return this;
-        }
+			if (tool.isEmpty()) {
+				return new McpJsonRPC.CallToolResult(List.of(), true);
+			}
+			String result = tool.get().process(callToolRequest.arguments());
+			List<McpJsonRPC.Content> content = List.of(
+					new McpJsonRPC.TextContent(List.of(McpJsonRPC.Role.USER), 2.0, result));
+			return new McpJsonRPC.CallToolResult(content, false);
+		};
+	}
 
-        public Builder addResource(ResourceComponent resource) {
-            resources.add(resource);
-            return this;
-        }
+	JsonRPCHandler<McpJsonRPC.ListResourcesResult> resourcesList() {
+		return (params) -> {
+			var resources = this.routing.resources().stream()
+					.map(Resource::info)
+					.toList();
+			return new McpJsonRPC.ListResourcesResult(resources, null);
+		};
+	}
 
-        public Builder addPrompt(PromptComponent prompt) {
-            prompts.add(prompt);
-            return this;
-        }
+	JsonRPCHandler<McpJsonRPC.ReadResourceResult> resourcesRead() {
+		return (params) -> {
+			McpJsonRPC.ReadResourceRequest resourceRequest = mapper.convertValue(params, new TypeReference<>() {});
+			String resourceUri = resourceRequest.uri();
+			Optional<Resource> resource = this.routing.resources().stream()
+					.filter(it -> Objects.equals(it.info().uri(), resourceUri))
+					.findFirst();
+			if (resource.isEmpty()) {
+				return new McpJsonRPC.ReadResourceResult(List.of());
+			}
+			McpJsonRPC.ResourceContents content = ResourceReader.get(resourceUri).read();
+			return new McpJsonRPC.ReadResourceResult(List.of(content));
+		};
+	}
 
-        public McpServer build() {
-            return new McpServerImpl(McpServerConfig.builder()
-                    .implementation(Implementation.builder()
-                            .name(this.name)
-                            .version(this.version)
-                            .build())
-                    .capabilities(Capabilities.builder()
-                            .resources(Resource.builder()
-                                    .listChanged(this.resourceChange)
-                                    .subscribe(this.resourceSubscribe)
-                                    .build())
-                            .prompts(Prompt.builder()
-                                    .listChanged(this.promptChange))
-                            .tools(Tool.builder()
-                                    .listChanged(this.toolChange)
-                                    .build()))
-                    .tools(this.tools)
-                    .resources(this.resources)
-                    .prompts(this.prompts)
-                    .buildPrototype());
-        }
-    }
+	JsonRPCHandler<McpJsonRPC.ListResourceTemplatesResult> resourceTemplateList() {
+		return (param) -> new McpJsonRPC.ListResourceTemplatesResult(this.routing.resources(), null);
+	}
 
+	private JsonRPCHandler<McpJsonRPC.ListPromptsResult> promptsList() {
+		return (object) -> new McpJsonRPC.ListPromptsResult(this.routing.prompts(), null);
+	}
+
+	/**
+	 * Same as tools, feature that process it and return prompt messages.
+	 * @return prompt result
+	 */
+	JsonRPCHandler<McpJsonRPC.GetPromptResult> promptsGet() {
+		return (params) -> {
+			McpJsonRPC.GetPromptRequest promptRequest = mapper.convertValue(params, new TypeReference<>() {});
+			var prompt = this.routing.prompts().stream()
+					.filter(p -> Objects.equals(p.info().name(), promptRequest.name()))
+					.findFirst();
+			if (prompt.isEmpty()) {
+				//TODO - return an error
+				return new McpJsonRPC.GetPromptResult("Error", List.of());
+			}
+			String content = prompt.get()
+					.prompt(promptRequest.arguments());
+			return new McpJsonRPC.GetPromptResult(prompt.get().info().description(), List.of(
+					new McpJsonRPC.PromptMessage(McpJsonRPC.Role.USER, new McpJsonRPC.TextContent(content))));
+		};
+	}
+
+	//Todo - Change the logging level in the sessions
+	JsonRPCHandler<McpJsonRPC.LoggingMessageNotification> logging() {
+		return (param) -> new McpJsonRPC.LoggingMessageNotification(McpJsonRPC.LoggingLevel.INFO, "", "");
+	}
+
+	private JsonRPCHandler<McpJsonRPC.InitializeResult> initialize() {
+		return (param) -> {
+			McpJsonRPC.InitializeRequest request = mapper.convertValue(param, new TypeReference<>() {});
+			String protocoleVersion = this.protocolVersions.getLast();
+
+			if (this.protocolVersions.contains(request.protocolVersion())) {
+				protocoleVersion = request.protocolVersion();
+			}
+
+			return McpJsonRPCMapper.initializeResult(
+					protocoleVersion,
+					this.info);
+		};
+	}
+
+	interface JsonRPCHandler<T> {
+		/**
+		 * Handles a request from the client.
+		 *
+		 * @param params the parameters of the request.
+		 */
+		T handle(Object params);
+	}
 }

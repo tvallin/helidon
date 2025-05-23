@@ -325,7 +325,7 @@ include::{sourcedir}/mp/testing/TestingSnippets.java[tag=snippet_16, indent=0]
 ----
 <1> CDI discovery is disabled
 <2> Add JAXRS (Jersey) support
-<3> Add `MyResource` to the CDI container
+<3> Add `WeatherResource` to the CDI container
 // end::examples[]
 
 == Mock Support

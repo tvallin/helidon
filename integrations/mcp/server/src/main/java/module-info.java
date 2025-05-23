@@ -26,6 +26,7 @@ module io.helidon.integrations.mcp.server {
 	requires io.modelcontextprotocol.sdk.mcp;
 	requires java.logging;
     requires io.helidon.webclient.api;
+    requires org.slf4j;
 
     exports io.helidon.integrations.mcp.server;
 }

@@ -19,17 +19,15 @@ package io.helidon.integrations.mcp.server;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import io.modelcontextprotocol.spec.McpSchema;
+interface McpSession {
 
-public interface McpSession {
+	void poll(Consumer<McpJsonRPC.JSONRPCMessage> consumer);
 
-	void poll(Consumer<McpSchema.JSONRPCMessage> consumer);
-
-	void send(McpSchema.JSONRPCMessage message);
+	void send(McpJsonRPC.JSONRPCMessage message);
 
 	void disonnect();
 
-	static McpSession create(Map<String, McpServer.RequestHandler<?>> handlers) {
+	static McpSession create(Map<String, McpServer.JsonRPCHandler<?>> handlers) {
 		return new McpSessionImpl(handlers);
 	}
 }

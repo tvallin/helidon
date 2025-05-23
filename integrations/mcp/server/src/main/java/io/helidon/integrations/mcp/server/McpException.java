@@ -18,8 +18,6 @@ package io.helidon.integrations.mcp.server;
 
 import io.helidon.http.sse.SseEvent;
 
-import io.modelcontextprotocol.spec.McpSchema;
-
 public class McpException extends RuntimeException {
 
 	public McpException(String message) {
@@ -30,8 +28,8 @@ public class McpException extends RuntimeException {
 		super(message, cause);
 	}
 
-	static McpSchema.JSONRPCResponse.JSONRPCError toError(String message) {
-		return new McpSchema.JSONRPCResponse.JSONRPCError(500, message, null);
+	static McpJsonRPC.JSONRPCResponse.JSONRPCError toError(String message) {
+		return new McpJsonRPC.JSONRPCResponse.JSONRPCError(500, message, null);
 	}
 
 	SseEvent.Builder sseEventBuilder() {

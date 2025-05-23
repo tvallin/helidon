@@ -14,30 +14,7 @@
  * limitations under the License.
  */
 
+/**
+ * Helidon MCP.
+ */
 package io.helidon.integrations.mcp.server;
-
-import java.util.Map;
-
-import io.helidon.builder.api.Option;
-import io.helidon.builder.api.Prototype;
-
-@Prototype.Configured
-@Prototype.Blueprint
-interface CapabilitiesBlueprint {
-
-	@Option.Configured
-	Map<String, Object> experimentation();
-
-	@Option.Configured
-	@Option.DefaultBoolean(false)
-	boolean logging();
-
-	@Option.Configured
-	Prompt prompts();
-
-	@Option.Configured
-	Resource resources();
-
-	@Option.Configured
-	Tool tools();
-}
