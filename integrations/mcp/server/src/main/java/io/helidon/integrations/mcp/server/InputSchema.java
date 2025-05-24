@@ -46,6 +46,14 @@ public class InputSchema {
             this.properties = new HashMap<>();
         }
 
+        public Builder properties(String key, String value, boolean required) {
+            this.properties.put(key, value);
+            if (required) {
+                this.required.add(key);
+            }
+            return this;
+        }
+
         public Builder properties(String key, String value) {
             this.properties.put(key, value);
             return this;

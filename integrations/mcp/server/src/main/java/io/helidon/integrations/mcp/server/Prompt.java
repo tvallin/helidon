@@ -35,5 +35,5 @@ public interface Prompt {
      * @param parameters client parameters
      * @return prompt as {@link String}
      */
-    String prompt(Parameters parameters);
+    PromptContent prompt(Parameters parameters);
 }

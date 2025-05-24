@@ -32,5 +32,5 @@ public interface Resource {
      *
      * @return resource content as a {@link String}
      */
-    String read();
+    ResourceContent read();
 }

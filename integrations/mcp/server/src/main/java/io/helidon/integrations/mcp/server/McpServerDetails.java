@@ -16,18 +16,27 @@
 
 package io.helidon.integrations.mcp.server;
 
-@FunctionalInterface
-public interface ResourceReader {
+/**
+ * MCP server configuration.
+ */
+public interface McpServerDetails {
 
-    McpJsonRPC.ResourceContents read();
+    /**
+     * Protocol version support by the server.
+     */
+    String PROTOCOL_VERSION = "2024-11-05";
 
-    static ResourceReader get(String uri) {
-        if (uri.startsWith("http")) {
-            return new BinaryResourceReader(uri);
-        }
-        if (uri.startsWith("file")) {
-            return new FileResourceReader(uri);
-        }
-        throw new McpException("No Resource Reader available for URI: " + uri);
-    }
+    /**
+     * Server information.
+     *
+     * @return {@link McpServerInfo}
+     */
+    McpServerInfo info();
+
+    /**
+     * Register {@link Tool}, {@link Prompt} and {@link Resource} to the server.
+     *
+     * @param routing server routing
+     */
+    void setup(McpRouting.Builder routing);
 }

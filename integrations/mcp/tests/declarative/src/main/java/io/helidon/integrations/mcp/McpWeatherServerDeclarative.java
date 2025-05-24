@@ -17,43 +17,37 @@
 package io.helidon.integrations.mcp;
 
 import io.helidon.integrations.mcp.server.Mcp;
+import io.helidon.integrations.mcp.server.PromptContent;
+import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.Role;
+import io.helidon.integrations.mcp.server.ToolContent;
 
-import static io.helidon.integrations.mcp.server.Capabilities.PROMPT_LIST_CHANGED;
-import static io.helidon.integrations.mcp.server.Capabilities.RESOURCE_LIST_CHANGED;
-import static io.helidon.integrations.mcp.server.Capabilities.RESOURCE_SUBSCRIBE;
-import static io.helidon.integrations.mcp.server.Capabilities.TOOL_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.Capability.RESOURCE_LIST_CHANGED;
+import static io.helidon.integrations.mcp.server.Capability.TOOL_LIST_CHANGED;
 
-@Mcp.Server(
-        name = "mcp-weather-server",
-        version = "1.0.0",
-        capabilities = {
-                TOOL_LIST_CHANGED,
-                RESOURCE_LIST_CHANGED,
-                RESOURCE_SUBSCRIBE,
-                PROMPT_LIST_CHANGED
-        })
-//@Mcp.Capabilities(TOOL_LIST_CHANGED, RESOURCE_LIST_CHANGED)
+@Mcp.Server("mcp-weather-server")
+@Mcp.Version("0.0.1")
+@Mcp.Capability({TOOL_LIST_CHANGED, RESOURCE_LIST_CHANGED})
 class McpWeatherServerDeclarative {
 
-    @Mcp.Tool(
-            name = "Weather Alert",
-            description = "Get weather alert from state")
-    String weatherAlert(@Mcp.Param("state's name") String state) {
-        return "Hurricane in " + state;
+    @Mcp.Tool
+    @Mcp.Description("Get weather alert from state")
+    ToolContent weatherAlert(@Mcp.Param("state's name") String state) {
+        return ToolContent.textContent("Hurricane in " + state);
     }
 
-    @Mcp.Prompt(
-            name = "Weather in town",
-            description = "Get the weather in a specific town")
-    String weatherInTown(@Mcp.Param("town's name") String town) {
-        return "What is the weather like in {{town}}";
+    @Mcp.Prompt
+    @Mcp.Description("Get weather alert from state")
+    PromptContent weatherInTown(@Mcp.Param("town's name") String town) {
+        return PromptContent.textContent("What is the weather like in {{town}}", Role.USER);
     }
 
-    @Mcp.Resource(
-            uri = "https://api.weather.gov/{path}",
-            name = "weather-report",
-            description = "Get the list of all alerts")
-    void weatherAlerts() {
+    @Mcp.Resource
+    @Mcp.URI("resource://api.weather.gov/{path}")
+    @Mcp.Description("Get weather alert from state")
+    ResourceContent weatherAlerts(@Mcp.Param("path") String path) {
+        //reader
+        return ResourceContent.textContent("Resource content");
     }
 
 }

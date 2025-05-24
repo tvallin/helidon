@@ -37,13 +37,13 @@ public interface McpServerInfo {
     String version();
 
     /**
-     * Server {@link Capabilities}.
+     * Server {@link Capability}.
      *
      * @return capabilities
      */
-    Set<Capabilities> capabilities();
+    Set<Capability> capabilities();
 
-    static McpServerInfo create(String name, String version, Capabilities... capabilities) {
+    static McpServerInfo create(String name, String version, Capability... capabilities) {
         return new McpServerInfo() {
             @Override
             public String name() {
@@ -56,7 +56,7 @@ public interface McpServerInfo {
             }
 
             @Override
-            public Set<Capabilities> capabilities() {
+            public Set<Capability> capabilities() {
                 return Set.of(capabilities);
             }
         };

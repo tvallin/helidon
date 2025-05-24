@@ -37,9 +37,9 @@ final class McpServer {
 	private final List<String> protocolVersions = new ArrayList<>();
 	private final Map<String, JsonRPCHandler<?>> handlers = new HashMap<>();
 
-	public McpServer(McpServerConfig server) {
+	public McpServer(McpServerDetails server) {
 		McpRouting.Builder routing = McpRouting.builder();
-		Set<Capabilities> capabilities = server.info().capabilities();
+		Set<Capability> capabilities = server.info().capabilities();
 
 		this.info = server.info();
 		this.protocolVersions.add(PROTOCOLE_VERSION);
@@ -47,28 +47,28 @@ final class McpServer {
 		handlers.put(McpJsonRPC.METHOD_PING, ping());
 		handlers.put(McpJsonRPC.METHOD_INITIALIZE, initialize());
 
-		if (capabilities.contains(Capabilities.TOOL_LIST_CHANGED)) {
+		if (capabilities.contains(Capability.TOOL_LIST_CHANGED)) {
 			handlers.put(McpJsonRPC.METHOD_TOOLS_LIST, toolsList());
 			handlers.put(McpJsonRPC.METHOD_TOOLS_CALL, toolsCall());
 		}
 
-		if (capabilities.contains(Capabilities.RESOURCE_LIST_CHANGED)) {
+		if (capabilities.contains(Capability.RESOURCE_LIST_CHANGED)) {
 			handlers.put(McpJsonRPC.METHOD_RESOURCES_LIST, resourcesList());
 			handlers.put(McpJsonRPC.METHOD_RESOURCES_READ, resourcesRead());
 			handlers.put(McpJsonRPC.METHOD_RESOURCES_TEMPLATES_LIST, resourceTemplateList());
 		}
 
-		if (capabilities.contains(Capabilities.RESOURCE_SUBSCRIBE)) {
+		if (capabilities.contains(Capability.RESOURCE_SUBSCRIBE)) {
 			handlers.put(McpJsonRPC.METHOD_RESOURCES_SUBSCRIBE, resourceSubscribe());
 			handlers.put(McpJsonRPC.METHOD_RESOURCES_UNSUBSCRIBE, resourceUnsubscribe());
 		}
 
-		if (capabilities.contains(Capabilities.PROMPT_LIST_CHANGED)) {
+		if (capabilities.contains(Capability.PROMPT_LIST_CHANGED)) {
 			handlers.put(McpJsonRPC.METHOD_PROMPT_LIST, promptsList());
 			handlers.put(McpJsonRPC.METHOD_PROMPT_GET, promptsGet());
 		}
 
-		if (capabilities.contains(Capabilities.LOGGING)) {
+		if (capabilities.contains(Capability.LOGGING)) {
 			handlers.put(McpJsonRPC.METHOD_LOGGING_SET_LEVEL, logging());
 		}
 
@@ -76,7 +76,7 @@ final class McpServer {
 		this.routing = routing.build();
 	}
 
-	static McpServer create(McpServerConfig... server) {
+	static McpServer create(McpServerDetails... server) {
 		return new McpServer(server[0]);
 	}
 

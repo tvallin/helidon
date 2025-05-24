@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -29,27 +30,40 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 public final class Mcp {
 
-	@Target(METHOD)
+	@Target(TYPE)
 	@Retention(RUNTIME)
-	public @interface Resource {
-		String uri();
-		String name();
-		String description() default "none"; 	//optional
+	public @interface Server {
+		String value() default "Helidon MCP Server";
+	}
+
+	@Target(TYPE)
+	@Retention(RUNTIME)
+	public @interface Capability {
+		io.helidon.integrations.mcp.server.Capability[] value();
+	}
+
+	@Target({TYPE, METHOD})
+	@Retention(RUNTIME)
+	public @interface Description {
+		String value();
+	}
+
+	@Target(TYPE)
+	@Retention(RUNTIME)
+	public @interface Version {
+		String value();
 	}
 
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Prompt {
-		String name();
-		String description() default "none"; //optional
+		String value() default "";
 	}
 
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Tool {
-		String name();
-		String description();
-		String annotations() default "";  //optional
+		String value() default "";
 	}
 
 	@Target(PARAMETER)
@@ -58,15 +72,15 @@ public final class Mcp {
 		String value();
 	}
 
-	@Target(ElementType.TYPE)
+	@Target(METHOD)
 	@Retention(RUNTIME)
-	public @interface Server {
-		String name() default "Helidon MCP Server";
-		String version() default "0.0.1";
-		Capabilities[] capabilities() default {};
+	public @interface Resource {
+		String value() default "";
 	}
 
-
-
-
+	@Target(METHOD)
+	@Retention(RUNTIME)
+	public @interface URI {
+		String value();
+	}
 }

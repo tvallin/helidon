@@ -1,6 +1,6 @@
 package io.helidon.integrations.mcp.server;
 
-public enum Capabilities {
+public enum Capability {
     TOOL_LIST_CHANGED,
     RESOURCE_LIST_CHANGED,
     RESOURCE_SUBSCRIBE,

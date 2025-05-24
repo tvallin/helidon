@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.integrations.mcp.server.McpServerConfig.PROTOCOL_VERSION;
+import static io.helidon.integrations.mcp.server.McpServerDetails.PROTOCOL_VERSION;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_DESCRIPTION;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_NAME;
 import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_DESCRIPTION;

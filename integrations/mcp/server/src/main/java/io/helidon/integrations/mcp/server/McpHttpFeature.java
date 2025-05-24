@@ -42,16 +42,20 @@ public class McpHttpFeature implements HttpFeature {
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
     @Service.Inject
-    public McpHttpFeature(McpServerConfig server) {
+    public McpHttpFeature(McpServerDetails server) {
         this.server = McpServer.create(server);
     }
 
-    public McpHttpFeature(McpServerConfig... server) {
+    public McpHttpFeature(McpServerDetails... server) {
         this.server = null;
     }
 
-    public static McpHttpFeature create(McpServerConfig... servers) {
+    public static McpHttpFeature create(McpServerDetails... servers) {
         return new McpHttpFeature(servers);
+    }
+
+    public static McpHttpFeature.Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -110,6 +114,20 @@ public class McpHttpFeature implements HttpFeature {
         } catch (IOException e) {
             throw new McpException("Failed to deserialize JSON RPC message");
         }
+    }
+
+    public static class Builder {
+        private McpServerDetails config;
+
+        public Builder server(McpServerDetails server) {
+            this.config = server;
+            return this;
+        }
+
+        public McpHttpFeature build() {
+            return new McpHttpFeature(config);
+        }
+
     }
 
 }

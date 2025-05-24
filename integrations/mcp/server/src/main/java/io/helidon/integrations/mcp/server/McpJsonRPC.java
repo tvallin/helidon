@@ -36,10 +36,6 @@ class McpJsonRPC {
     private McpJsonRPC() {
     }
 
-    static final String LATEST_PROTOCOL_VERSION = "2024-11-05";
-
-    static final String JSONRPC_VERSION = "2.0";
-
     // ---------------------------
     // Method Names
     // ---------------------------

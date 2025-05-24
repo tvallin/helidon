@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Consumer;
+
 /**
  * MCP tool information.
  */
@@ -60,23 +62,8 @@ public interface ToolInfo {
             return this;
         }
 
-        public Builder properties(String name, String type, boolean required) {
-            this.schemaBuilder.properties(name, type);
-            if (required) {
-                this.schemaBuilder.required(name);
-            }
-            return this;
-        }
-
-        public Builder properties(String name, String type) {
-            this.schemaBuilder.properties(name, type);
-            return this;
-        }
-
-        public Builder requiredProperties(String... properties) {
-            for (String property : properties) {
-                this.schemaBuilder.required(property);
-            }
+        public Builder schema(Consumer<InputSchema.Builder> schema) {
+            schema.accept(schemaBuilder);
             return this;
         }
 

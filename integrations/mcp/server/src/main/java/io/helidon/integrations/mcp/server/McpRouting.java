@@ -54,8 +54,8 @@ public interface McpRouting {
         List<Prompt> prompts = new ArrayList<>();
         List<Resource> resources = new ArrayList<>();
 
-        public Builder register(Tool... tool) {
-            this.tools.addAll(Arrays.asList(tool));
+        public Builder register(Tool... tools) {
+            this.tools.addAll(List.of(tools));
             return this;
         }
 

@@ -18,38 +18,59 @@ package io.helidon.integrations.mcp.tests.se;
 
 import io.helidon.common.config.Config;
 import io.helidon.common.parameters.Parameters;
-import io.helidon.integrations.mcp.server.Capabilities;
+import io.helidon.integrations.mcp.server.Capability;
 import io.helidon.integrations.mcp.server.McpHttpFeature;
 import io.helidon.integrations.mcp.server.McpRouting;
-import io.helidon.integrations.mcp.server.McpServerConfig;
+import io.helidon.integrations.mcp.server.McpServerDetails;
 import io.helidon.integrations.mcp.server.McpServerInfo;
 import io.helidon.integrations.mcp.server.Prompt;
 import io.helidon.integrations.mcp.server.PromptArgument;
+import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptInfo;
 import io.helidon.integrations.mcp.server.Resource;
 import io.helidon.integrations.mcp.server.ResourceInfo;
+import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.Tool;
+import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolInfo;
 import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 
 class McpWeatherServerSe {
 
+    /*
+         FEEDBACK LIST:
+
+        - Cannot be dependent on jackson.
+        - ! Capability to build JSON schema from classes !
+        - ! Capability to read it in the tool !
+        - JsonSchema support
+        - JsonRPC support
+        - Post/Sse will not work in a distributed environment
+        - https://raz.sh/blog/2025-05-02_a_critical_look_at_mcp
+     */
+
+    //No contstructor
     public static void main(String[] args) {
         var config = Services.get(Config.class);
 
         WebServer.builder()
                 .config(config.get("server"))
-                .routing(routing -> routing.addFeature(McpHttpFeature.create(new McpWeatherConfig())))
+                .routing(routing -> routing.addFeature(McpHttpFeature.builder()
+                        .server(new McpWeatherDetails())
+                        .build()))
                 .build()
                 .start();
     }
 
-    static class McpWeatherConfig implements McpServerConfig {
+    //config is from blueprint - change naming - maybe builder
+    //check capabilities default value, if yes builder.
+    static class McpWeatherDetails implements McpServerDetails {
 
         @Override
         public McpServerInfo info() {
-            return McpServerInfo.create("mcp-server", "0.0.1", Capabilities.TOOL_LIST_CHANGED);
+            return McpServerInfo.create("mcp-server", "0.0.1", Capability.TOOL_LIST_CHANGED);
         }
 
         @Override
@@ -67,14 +88,19 @@ class McpWeatherServerSe {
             return ToolInfo.builder()
                     .name("tool-weater")
                     .description("Get the weather in a specific town")
-                    .requiredProperties("town")
-                    .properties("town", "string")
+                    .schema(schema -> schema.properties("town", "string", true))
                     .build();
         }
 
         @Override
-        public String process(Parameters parameters) {
-            return "It is sunny in " + parameters.get("town");
+        public ToolContent process(Parameters parameters) {
+//            Optional<Town> value = parameters.object("town", Town.class);
+//            Optional<String> value = parameters.objectString("town");
+//            OptionalValue<String> value = parameters.first("town");
+
+            ToolContent resource = ToolContent.resourceContent("uri");
+            ToolContent image = ToolContent.imageContent("data", "text/plain");
+            return ToolContent.textContent("data");
         }
     }
 
@@ -90,8 +116,10 @@ class McpWeatherServerSe {
         }
 
         @Override
-        public String prompt(Parameters parameters) {
-            return "It is sunny in " + parameters.get("town");
+        public PromptContent prompt(Parameters parameters) {
+            PromptContent resource = PromptContent.resourceContent("uri", Role.ASSISTANT);
+            PromptContent image = PromptContent.imageContent("data", "text/plain", Role.ASSISTANT);
+            return PromptContent.textContent("It is sunny in " + parameters.get("town"), Role.USER);
         }
     }
 
@@ -99,12 +127,18 @@ class McpWeatherServerSe {
 
         @Override
         public ResourceInfo info() {
-            return ResourceInfo.create("file:///tmp/", "temp-file", "This is a temporary file");
+//            return ResourceInfo.create("resource://weather-report", "resource-weather", "This is a weather report");
+            return ResourceInfo.builder()
+                    .name("resource-weather")
+                    .uri("resource://weather-report")
+                    .description("This is a weather report")
+                    .build();
         }
 
         @Override
-        public String read() {
-            return null;
+        public ResourceContent read() {
+            ResourceContent text = ResourceContent.textContent("data");
+            return ResourceContent.binaryContent("data", "text/plain");
         }
     }
 }

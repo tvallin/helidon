@@ -35,5 +35,5 @@ public interface Tool {
      * @param parameters client parameters
      * @return tool execution result as a {@link String}
      */
-    String process(Parameters parameters);
+    ToolContent process(Parameters parameters);
 }
