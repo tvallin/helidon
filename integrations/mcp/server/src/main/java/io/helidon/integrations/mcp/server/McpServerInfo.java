@@ -43,6 +43,10 @@ public interface McpServerInfo {
      */
     Set<Capability> capabilities();
 
+    static Builder builder() {
+        return new Builder();
+    }
+
     static McpServerInfo create(String name, String version, Capability... capabilities) {
         return new McpServerInfo() {
             @Override
@@ -60,5 +64,45 @@ public interface McpServerInfo {
                 return Set.of(capabilities);
             }
         };
+    }
+
+    class Builder {
+        private String name;
+        private String version;
+        private Set<Capability> capabilities;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder version(String version) {
+            this.version = version;
+            return this;
+        }
+
+        public Builder capability(Capability... capabilities) {
+            this.capabilities = Set.of(capabilities);
+            return this;
+        }
+
+        public McpServerInfo build() {
+            return new McpServerInfo() {
+                @Override
+                public String name() {
+                    return name;
+                }
+
+                @Override
+                public String version() {
+                    return version;
+                }
+
+                @Override
+                public Set<Capability> capabilities() {
+                    return capabilities;
+                }
+            };
+        }
     }
 }

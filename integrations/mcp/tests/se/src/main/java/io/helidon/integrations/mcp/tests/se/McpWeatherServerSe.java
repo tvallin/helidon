@@ -16,13 +16,15 @@
 
 package io.helidon.integrations.mcp.tests.se;
 
+import java.util.Optional;
+
 import io.helidon.common.config.Config;
-import io.helidon.common.parameters.Parameters;
 import io.helidon.integrations.mcp.server.Capability;
 import io.helidon.integrations.mcp.server.McpHttpFeature;
 import io.helidon.integrations.mcp.server.McpRouting;
 import io.helidon.integrations.mcp.server.McpServerDetails;
 import io.helidon.integrations.mcp.server.McpServerInfo;
+import io.helidon.integrations.mcp.server.Parameters;
 import io.helidon.integrations.mcp.server.Prompt;
 import io.helidon.integrations.mcp.server.PromptArgument;
 import io.helidon.integrations.mcp.server.PromptContent;
@@ -70,7 +72,11 @@ class McpWeatherServerSe {
 
         @Override
         public McpServerInfo info() {
-            return McpServerInfo.create("mcp-server", "0.0.1", Capability.TOOL_LIST_CHANGED);
+            return McpServerInfo.builder()
+                    .name("weather-mcp-server")
+                    .version("0.0.1")
+                    .capability(Capability.TOOL_LIST_CHANGED)
+                    .build();
         }
 
         @Override
@@ -88,19 +94,31 @@ class McpWeatherServerSe {
             return ToolInfo.builder()
                     .name("tool-weater")
                     .description("Get the weather in a specific town")
-                    .schema(schema -> schema.properties("town", "string", true))
+                    .schema(schema -> schema
+                            .object("town", Town.class, false))
                     .build();
         }
 
         @Override
         public ToolContent process(Parameters parameters) {
-//            Optional<Town> value = parameters.object("town", Town.class);
-//            Optional<String> value = parameters.objectString("town");
-//            OptionalValue<String> value = parameters.first("town");
+
+            Optional<Town> town = parameters.object("town", Town.class);
 
             ToolContent resource = ToolContent.resourceContent("uri");
             ToolContent image = ToolContent.imageContent("data", "text/plain");
             return ToolContent.textContent("data");
+        }
+
+        static class Town {
+            String name;
+            double latitude;
+            double longitude;
+
+            Town() {
+                name = "Prague";
+                latitude = 50.09;
+                longitude = 14.40;
+            }
         }
     }
 

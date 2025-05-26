@@ -46,7 +46,38 @@ public class InputSchema {
             this.properties = new HashMap<>();
         }
 
-        public Builder properties(String key, String value, boolean required) {
+        public Builder asBoolean(String name, boolean bool, boolean required) {
+            return this;
+        }
+        public Builder asBoolean(String name, boolean bool) {
+            return this;
+        }
+
+        public <T> Builder array(String name, List<T> list, boolean required) {
+            return this;
+        }
+
+        public <T> Builder array(String name, List<T> list) {
+            return this;
+        }
+
+        public Builder number(String name, boolean required) {
+            return this;
+        }
+
+        public Builder number(String name) {
+            return this;
+        }
+
+        public Builder object(String name, Class<?> type, boolean required) {
+            return this;
+        }
+
+        public Builder object(String name, Class<?> type) {
+            return this;
+        }
+
+        Builder properties(String key, String value, boolean required) {
             this.properties.put(key, value);
             if (required) {
                 this.required.add(key);
@@ -54,12 +85,12 @@ public class InputSchema {
             return this;
         }
 
-        public Builder properties(String key, String value) {
+        Builder properties(String key, String value) {
             this.properties.put(key, value);
             return this;
         }
 
-        public Builder required(String value) {
+        Builder required(String value) {
             this.required.add(value);
             return this;
         }

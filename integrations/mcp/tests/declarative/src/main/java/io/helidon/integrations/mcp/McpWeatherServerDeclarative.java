@@ -27,7 +27,7 @@ import static io.helidon.integrations.mcp.server.Capability.TOOL_LIST_CHANGED;
 
 @Mcp.Server("mcp-weather-server")
 @Mcp.Version("0.0.1")
-@Mcp.Capability({TOOL_LIST_CHANGED, RESOURCE_LIST_CHANGED})
+@Mcp.Capability({ TOOL_LIST_CHANGED, RESOURCE_LIST_CHANGED })
 class McpWeatherServerDeclarative {
 
     @Mcp.Tool

@@ -16,8 +16,6 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.parameters.Parameters;
-
 /**
  * MCP Prompt definition.
  */
