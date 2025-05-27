@@ -97,7 +97,7 @@ class McpWeatherServerSe {
 
             ToolContent text = ToolContent.textContent("data");
             ToolContent resource = ToolContent.resourceContent("uri");
-            ToolContent image = ToolContent.imageContent("data", "text/plain");
+            ToolContent image = ToolContent.imageContent("data", "image/png");
 
             return text;
         }
@@ -133,7 +133,7 @@ class McpWeatherServerSe {
         public PromptContent prompt(Parameters parameters) {
 
             PromptContent resource = PromptContent.resourceContent("uri", Role.ASSISTANT);
-            PromptContent image = PromptContent.imageContent("data", "text/plain", Role.ASSISTANT);
+            PromptContent image = PromptContent.imageContent("data", "image/png", Role.ASSISTANT);
             PromptContent text = PromptContent.textContent("It is sunny in " + parameters.get("town"), Role.USER);
 
             return text;
