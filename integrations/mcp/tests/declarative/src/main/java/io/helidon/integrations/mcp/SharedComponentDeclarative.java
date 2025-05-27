@@ -25,7 +25,7 @@ import io.helidon.integrations.mcp.server.ToolContent;
 class SharedComponentDeclarative {
 
     @Mcp.Tool
-    ToolContent crazyNiceTool() {
+    ToolContent tool() {
         return ToolContent.textContent("I am a nice tool");
     }
 
