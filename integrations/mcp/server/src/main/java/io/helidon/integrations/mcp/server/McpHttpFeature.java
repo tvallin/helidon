@@ -31,15 +31,12 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import io.helidon.webserver.sse.SseSink;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service.Singleton
 public class McpHttpFeature implements HttpFeature {
 
     private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
 
     private final McpServerImpl server;
-    private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
     @Service.Inject
@@ -111,9 +108,9 @@ public class McpHttpFeature implements HttpFeature {
 
     private McpJsonRPC.JSONRPCMessage deserializeJsonRpcMessage(String content) {
         try {
-            return McpJsonRPC.deserializeJsonRpcMessage(mapper, content);
+            return McpJsonRPC.deserializeJsonRpcMessage(content);
         } catch (IOException e) {
-            throw new McpException("Failed to deserialize JSON RPC message");
+            throw new McpException("Failed to deserialize JSON-RPC message");
         }
     }
 

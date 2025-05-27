@@ -4,10 +4,16 @@ package io.helidon.integrations.mcp.server;
  * Prompt Role
  */
 public enum Role {
+    /**
+     * User role.
+     */
     USER,
+    /**
+     * Assistant role.
+     */
     ASSISTANT;
 
-    public String getName() {
+    String getName() {
         return toString().toLowerCase();
     }
 }

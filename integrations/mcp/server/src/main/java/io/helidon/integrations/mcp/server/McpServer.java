@@ -17,7 +17,7 @@
 package io.helidon.integrations.mcp.server;
 
 /**
- * MCP server configuration.
+ * MCP server definition.
  */
 public interface McpServer {
     /**

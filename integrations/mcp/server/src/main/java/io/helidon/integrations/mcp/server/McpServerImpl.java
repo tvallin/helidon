@@ -119,14 +119,6 @@ final class McpServerImpl {
 		};
 	}
 
-	/**
-	 * Params is the arguments provided by the client to the tool (method signature).
-	 * McpJsonRPC.Tool represent the tool definition and is selected by name.
-	 * Create an object that run the method with the params and return the result of it.
-	 * It is defined in McpJsonRPC by Features with specification.
-	 *
-	 * @return Call tool result
-	 */
 	JsonRPCHandler<McpJsonRPC.CallToolResult> toolsCall() {
 		return (params) -> {
 			McpJsonRPC.CallToolRequest callToolRequest = mapper.convertValue(params, new TypeReference<>() {});
@@ -177,10 +169,6 @@ final class McpServerImpl {
 		return (object) -> new McpJsonRPC.ListPromptsResult(this.routing.prompts(), null);
 	}
 
-	/**
-	 * Same as tools, feature that process it and return prompt messages.
-	 * @return prompt result
-	 */
 	JsonRPCHandler<McpJsonRPC.GetPromptResult> promptsGet() {
 		return (params) -> {
 			McpJsonRPC.GetPromptRequest promptRequest = mapper.convertValue(params, new TypeReference<>() {});
@@ -191,8 +179,7 @@ final class McpServerImpl {
 				//TODO - return an error
 				return new McpJsonRPC.GetPromptResult("Error", List.of());
 			}
-			String content = prompt.get()
-					.prompt(promptRequest.arguments());
+			PromptContent content = prompt.get().prompt(promptRequest.arguments());
 			return new McpJsonRPC.GetPromptResult(prompt.get().info().description(), List.of(
 					new McpJsonRPC.PromptMessage(McpJsonRPC.Role.USER, new McpJsonRPC.TextContent(content))));
 		};
@@ -212,9 +199,7 @@ final class McpServerImpl {
 				protocoleVersion = request.protocolVersion();
 			}
 
-			return McpJsonRPCMapper.initializeResult(
-					protocoleVersion,
-					this.info);
+			return null;
 		};
 	}
 

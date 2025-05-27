@@ -36,7 +36,12 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Server {
-		String value() default "Helidon MCP Server";
+		/**
+		 * Name of the server.
+		 *
+		 * @return server name
+		 */
+		String value() default "helidon-mcp-server";
 	}
 
 	/**
@@ -46,6 +51,11 @@ public final class Mcp {
 	@Retention(RUNTIME)
 	@Repeatable(Capabilities.class)
 	public @interface Capability {
+		/**
+		 * Capability of the server.
+		 *
+		 * @return server capability
+		 */
 		io.helidon.integrations.mcp.server.Capability value();
 	}
 
@@ -55,6 +65,11 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Capabilities {
+		/**
+		 * Capabilities of the server.
+		 *
+		 * @return server capabilities
+		 */
 		Capability[] value();
 	}
 
@@ -64,6 +79,11 @@ public final class Mcp {
 	@Target({TYPE, METHOD})
 	@Retention(RUNTIME)
 	public @interface Description {
+		/**
+		 * Component description.
+		 *
+		 * @return description
+		 */
 		String value();
 	}
 
@@ -73,6 +93,11 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Version {
+		/**
+		 * Version of the server.
+		 *
+		 * @return server version
+		 */
 		String value();
 	}
 
@@ -82,7 +107,12 @@ public final class Mcp {
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Tool {
-		String value() default "";
+		/**
+		 * Name of the tool.
+		 *
+		 * @return tool name
+		 */
+		String value() default "mcp-tool";
 	}
 
 	/**
@@ -91,6 +121,11 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Tools {
+		/**
+		 * List of classes containing {@link Tool}.
+		 *
+		 * @return classes
+		 */
 		Class<?>[] value();
 	}
 
@@ -100,7 +135,12 @@ public final class Mcp {
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Prompt {
-		String value() default "";
+		/**
+		 * Name of the Prompt
+		 *
+		 * @return name
+		 */
+		String value() default "mcp-prompt";
 	}
 
 	/**
@@ -109,6 +149,11 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Prompts {
+		/**
+		 * List of classes containing {@link Prompt}.
+		 *
+		 * @return classes
+		 */
 		Class<?>[] value();
 	}
 
@@ -118,7 +163,12 @@ public final class Mcp {
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Resource {
-		String value() default "";
+		/**
+		 * Name of the resource
+		 *
+		 * @return name
+		 */
+		String value() default "mcp-resource";
 	}
 
 	/**
@@ -127,6 +177,11 @@ public final class Mcp {
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Resources {
+		/**
+		 * List of classes containing {@link Resource}.
+		 *
+		 * @return classes
+		 */
 		Class<?>[] value();
 	}
 
@@ -136,6 +191,11 @@ public final class Mcp {
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface URI {
+		/**
+		 * Value of the URI.
+		 *
+		 * @return URI
+		 */
 		String value();
 	}
 
@@ -145,6 +205,11 @@ public final class Mcp {
 	@Target(PARAMETER)
 	@Retention(RUNTIME)
 	public @interface Param {
+		/**
+		 * Description of the argument.
+		 *
+		 * @return description
+		 */
 		String value();
 	}
 }

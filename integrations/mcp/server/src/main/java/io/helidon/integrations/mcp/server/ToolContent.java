@@ -1,5 +1,8 @@
 package io.helidon.integrations.mcp.server;
 
+/**
+ * Tool content.
+ */
 public interface ToolContent {
 
     static ToolContent textContent(String text) {

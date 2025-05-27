@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
+/*
+         FEEDBACK LIST:
+
+        - Cannot be dependent on jackson. ->R Reflection
+        - ! Capability to build JSON schema from classes !
+        - ! Capability to read it in the tool !
+        - JsonSchema support
+        - JsonRPC support
+        - Post/Sse will not work in a distributed environment
+        - https://raz.sh/blog/2025-05-02_a_critical_look_at_mcp
+     */
+
 package io.helidon.integrations.mcp.tests.se;
 
 import java.util.Optional;
@@ -37,18 +49,6 @@ import io.helidon.integrations.mcp.server.ToolInfo;
 import io.helidon.webserver.WebServer;
 
 class McpWeatherServerSe {
-
-    /*
-         FEEDBACK LIST:
-
-        - Cannot be dependent on jackson. ->R Reflection
-        - ! Capability to build JSON schema from classes !
-        - ! Capability to read it in the tool !
-        - JsonSchema support
-        - JsonRPC support
-        - Post/Sse will not work in a distributed environment
-        - https://raz.sh/blog/2025-05-02_a_critical_look_at_mcp
-     */
 
     public static void main(String[] args) {
         WebServer.builder()
@@ -95,9 +95,11 @@ class McpWeatherServerSe {
 
             Optional<Town> town = parameters.object("town", Town.class);
 
+            ToolContent text = ToolContent.textContent("data");
             ToolContent resource = ToolContent.resourceContent("uri");
             ToolContent image = ToolContent.imageContent("data", "text/plain");
-            return ToolContent.textContent("data");
+
+            return text;
         }
 
         static class Town {
@@ -129,9 +131,12 @@ class McpWeatherServerSe {
 
         @Override
         public PromptContent prompt(Parameters parameters) {
+
             PromptContent resource = PromptContent.resourceContent("uri", Role.ASSISTANT);
             PromptContent image = PromptContent.imageContent("data", "text/plain", Role.ASSISTANT);
-            return PromptContent.textContent("It is sunny in " + parameters.get("town"), Role.USER);
+            PromptContent text = PromptContent.textContent("It is sunny in " + parameters.get("town"), Role.USER);
+
+            return text;
         }
     }
 
@@ -148,8 +153,11 @@ class McpWeatherServerSe {
 
         @Override
         public ResourceContent read() {
+
             ResourceContent text = ResourceContent.textContent("data");
-            return ResourceContent.binaryContent("base64-encoded-data", "image/png");
+            ResourceContent binary = ResourceContent.binaryContent("base64-encoded-data", "image/png");
+
+            return text;
         }
     }
 }

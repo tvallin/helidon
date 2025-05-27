@@ -50,7 +50,6 @@ class McpWeatherServerDeclarative {
     @Mcp.URI("resource://api.weather.gov/{path}")
     @Mcp.Description("Get weather alert from state")
     ResourceContent weatherAlerts(@Mcp.Param("path") String path) {
-        //reader
         return ResourceContent.textContent("Resource content");
     }
 
