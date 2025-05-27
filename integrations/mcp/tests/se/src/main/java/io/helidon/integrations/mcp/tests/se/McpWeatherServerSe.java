@@ -106,12 +106,6 @@ class McpWeatherServerSe {
             String name;
             double latitude;
             double longitude;
-
-            Town() {
-                name = "Prague";
-                latitude = 50.09;
-                longitude = 14.40;
-            }
         }
     }
 
