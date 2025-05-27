@@ -28,6 +28,7 @@ module io.helidon.integrations.mcp.server {
     requires io.helidon.webclient.api;
     requires org.slf4j;
     requires java.sql;
+	requires jakarta.json;
 
-    exports io.helidon.integrations.mcp.server;
+	exports io.helidon.integrations.mcp.server;
 }

@@ -27,7 +27,7 @@ interface McpSession {
 
 	void disonnect();
 
-	static McpSession create(Map<String, McpServer.JsonRPCHandler<?>> handlers) {
+	static McpSession create(Map<String, McpServerImpl.JsonRPCHandler<?>> handlers) {
 		return new McpSessionImpl(handlers);
 	}
 }

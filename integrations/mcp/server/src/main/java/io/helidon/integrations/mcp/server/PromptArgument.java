@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 /**
  * Prompt argument information.
  */
@@ -63,5 +65,54 @@ public interface PromptArgument {
                 return required;
             }
         };
+    }
+
+    static Builder builder() {
+        return new Builder();
+    }
+
+    class Builder implements Supplier<PromptArgument> {
+        private String name;
+        private String description;
+        private boolean required;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder required(boolean required) {
+            this.required = required;
+            return this;
+        }
+
+        public PromptArgument build() {
+            return new PromptArgument() {
+                @Override
+                public String name() {
+                    return name;
+                }
+
+                @Override
+                public String description() {
+                    return description;
+                }
+
+                @Override
+                public boolean required() {
+                    return required;
+                }
+            };
+        }
+
+        @Override
+        public PromptArgument get() {
+            return this.build();
+        }
     }
 }

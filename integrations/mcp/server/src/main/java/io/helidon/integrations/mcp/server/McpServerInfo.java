@@ -47,25 +47,6 @@ public interface McpServerInfo {
         return new Builder();
     }
 
-    static McpServerInfo create(String name, String version, Capability... capabilities) {
-        return new McpServerInfo() {
-            @Override
-            public String name() {
-                return name;
-            }
-
-            @Override
-            public String version() {
-                return version;
-            }
-
-            @Override
-            public Set<Capability> capabilities() {
-                return Set.of(capabilities);
-            }
-        };
-    }
-
     class Builder {
         private String name;
         private String version;

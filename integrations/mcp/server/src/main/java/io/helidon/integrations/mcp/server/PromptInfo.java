@@ -19,6 +19,7 @@ package io.helidon.integrations.mcp.server;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * MCP Prompt information.
@@ -66,6 +67,13 @@ public interface PromptInfo {
 
         public Builder arguments(PromptArgument... arguments) {
             Collections.addAll(this.arguments, arguments);
+            return this;
+        }
+
+        public Builder argument(Consumer<PromptArgument.Builder> builder) {
+            PromptArgument.Builder argument = PromptArgument.builder();
+            builder.accept(argument);
+            arguments.add(argument.build());
             return this;
         }
 

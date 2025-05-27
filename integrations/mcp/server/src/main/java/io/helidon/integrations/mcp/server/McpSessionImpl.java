@@ -38,7 +38,7 @@ class McpSessionImpl implements McpSession {
 
 	private static final System.Logger LOGGER = System.getLogger(McpSessionImpl.class.getName());
 
-	private final Map<String, McpServer.JsonRPCHandler<?>> handlers;
+	private final Map<String, McpServerImpl.JsonRPCHandler<?>> handlers;
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final List<String> pendingResponses = new ArrayList<>();
 	private final AtomicBoolean active = new AtomicBoolean(true);
@@ -48,7 +48,7 @@ class McpSessionImpl implements McpSession {
 
 	private State state = UNINITIALIZED;
 
-	McpSessionImpl(Map<String, McpServer.JsonRPCHandler<?>> handlers) {
+	McpSessionImpl(Map<String, McpServerImpl.JsonRPCHandler<?>> handlers) {
 		this.handlers = handlers;
 	}
 

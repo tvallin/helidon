@@ -37,11 +37,11 @@ public interface ToolInfo {
     String description();
 
     /**
-     * Tool {@link InputSchema}.
+     * Tool {@link JsonSchema}.
      *
      * @return schema
      */
-    InputSchema schema();
+    JsonSchema schema();
 
     static Builder builder() {
         return new Builder();
@@ -50,7 +50,7 @@ public interface ToolInfo {
     class Builder {
         String name;
         String description;
-        InputSchema.Builder schemaBuilder = InputSchema.builder();
+        JsonSchema schema;
 
         public Builder name(String name) {
             this.name = name;
@@ -62,8 +62,10 @@ public interface ToolInfo {
             return this;
         }
 
-        public Builder schema(Consumer<InputSchema.Builder> schema) {
-            schema.accept(schemaBuilder);
+        public Builder schema(Consumer<JsonSchema.Builder> builder) {
+            JsonSchema.Builder schema = JsonSchema.builder();
+            builder.accept(schema);
+            this.schema = schema.build();
             return this;
         }
 
@@ -80,8 +82,8 @@ public interface ToolInfo {
                 }
 
                 @Override
-                public InputSchema schema() {
-                    return schemaBuilder.build();
+                public JsonSchema schema() {
+                    return schema;
                 }
             };
         }

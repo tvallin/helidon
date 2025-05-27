@@ -42,14 +42,6 @@ public interface ResourceInfo {
      */
     String description();
 
-    static ResourceInfo create(String uri, String name, String description) {
-        return builder()
-                .uri(uri)
-                .name(name)
-                .description(description)
-                .build();
-    }
-
     static Builder builder() {
         return new Builder();
     }

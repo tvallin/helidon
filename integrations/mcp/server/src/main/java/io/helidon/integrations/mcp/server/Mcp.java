@@ -16,7 +16,7 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -26,61 +26,125 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * This interface contains a set of annotations for defining MCP declarative server.
+ * This interface contains a set of annotations to define an MCP declarative server.
  */
 public final class Mcp {
 
+	/**
+	 * Annotation to define a MCP server.
+	 */
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Server {
 		String value() default "Helidon MCP Server";
 	}
 
+	/**
+	 * Annotation to define the {@link Server} capabilities.
+	 */
 	@Target(TYPE)
 	@Retention(RUNTIME)
+	@Repeatable(Capabilities.class)
 	public @interface Capability {
-		io.helidon.integrations.mcp.server.Capability[] value();
+		io.helidon.integrations.mcp.server.Capability value();
 	}
 
+	/**
+	 * Set of {@link Capability}.
+	 */
+	@Target(TYPE)
+	@Retention(RUNTIME)
+	public @interface Capabilities {
+		Capability[] value();
+	}
+
+	/**
+	 * Annotation to describe an MCP component such as {@link Tool}, {@link Prompt} and {@link Resource}.
+	 */
 	@Target({TYPE, METHOD})
 	@Retention(RUNTIME)
 	public @interface Description {
 		String value();
 	}
 
+	/**
+	 * Annotation to define the {@link Server} version.
+	 */
 	@Target(TYPE)
 	@Retention(RUNTIME)
 	public @interface Version {
 		String value();
 	}
 
-	@Target(METHOD)
-	@Retention(RUNTIME)
-	public @interface Prompt {
-		String value() default "";
-	}
-
+	/**
+	 * Annotation to define an MCP Tool.
+	 */
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Tool {
 		String value() default "";
 	}
 
-	@Target(PARAMETER)
+	/**
+	 * Annotation to manually register classes containing {@link Tool}.
+	 */
+	@Target(TYPE)
 	@Retention(RUNTIME)
-	public @interface Param {
-		String value();
+	public @interface Tools {
+		Class<?>[] value();
 	}
 
+	/**
+	 * Annotation to define an MCP Prompt.
+	 */
+	@Target(METHOD)
+	@Retention(RUNTIME)
+	public @interface Prompt {
+		String value() default "";
+	}
+
+	/**
+	 * Annotation to manually register classes containing {@link Prompt}.
+	 */
+	@Target(TYPE)
+	@Retention(RUNTIME)
+	public @interface Prompts {
+		Class<?>[] value();
+	}
+
+	/**
+	 * Annotation to define an MCP resource.
+	 */
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface Resource {
 		String value() default "";
 	}
 
+	/**
+	 * Annotation to manually register classes containing {@link Resource}.
+	 */
+	@Target(TYPE)
+	@Retention(RUNTIME)
+	public @interface Resources {
+		Class<?>[] value();
+	}
+
+	/**
+	 * Annotation to define a {@link Resource} URI
+	 */
 	@Target(METHOD)
 	@Retention(RUNTIME)
 	public @interface URI {
+		String value();
+	}
+
+	/**
+	 * Annotation to define a {@link Tool} and {@link Prompt} argument.
+	 */
+	@Target(PARAMETER)
+	@Retention(RUNTIME)
+	public @interface Param {
 		String value();
 	}
 }

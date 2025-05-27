@@ -18,15 +18,13 @@ package io.helidon.integrations.mcp.tests.se;
 
 import java.util.Optional;
 
-import io.helidon.common.config.Config;
 import io.helidon.integrations.mcp.server.Capability;
 import io.helidon.integrations.mcp.server.McpHttpFeature;
 import io.helidon.integrations.mcp.server.McpRouting;
-import io.helidon.integrations.mcp.server.McpServerDetails;
+import io.helidon.integrations.mcp.server.McpServer;
 import io.helidon.integrations.mcp.server.McpServerInfo;
 import io.helidon.integrations.mcp.server.Parameters;
 import io.helidon.integrations.mcp.server.Prompt;
-import io.helidon.integrations.mcp.server.PromptArgument;
 import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptInfo;
 import io.helidon.integrations.mcp.server.Resource;
@@ -36,7 +34,6 @@ import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.Tool;
 import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolInfo;
-import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 
 class McpWeatherServerSe {
@@ -44,7 +41,7 @@ class McpWeatherServerSe {
     /*
          FEEDBACK LIST:
 
-        - Cannot be dependent on jackson.
+        - Cannot be dependent on jackson. ->R Reflection
         - ! Capability to build JSON schema from classes !
         - ! Capability to read it in the tool !
         - JsonSchema support
@@ -53,22 +50,15 @@ class McpWeatherServerSe {
         - https://raz.sh/blog/2025-05-02_a_critical_look_at_mcp
      */
 
-    //No contstructor
     public static void main(String[] args) {
-        var config = Services.get(Config.class);
-
         WebServer.builder()
-                .config(config.get("server"))
-                .routing(routing -> routing.addFeature(McpHttpFeature.builder()
-                        .server(new McpWeatherDetails())
-                        .build()))
+                .routing(routing -> routing.addFeature(
+                        McpHttpFeature.builder().server(new McpWeatherServer())))
                 .build()
                 .start();
     }
 
-    //config is from blueprint - change naming - maybe builder
-    //check capabilities default value, if yes builder.
-    static class McpWeatherDetails implements McpServerDetails {
+    static class McpWeatherServer implements McpServer {
 
         @Override
         public McpServerInfo info() {
@@ -95,7 +85,8 @@ class McpWeatherServerSe {
                     .name("tool-weater")
                     .description("Get the weather in a specific town")
                     .schema(schema -> schema
-                            .object("town", Town.class, false))
+                            .object("town", Town.class, false)
+                            .object("town1", Town.class))
                     .build();
         }
 
@@ -129,7 +120,10 @@ class McpWeatherServerSe {
             return PromptInfo.builder()
                     .name("prompt-weather")
                     .description("Get the weather in a specific town")
-                    .arguments(PromptArgument.create("town", "The name of the town", false))
+                    .argument(argument -> argument
+                            .name("town")
+                            .description( "The name of the town")
+                            .required(false))
                     .build();
         }
 
@@ -145,7 +139,6 @@ class McpWeatherServerSe {
 
         @Override
         public ResourceInfo info() {
-//            return ResourceInfo.create("resource://weather-report", "resource-weather", "This is a weather report");
             return ResourceInfo.builder()
                     .name("resource-weather")
                     .uri("resource://weather-report")
@@ -156,7 +149,7 @@ class McpWeatherServerSe {
         @Override
         public ResourceContent read() {
             ResourceContent text = ResourceContent.textContent("data");
-            return ResourceContent.binaryContent("data", "text/plain");
+            return ResourceContent.binaryContent("base64-encoded-data", "image/png");
         }
     }
 }

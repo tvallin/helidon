@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import io.helidon.http.Status;
 import io.helidon.http.sse.SseEvent;
@@ -37,20 +38,20 @@ public class McpHttpFeature implements HttpFeature {
 
     private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
 
-    private final McpServer server;
+    private final McpServerImpl server;
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
     @Service.Inject
-    public McpHttpFeature(McpServerDetails server) {
-        this.server = McpServer.create(server);
+    public McpHttpFeature(McpServer server) {
+        this.server = new McpServerImpl(server);
     }
 
-    public McpHttpFeature(McpServerDetails... server) {
+    public McpHttpFeature(McpServer... server) {
         this.server = null;
     }
 
-    public static McpHttpFeature create(McpServerDetails... servers) {
+    public static McpHttpFeature create(McpServer... servers) {
         return new McpHttpFeature(servers);
     }
 
@@ -116,10 +117,10 @@ public class McpHttpFeature implements HttpFeature {
         }
     }
 
-    public static class Builder {
-        private McpServerDetails config;
+    public static class Builder implements Supplier<McpHttpFeature> {
+        private McpServer config;
 
-        public Builder server(McpServerDetails server) {
+        public Builder server(McpServer server) {
             this.config = server;
             return this;
         }
@@ -128,6 +129,10 @@ public class McpHttpFeature implements HttpFeature {
             return new McpHttpFeature(config);
         }
 
+        @Override
+        public McpHttpFeature get() {
+            return this.build();
+        }
     }
 
 }
