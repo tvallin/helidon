@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -146,11 +147,16 @@ class McpJsonRPC {
      * @throws IllegalArgumentException If the JSON structure doesn't match any known
      *                                  message type
      */
-    static JSONRPCMessage deserializeJsonRpcMessage(String jsonText) throws IOException {
+    static JSONRPCMessage deserializeJsonRpcMessage(String jsonText) {
 
         LOGGER.log(System.Logger.Level.DEBUG, "Received JSON message: %s", jsonText);
+        HashMap<String, Object> map;
 
-        var map = MAPPER.readValue(jsonText, MAP_TYPE_REF);
+        try {
+            map = MAPPER.readValue(jsonText, MAP_TYPE_REF);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
 
         // Determine message type based on specific JSON structure
         if (map.containsKey("method") && map.containsKey("id")) {

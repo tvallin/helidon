@@ -16,6 +16,14 @@
 
 package io.helidon.integrations.mcp.server;
 
+/**
+ * Abstraction for {@link Tool}, {@link Prompt} and {@link Resource} result content.
+ */
 interface Content {
+    /**
+     * Result content type.
+     *
+     * @return type
+     */
     String type();
 }

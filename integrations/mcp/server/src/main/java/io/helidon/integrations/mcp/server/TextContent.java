@@ -1,7 +1,7 @@
 package io.helidon.integrations.mcp.server;
 
 @FunctionalInterface
-interface TextContent extends ToolContent, Content {
+interface TextContent extends Content {
 
     default String type() {
         return "text";

@@ -16,22 +16,12 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolImageContent extends ToolContentBase implements ImageContent {
-    private final String data;
-    private final String mimeType;
-
-    ToolImageContent(String data, String mimeType) {
-        this.data = data;
-        this.mimeType = mimeType;
-    }
+abstract class ToolContentBase implements ToolContent {
+    private ToolContent content;
 
     @Override
-    public String data() {
-        return data;
-    }
-
-    @Override
-    public String mimeType() {
-        return mimeType;
+    public ToolContent chain(ToolContent content) {
+        this.content = content;
+        return this.content;
     }
 }

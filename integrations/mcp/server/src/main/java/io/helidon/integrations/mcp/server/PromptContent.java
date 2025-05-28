@@ -26,12 +26,21 @@ public interface PromptContent {
      * @return role
      */
     Role role();
+
     /**
      * Prompt content.
      *
      * @return content
      */
     Content content();
+
+    /**
+     * Chain prompt content.
+     *
+     * @param content nested content
+     * @return nested content
+     */
+    PromptContent chain(PromptContent content);
 
     static PromptContent textContent(String prompt, Role role) {
         return new PromptTextContent(prompt, role);

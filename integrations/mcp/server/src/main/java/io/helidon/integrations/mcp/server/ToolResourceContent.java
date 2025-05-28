@@ -16,14 +16,15 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolResourceContent implements ToolContent {
+class ToolResourceContent extends ToolContentBase implements ResourceReference {
     private final String uri;
 
     public ToolResourceContent(String uri) {
         this.uri = uri;
     }
 
-    String uri() {
-        return uri;
+    @Override
+    public String uri() {
+        return this.uri;
     }
 }

@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 
 /**
@@ -43,6 +44,10 @@ public class JsonSchema {
 
         JsonObjectBuilder properties = Json.createObjectBuilder();
         builder.properties.forEach(properties::add);
+    }
+
+    JsonObject json() {
+        return JsonObject.EMPTY_JSON_OBJECT;
     }
 
     public static Builder builder() {

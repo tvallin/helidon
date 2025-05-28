@@ -19,13 +19,14 @@ package io.helidon.integrations.mcp.server;
 /**
  * Image content.
  */
-interface ImageContent extends ToolContent, Content {
+interface ImageContent extends Content {
     /**
      * Image content.
      *
      * @return content
      */
     String data();
+
     /**
      * Image mime type.
      *
@@ -33,6 +34,7 @@ interface ImageContent extends ToolContent, Content {
      */
     String mimeType();
 
+    @Override
     default String type() {
         return "image";
     }

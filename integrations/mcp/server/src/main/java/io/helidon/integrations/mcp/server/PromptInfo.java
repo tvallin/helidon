@@ -16,10 +16,13 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 
 /**
  * MCP Prompt information.
@@ -46,6 +49,13 @@ public interface PromptInfo {
      */
     Set<PromptArgument> arguments();
 
+    /**
+     * Serialize to json.
+     *
+     * @return json
+     */
+    JsonObject json();
+
     static Builder builder() {
         return new Builder();
     }
@@ -62,11 +72,6 @@ public interface PromptInfo {
 
         public Builder description(String description) {
             this.description = description;
-            return this;
-        }
-
-        public Builder arguments(PromptArgument... arguments) {
-            Collections.addAll(this.arguments, arguments);
             return this;
         }
 
@@ -92,6 +97,19 @@ public interface PromptInfo {
                 @Override
                 public Set<PromptArgument> arguments() {
                     return arguments;
+                }
+
+                @Override
+                public JsonObject json() {
+                    JsonArrayBuilder array = Json.createArrayBuilder();
+                    arguments.stream()
+                            .map(PromptArgument::json)
+                            .forEach(array::add);
+                    return Json.createObjectBuilder()
+                            .add("name", name)
+                            .add("description", description)
+                            .add("arguments", array)
+                            .build();
                 }
             };
         }

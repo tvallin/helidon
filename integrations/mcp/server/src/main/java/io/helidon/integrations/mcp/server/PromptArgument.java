@@ -18,6 +18,9 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Supplier;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
 /**
  * Prompt argument information.
  */
@@ -43,28 +46,23 @@ public interface PromptArgument {
      */
     boolean required();
 
+    /**
+     * Serialize to json.
+     *
+     * @return json
+     */
+    JsonObject json();
+
     static PromptArgument create(String name, String description) {
         return create(name, description, true);
     }
 
     static PromptArgument create(String name, String description, boolean required) {
-        return new PromptArgument() {
-
-            @Override
-            public String name() {
-                return name;
-            }
-
-            @Override
-            public String description() {
-                return description;
-            }
-
-            @Override
-            public boolean required() {
-                return required;
-            }
-        };
+        return PromptArgument.builder()
+                .name(name)
+                .description(description)
+                .required(required)
+                .build();
     }
 
     static Builder builder() {
@@ -106,6 +104,15 @@ public interface PromptArgument {
                 @Override
                 public boolean required() {
                     return required;
+                }
+
+                @Override
+                public JsonObject json() {
+                    return Json.createObjectBuilder()
+                            .add("name", name)
+                            .add("description", description)
+                            .add("required", required)
+                            .build();
                 }
             };
         }

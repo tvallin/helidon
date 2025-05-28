@@ -18,6 +18,9 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Consumer;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
 /**
  * MCP tool information.
  */
@@ -42,6 +45,13 @@ public interface ToolInfo {
      * @return schema
      */
     JsonSchema schema();
+
+    /**
+     * Serialize to json.
+     *
+     * @return json
+     */
+    JsonObject json();
 
     static Builder builder() {
         return new Builder();
@@ -71,6 +81,7 @@ public interface ToolInfo {
 
         public ToolInfo build() {
             return new ToolInfo() {
+
                 @Override
                 public String name() {
                     return name;
@@ -84,6 +95,15 @@ public interface ToolInfo {
                 @Override
                 public JsonSchema schema() {
                     return schema;
+                }
+
+                @Override
+                public JsonObject json() {
+                    return Json.createObjectBuilder()
+                            .add("name", name)
+                            .add("description", description)
+                            .add("inputSchema", schema.json())
+                            .build();
                 }
             };
         }

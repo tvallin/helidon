@@ -19,6 +19,7 @@ package io.helidon.integrations.mcp.server;
 class ResourceBinaryContent implements ResourceContent {
     String mimeType;
     String data;
+    ResourceContent content;
 
     ResourceBinaryContent(String mimeType, String data) {
         this.mimeType = mimeType;
@@ -33,5 +34,11 @@ class ResourceBinaryContent implements ResourceContent {
     @Override
     public String mimeType() {
         return mimeType;
+    }
+
+    @Override
+    public ResourceContent chain(ResourceContent content) {
+        this.content = content;
+        return this.content;
     }
 }

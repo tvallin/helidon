@@ -16,7 +16,7 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolTextContent implements TextContent {
+class ToolTextContent extends ToolContentBase implements TextContent {
     private final String text;
 
     public ToolTextContent(String text) {

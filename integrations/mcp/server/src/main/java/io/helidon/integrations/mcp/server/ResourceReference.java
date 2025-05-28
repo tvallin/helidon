@@ -16,22 +16,20 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolImageContent extends ToolContentBase implements ImageContent {
-    private final String data;
-    private final String mimeType;
+/**
+ * Reference a resource, used by {@link Tool} and {@link Prompt}
+ */
+interface ResourceReference extends Content {
 
-    ToolImageContent(String data, String mimeType) {
-        this.data = data;
-        this.mimeType = mimeType;
-    }
-
-    @Override
-    public String data() {
-        return data;
-    }
+    /**
+     * Resource uri.
+     *
+     * @return uri
+     */
+    String uri();
 
     @Override
-    public String mimeType() {
-        return mimeType;
+    default String type() {
+        return "resource";
     }
 }

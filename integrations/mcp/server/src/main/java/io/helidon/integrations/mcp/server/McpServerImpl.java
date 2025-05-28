@@ -23,9 +23,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 
 final class McpServerImpl {
 
@@ -76,24 +80,8 @@ final class McpServerImpl {
 		this.routing = routing.build();
 	}
 
-	public Map<String, JsonRPCHandler<?>> handlers() {
+	Map<String, JsonRPCHandler<?>> handlers() {
 		return this.handlers;
-	}
-
-	public void addTool(Tool tool) {
-		this.routing.tools().add(tool);
-	}
-
-	public void removeTool(Tool tool) {
-		this.routing.tools().remove(tool);
-	}
-
-	public void addResource(Resource resource) {
-		this.routing.resources().add(resource);
-	}
-
-	public void addPrompt(Prompt prompt) {
-		this.routing.prompts().add(prompt);
 	}
 
 	//TODO - How to maintain list of client subscription ?
@@ -109,19 +97,23 @@ final class McpServerImpl {
 		return object -> "pong";
 	}
 
-	JsonRPCHandler<McpJsonRPC.ListToolsResult> toolsList() {
-		return (object) -> {
-			List<McpJsonRPC.Tool> toolz = this.routing.tools().stream()
-					.filter(Objects::nonNull)
-					.map(tool -> tool.info().name())
-					.toList();
-			return new McpJsonRPC.ListToolsResult(toolz, null);
+	//Return only the reponse payload
+	JsonRPCHandler<JsonObject> toolsList() {
+		return cursor -> {
+			JsonArrayBuilder builder = Json.createArrayBuilder();
+			this.routing.tools().stream()
+					.map(Tool::info)
+					.map(ToolInfo::json)
+					.forEach(builder::add);
+			return Json.createObjectBuilder()
+					.add("tools", builder.build())
+					.build();
 		};
 	}
 
-	JsonRPCHandler<McpJsonRPC.CallToolResult> toolsCall() {
-		return (params) -> {
-			McpJsonRPC.CallToolRequest callToolRequest = mapper.convertValue(params, new TypeReference<>() {});
+	JsonRPCHandler<JsonObject> toolsCall() {
+		return params -> {
+			McpJsonRPC.CallToolRequest callToolRequest = (McpJsonRPC.CallToolRequest) params;
 
 			Optional<Tool> tool = this.routing.tools().stream()
 					.filter(tr -> callToolRequest.name().equals(tr.info().name()))
@@ -130,68 +122,89 @@ final class McpServerImpl {
 			if (tool.isEmpty()) {
 				return new McpJsonRPC.CallToolResult(List.of(), true);
 			}
-			String result = tool.get().process(callToolRequest.arguments());
-			List<McpJsonRPC.Content> content = List.of(
-					new McpJsonRPC.TextContent(List.of(McpJsonRPC.Role.USER), 2.0, result));
-			return new McpJsonRPC.CallToolResult(content, false);
+
+			return tool.get()
+					.process(Parameters.toParameters(callToolRequest.arguments()))
+					.json();
 		};
 	}
 
-	JsonRPCHandler<McpJsonRPC.ListResourcesResult> resourcesList() {
-		return (params) -> {
-			var resources = this.routing.resources().stream()
+	JsonRPCHandler<JsonObject> resourcesList() {
+		return params -> {
+			JsonArrayBuilder builder = Json.createArrayBuilder();
+			this.routing.resources().stream()
 					.map(Resource::info)
-					.toList();
-			return new McpJsonRPC.ListResourcesResult(resources, null);
+					.map(ResourceInfo::json)
+					.forEach(builder::add);
+			return Json.createObjectBuilder()
+					.add("resources", builder.build())
+					.build();
 		};
 	}
 
-	JsonRPCHandler<McpJsonRPC.ReadResourceResult> resourcesRead() {
-		return (params) -> {
-			McpJsonRPC.ReadResourceRequest resourceRequest = mapper.convertValue(params, new TypeReference<>() {});
+	JsonRPCHandler<JsonObject> resourcesRead() {
+		return params -> {
+			McpJsonRPC.ReadResourceRequest resourceRequest = (McpJsonRPC.ReadResourceRequest) params;
+
 			String resourceUri = resourceRequest.uri();
 			Optional<Resource> resource = this.routing.resources().stream()
 					.filter(it -> Objects.equals(it.info().uri(), resourceUri))
 					.findFirst();
 			if (resource.isEmpty()) {
-				return new McpJsonRPC.ReadResourceResult(List.of());
+				//Return JSON-RPC error
+				return Json.createObjectBuilder();
 			}
-			McpJsonRPC.ResourceContents content = resource.get().read();
-			return new McpJsonRPC.ReadResourceResult(List.of(content));
+			return resource.get().read().json();
 		};
 	}
 
-	JsonRPCHandler<McpJsonRPC.ListResourceTemplatesResult> resourceTemplateList() {
-		return (param) -> new McpJsonRPC.ListResourceTemplatesResult(this.routing.resources(), null);
+	JsonRPCHandler<JsonObject> resourceTemplateList() {
+		return param -> {
+			List<JsonObject> templates = this.routing.resources().stream()
+					.map(Resource::info)
+					.filter(ResourceInfo::isTemplate)
+					.map(ResourceInfo::json)
+					.toList();
+			return Json.createObjectBuilder().add("resourceTemplates", Json.createArrayBuilder(templates)).build();
+		};
 	}
 
-	private JsonRPCHandler<McpJsonRPC.ListPromptsResult> promptsList() {
-		return (object) -> new McpJsonRPC.ListPromptsResult(this.routing.prompts(), null);
+	private JsonRPCHandler<JsonObject> promptsList() {
+		return object -> {
+			JsonArrayBuilder builder = Json.createArrayBuilder();
+			this.routing.prompts().stream()
+					.map(Prompt::info)
+					.map(PromptInfo::json)
+					.forEach(builder::add);
+			return Json.createObjectBuilder()
+					.add("prompts", builder.build())
+					.build();
+		};
 	}
 
-	JsonRPCHandler<McpJsonRPC.GetPromptResult> promptsGet() {
-		return (params) -> {
-			McpJsonRPC.GetPromptRequest promptRequest = mapper.convertValue(params, new TypeReference<>() {});
+	JsonRPCHandler<JsonObject> promptsGet() {
+		return params -> {
+			McpJsonRPC.GetPromptRequest promptRequest = (McpJsonRPC.GetPromptRequest) params;
 			var prompt = this.routing.prompts().stream()
 					.filter(p -> Objects.equals(p.info().name(), promptRequest.name()))
 					.findFirst();
 			if (prompt.isEmpty()) {
-				//TODO - return an error
-				return new McpJsonRPC.GetPromptResult("Error", List.of());
+				//Return JSON-RPC error
+				return Json.createObjectBuilder();
 			}
-			PromptContent content = prompt.get().prompt(promptRequest.arguments());
-			return new McpJsonRPC.GetPromptResult(prompt.get().info().description(), List.of(
-					new McpJsonRPC.PromptMessage(McpJsonRPC.Role.USER, new McpJsonRPC.TextContent(content))));
+			return prompt.get()
+					.prompt(Parameters.toParameters(promptRequest.arguments()))
+					.json();
 		};
 	}
 
 	//Todo - Change the logging level in the sessions
 	JsonRPCHandler<McpJsonRPC.LoggingMessageNotification> logging() {
-		return (param) -> new McpJsonRPC.LoggingMessageNotification(McpJsonRPC.LoggingLevel.INFO, "", "");
+		return param -> new McpJsonRPC.LoggingMessageNotification(McpJsonRPC.LoggingLevel.INFO, "", "");
 	}
 
 	private JsonRPCHandler<McpJsonRPC.InitializeResult> initialize() {
-		return (param) -> {
+		return param -> {
 			McpJsonRPC.InitializeRequest request = mapper.convertValue(param, new TypeReference<>() {});
 			String protocoleVersion = this.protocolVersions.getLast();
 

@@ -130,7 +130,7 @@ class McpWeatherServerSe {
             PromptContent image = PromptContent.imageContent("data", "image/png", Role.ASSISTANT);
             PromptContent text = PromptContent.textContent("It is sunny in " + parameters.get("town"), Role.USER);
 
-            return text;
+            return text.chain(resource).chain(image);
         }
     }
 
@@ -139,6 +139,7 @@ class McpWeatherServerSe {
         @Override
         public ResourceInfo info() {
             return ResourceInfo.builder()
+                    .mimeType("image/png")
                     .name("resource-weather")
                     .uri("resource://weather-report")
                     .description("This is a weather report")

@@ -16,16 +16,18 @@
 
 package io.helidon.integrations.mcp.server;
 
-class PromptResourceContent implements PromptContent {
+class PromptResourceContent implements PromptContent, ResourceReference {
     private final Role role;
     private final String uri;
+    private PromptContent content;
 
     PromptResourceContent(String uri, Role role) {
         this.uri = uri;
         this.role = role;
     }
 
-    String uri() {
+    @Override
+    public String uri() {
         return uri;
     }
 
@@ -38,5 +40,11 @@ class PromptResourceContent implements PromptContent {
     public Content content() {
         //TODO - Look up resources from server...
         throw new UnsupportedOperationException("This is only a resource reference");
+    }
+
+    @Override
+    public PromptContent chain(PromptContent content) {
+        this.content = content;
+        return this.content;
     }
 }

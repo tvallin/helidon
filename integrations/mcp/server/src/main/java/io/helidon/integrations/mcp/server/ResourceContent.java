@@ -33,6 +33,15 @@ public interface ResourceContent extends Content {
      */
     String mimeType();
 
+    /**
+     * Chain prompt content.
+     *
+     * @param content nested content
+     * @return nested content
+     */
+    ResourceContent chain(ResourceContent content);
+
+    @Override
     default String type() {
         return "resource";
     }

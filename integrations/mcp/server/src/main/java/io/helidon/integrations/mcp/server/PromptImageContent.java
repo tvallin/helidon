@@ -19,11 +19,12 @@ package io.helidon.integrations.mcp.server;
 class PromptImageContent implements PromptContent {
 
     private final Role role;
-    private final Content content;
+    private final ImageContent image;
+    private PromptContent content;
 
     PromptImageContent(String data, String mimeType, Role role) {
         this.role = role;
-        this.content = ImageContent.create(data, mimeType);
+        this.image = ImageContent.create(data, mimeType);
     }
 
     @Override
@@ -33,6 +34,12 @@ class PromptImageContent implements PromptContent {
 
     @Override
     public Content content() {
-        return content;
+        return image;
+    }
+
+    @Override
+    public PromptContent chain(PromptContent content) {
+        this.content = content;
+        return this.content;
     }
 }

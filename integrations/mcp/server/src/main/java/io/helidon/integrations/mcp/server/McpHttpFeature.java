@@ -16,7 +16,6 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,21 +96,13 @@ public class McpHttpFeature implements HttpFeature {
         }
 
         String jsonRpc = request.content().as(String.class);
-        McpJsonRPC.JSONRPCMessage message = deserializeJsonRpcMessage(jsonRpc);
+        McpJsonRPC.JSONRPCMessage message = McpJsonRPC.deserializeJsonRpcMessage(jsonRpc);
         if (LOGGER.isLoggable(System.Logger.Level.DEBUG)) {
-            LOGGER.log(System.Logger.Level.INFO, "Message received : %s", message.toString());
+            LOGGER.log(System.Logger.Level.DEBUG, "Message received : %s", message.toString());
         }
         session.send(message);
         response.status(Status.OK_200);
         response.send();
-    }
-
-    private McpJsonRPC.JSONRPCMessage deserializeJsonRpcMessage(String content) {
-        try {
-            return McpJsonRPC.deserializeJsonRpcMessage(content);
-        } catch (IOException e) {
-            throw new McpException("Failed to deserialize JSON-RPC message");
-        }
     }
 
     public static class Builder implements Supplier<McpHttpFeature> {

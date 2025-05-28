@@ -30,9 +30,14 @@ public class Parameters implements io.helidon.common.parameters.Parameters {
     io.helidon.common.parameters.Parameters delegate =
             io.helidon.common.parameters.Parameters.create("mcp", Map.of());
 
+    static Parameters toParameters(Object value) {
+        return new Parameters();
+    }
+
     public <T> Optional<T> object(String key, Class<T> clazz) {
         return Optional.empty();
     }
+
 
     @Override
     public List<String> all(String name) throws NoSuchElementException {

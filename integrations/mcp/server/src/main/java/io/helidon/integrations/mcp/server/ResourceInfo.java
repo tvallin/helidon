@@ -16,6 +16,9 @@
 
 package io.helidon.integrations.mcp.server;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
 /**
  * MCP resource information.
  */
@@ -42,6 +45,27 @@ public interface ResourceInfo {
      */
     String description();
 
+    /**
+     * Resource mime type.
+     *
+     * @return type
+     */
+    String mimeType();
+
+    /**
+     * Wether this ressource is a template.
+     *
+     * @return {@code true} if this resource is a resource template, {@code false} otherwise
+     */
+    boolean isTemplate();
+
+    /**
+     * Serialize to json.
+     *
+     * @return json
+     */
+    JsonObject json();
+
     static Builder builder() {
         return new Builder();
     }
@@ -49,6 +73,7 @@ public interface ResourceInfo {
     class Builder {
         private String uri;
         private String name;
+        private String mimeType;
         private String description;
 
         public Builder uri(String uri) {
@@ -58,6 +83,11 @@ public interface ResourceInfo {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder mimeType(String mimeType) {
+            this.mimeType = mimeType;
             return this;
         }
 
@@ -79,8 +109,28 @@ public interface ResourceInfo {
                 }
 
                 @Override
+                public String mimeType() {
+                    return mimeType;
+                }
+
+                @Override
+                public boolean isTemplate() {
+                    return uri.contains("{") && uri.contains("}");
+                }
+
+                @Override
                 public String description() {
                     return description;
+                }
+
+                @Override
+                public JsonObject json() {
+                    return Json.createObjectBuilder()
+                            .add("uri", uri)
+                            .add("name", name)
+                            .add("description", description)
+                            .add("mimeType", mimeType)
+                            .build();
                 }
             };
         }
