@@ -19,6 +19,7 @@ package io.helidon.integrations.mcp.server;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.helidon.http.Status;
@@ -85,6 +86,34 @@ public class McpHttpFeature implements HttpFeature {
         }
     }
 
+    private void message(JsonRpc request, JsonRpc response) {
+
+        request.param("address").as(Address.class);
+
+        response.param();
+
+        var schema = """
+                {
+                  "type" : "object",
+                  "id" : "urn:jsonschema:address",
+                  "properties" : {
+                    "street" : {
+                      "type" : "string"
+                    },
+                    "number" : {
+                      "type" : "number"
+                    }
+                  }
+                }
+                """;
+    }
+
+    static class Address {
+
+        int number;
+        String street;
+    }
+
     private void message(ServerRequest request, ServerResponse response) {
         String sessionId = request.query().get("sessionId");
 
@@ -106,15 +135,22 @@ public class McpHttpFeature implements HttpFeature {
     }
 
     public static class Builder implements Supplier<McpHttpFeature> {
-        private McpServer config;
+        private McpServer server;
 
         public Builder server(McpServer server) {
-            this.config = server;
+            this.server = server;
+            return this;
+        }
+
+        public Builder server(Consumer<McpServerInfo.Builder> info, Consumer<McpRouting.Builder> routing) {
+            McpServerInfo.Builder builder = McpServerInfo.builder();
+            info.accept(builder);
+            this.server = McpServer.create(builder.build(), routing);
             return this;
         }
 
         public McpHttpFeature build() {
-            return new McpHttpFeature(config);
+            return new McpHttpFeature(server);
         }
 
         @Override

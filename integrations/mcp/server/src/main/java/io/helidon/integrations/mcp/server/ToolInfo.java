@@ -17,6 +17,7 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -57,7 +58,7 @@ public interface ToolInfo {
         return new Builder();
     }
 
-    class Builder {
+    class Builder implements Supplier<ToolInfo> {
         String name;
         String description;
         JsonSchema schema;
@@ -108,5 +109,9 @@ public interface ToolInfo {
             };
         }
 
+        @Override
+        public ToolInfo get() {
+            return this.build();
+        }
     }
 }

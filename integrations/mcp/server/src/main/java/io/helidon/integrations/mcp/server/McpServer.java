@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Consumer;
+
 /**
  * MCP server definition.
  */
@@ -33,4 +35,18 @@ public interface McpServer {
      * @param routing server routing
      */
     void setup(McpRouting.Builder routing);
+
+    static McpServer create(McpServerInfo info, Consumer<McpRouting.Builder> consumer) {
+        return new McpServer() {
+            @Override
+            public McpServerInfo info() {
+                return info;
+            }
+
+            @Override
+            public void setup(McpRouting.Builder routing) {
+                consumer.accept(routing);
+            }
+        };
+    }
 }

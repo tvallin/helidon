@@ -19,6 +19,9 @@ package io.helidon.integrations.mcp.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Mcp routing.
@@ -53,6 +56,28 @@ public interface McpRouting {
         List<Tool> tools = new ArrayList<>();
         List<Prompt> prompts = new ArrayList<>();
         List<Resource> resources = new ArrayList<>();
+
+        public Builder register(ToolInfo info, Function<Parameters, ToolContent> process) {
+            tools.add(Tool.create(info, process));
+            return this;
+        }
+
+        public Builder register(Consumer<ToolInfo.Builder> info, Function<Parameters, ToolContent> process) {
+            ToolInfo.Builder builder = ToolInfo.builder();
+            info.accept(builder);
+            tools.add(Tool.create(builder.build(), process));
+            return this;
+        }
+
+        public Builder register(PromptInfo info, Function<Parameters, PromptContent> prompt) {
+            this.prompts.add(Prompt.create(info, prompt));
+            return this;
+        }
+
+        public Builder register(ResourceInfo info, Supplier<ResourceContent> read) {
+            this.resources.add(Resource.create(info, read));
+            return this;
+        }
 
         public Builder register(Tool... tools) {
             this.tools.addAll(List.of(tools));

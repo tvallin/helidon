@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 /**
  * MCP resource definition.
  */
@@ -33,4 +35,19 @@ public interface Resource {
      * @return resource content as a {@link String}
      */
     ResourceContent read();
+
+    static Resource create(ResourceInfo info, Supplier<ResourceContent> read) {
+        return new Resource() {
+
+            @Override
+            public ResourceInfo info() {
+                return info;
+            }
+
+            @Override
+            public ResourceContent read() {
+                return read.get();
+            }
+        };
+    }
 }

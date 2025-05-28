@@ -17,6 +17,7 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Mcp Server information.
@@ -47,7 +48,7 @@ public interface McpServerInfo {
         return new Builder();
     }
 
-    class Builder {
+    class Builder implements Supplier<McpServerInfo> {
         private String name;
         private String version;
         private Set<Capability> capabilities;
@@ -84,6 +85,11 @@ public interface McpServerInfo {
                     return capabilities;
                 }
             };
+        }
+
+        @Override
+        public McpServerInfo get() {
+            return this.build();
         }
     }
 }

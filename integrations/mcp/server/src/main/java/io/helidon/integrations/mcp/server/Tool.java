@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Function;
+
 /**
  * MCP tool definition.
  */
@@ -34,4 +36,19 @@ public interface Tool {
      * @return tool execution result as a {@link String}
      */
     ToolContent process(Parameters parameters);
+
+    static Tool create(ToolInfo info, Function<Parameters, ToolContent> process) {
+        return new Tool() {
+
+            @Override
+            public ToolInfo info() {
+                return info;
+            }
+
+            @Override
+            public ToolContent process(Parameters parameters) {
+                return process.apply(parameters);
+            }
+        };
+    }
 }

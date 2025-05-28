@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Function;
+
 /**
  * MCP Prompt definition.
  */
@@ -34,4 +36,19 @@ public interface Prompt {
      * @return prompt as {@link String}
      */
     PromptContent prompt(Parameters parameters);
+
+    static Prompt create(PromptInfo info, Function<Parameters, PromptContent> prompt) {
+        return new Prompt() {
+
+            @Override
+            public PromptInfo info() {
+                return info;
+            }
+
+            @Override
+            public PromptContent prompt(Parameters parameters) {
+                return prompt.apply(parameters);
+            }
+        };
+    }
 }

@@ -53,7 +53,10 @@ class McpWeatherServerSe {
     public static void main(String[] args) {
         WebServer.builder()
                 .routing(routing -> routing.addFeature(
-                        McpHttpFeature.builder().server(new McpWeatherServer())))
+                        McpHttpFeature.builder()
+                                .server(info -> info.name("weather-mcp-server"),
+                                        mcpRouting -> mcpRouting.register(ResourceInfo.builder().build(),
+                                                () -> ResourceContent.textContent("")))))
                 .build()
                 .start();
     }
@@ -71,12 +74,13 @@ class McpWeatherServerSe {
 
         @Override
         public void setup(McpRouting.Builder routing) {
-            routing.register(new WeatherTool())
-                    .register(new WeatherResource())
-                    .register(new WeatherPrompt());
+            routing.register(ResourceInfo.builder().build(), () -> ResourceContent.textContent(""))
+                    .register(ToolInfo.builder().build(), parameters -> ToolContent.textContent(""))
+                    .register(PromptInfo.builder().build(), parameters -> PromptContent.textContent("", Role.USER));
         }
     }
 
+    //Start with the simplest schema with string
     static class WeatherTool implements Tool {
 
         @Override
@@ -102,6 +106,7 @@ class McpWeatherServerSe {
             return text;
         }
 
+//        @JsonSchema
         static class Town {
             String name;
             double latitude;
