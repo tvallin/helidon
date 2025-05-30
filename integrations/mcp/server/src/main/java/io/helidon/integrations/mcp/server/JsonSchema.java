@@ -33,6 +33,8 @@ import jakarta.json.JsonObjectBuilder;
 public class JsonSchema {
 
     private final Map<String, Object> schema = new HashMap<>();
+    private final String asString;
+    private final JsonObject json;
 
     private JsonSchema(Builder builder) {
         schema.put("id", builder.id);
@@ -44,10 +46,17 @@ public class JsonSchema {
 
         JsonObjectBuilder properties = Json.createObjectBuilder();
         builder.properties.forEach(properties::add);
+
+        this.asString = builder.asString;
+        this.json = builder.json;
     }
 
     JsonObject json() {
-        return JsonObject.EMPTY_JSON_OBJECT;
+        return json;
+    }
+
+    String asString() {
+        return asString;
     }
 
     public static Builder builder() {
@@ -60,6 +69,8 @@ public class JsonSchema {
         private final String id;
         private final List<String> required;
         private final Map<String, String> properties;
+        private String asString;
+        private JsonObject json;
 
         private Builder() {
             this.id = "jsonSchema-" + UUID.randomUUID();
@@ -79,6 +90,16 @@ public class JsonSchema {
         public Builder object(String key, Class<?> type) {
             this.properties.put(key, type.toString());
             this.required.add(key);
+            return this;
+        }
+
+        public Builder json(JsonObject json) {
+            this.json = json;
+            return this;
+        }
+
+        public Builder asString(String asString) {
+            this.asString = asString;
             return this;
         }
 

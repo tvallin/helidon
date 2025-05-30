@@ -52,20 +52,6 @@ public interface ResourceInfo {
      */
     String mimeType();
 
-    /**
-     * Wether this ressource is a template.
-     *
-     * @return {@code true} if this resource is a resource template, {@code false} otherwise
-     */
-    boolean isTemplate();
-
-    /**
-     * Serialize to json.
-     *
-     * @return json
-     */
-    JsonObject json();
-
     static Builder builder() {
         return new Builder();
     }
@@ -114,23 +100,8 @@ public interface ResourceInfo {
                 }
 
                 @Override
-                public boolean isTemplate() {
-                    return uri.contains("{") && uri.contains("}");
-                }
-
-                @Override
                 public String description() {
                     return description;
-                }
-
-                @Override
-                public JsonObject json() {
-                    return Json.createObjectBuilder()
-                            .add("uri", uri)
-                            .add("name", name)
-                            .add("description", description)
-                            .add("mimeType", mimeType)
-                            .build();
                 }
             };
         }

@@ -28,10 +28,6 @@ public class McpException extends RuntimeException {
 		super(message, cause);
 	}
 
-	static McpJsonRPC.JSONRPCResponse.JSONRPCError toError(String message) {
-		return new McpJsonRPC.JSONRPCResponse.JSONRPCError(500, message, null);
-	}
-
 	SseEvent.Builder sseEventBuilder() {
 		return SseEvent.builder()
 				.name("Error");

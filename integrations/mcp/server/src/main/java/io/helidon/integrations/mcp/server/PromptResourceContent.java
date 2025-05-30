@@ -16,10 +16,13 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 class PromptResourceContent implements PromptContent, ResourceReference {
     private final Role role;
     private final String uri;
     private PromptContent content;
+    private Supplier<Resource> resource;
 
     PromptResourceContent(String uri, Role role) {
         this.uri = uri;
@@ -29,6 +32,20 @@ class PromptResourceContent implements PromptContent, ResourceReference {
     @Override
     public String uri() {
         return uri;
+    }
+
+    @Override
+    public void resource(Supplier<Resource> resource) {
+        this.resource = resource;
+    }
+
+    @Override
+    public Resource resource() {
+        //Use optional ?
+        if (resource == null) {
+            throw new McpException("Resource not yet available");
+        }
+        return resource.get();
     }
 
     @Override

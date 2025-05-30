@@ -47,13 +47,6 @@ public interface ToolInfo {
      */
     JsonSchema schema();
 
-    /**
-     * Serialize to json.
-     *
-     * @return json
-     */
-    JsonObject json();
-
     static Builder builder() {
         return new Builder();
     }
@@ -96,15 +89,6 @@ public interface ToolInfo {
                 @Override
                 public JsonSchema schema() {
                     return schema;
-                }
-
-                @Override
-                public JsonObject json() {
-                    return Json.createObjectBuilder()
-                            .add("name", name)
-                            .add("description", description)
-                            .add("inputSchema", schema.json())
-                            .build();
                 }
             };
         }

@@ -27,24 +27,26 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.integrations.mcp.server.McpServer.PROTOCOL_VERSION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_URI;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.SERVER_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.SERVER_VERSION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.TOOL_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROTOCOL_VERSION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_ARGUMENT_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_ARGUMENT_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_URI;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.SERVER_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.SERVER_VERSION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.TOOL_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.TOOL_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 /**
- * {@link McpWeatherServerSe} test using Anthropic client.
+ * {@link McpWeather} test using Anthropic client.
  */
 class AnthropicClientTest {
 
@@ -53,15 +55,15 @@ class AnthropicClientTest {
 
 	@BeforeAll
 	static void startServer() {
-		McpWeatherServerSe.main(new String[0]);
-		port = McpWeatherServerSe.server().port();
+		McpWeather.start();
+		port = McpWeather.port();
 		client = buildClient();
 		client.initialize();
 	}
 
 	@AfterAll
 	static void stopServer() {
-		McpWeatherServerSe.server().stop();
+		McpWeather.stop();
 		client.close();
 	}
 
@@ -74,8 +76,8 @@ class AnthropicClientTest {
 		assertThat(implmentation.name(), is(SERVER_NAME));
 		assertThat(implmentation.version(), is(SERVER_VERSION));
 		var capabilities = result.capabilities();
-		assertThat(capabilities.experimental(), is(Map.of()));
-		assertThat(capabilities.logging(), nullValue(McpSchema.ServerCapabilities.LoggingCapabilities.class));
+		assertThat(capabilities.experimental(), is(nullValue()));
+		assertThat(capabilities.logging(), notNullValue(McpSchema.ServerCapabilities.LoggingCapabilities.class));
 		assertThat(capabilities.prompts().listChanged(), is(true));
 		var resources = capabilities.resources();
 		assertThat(resources.listChanged(), is(true));
@@ -91,7 +93,7 @@ class AnthropicClientTest {
 	@Test
 	void testPing() {
 		var ping = client.ping();
-		assertThat(ping, is("pong"));
+		assertThat(ping.toString(), is("{ping=pong}"));
 	}
 
 	@Test
@@ -99,10 +101,10 @@ class AnthropicClientTest {
 		McpSchema.ListToolsResult result = client.listTools();
 		assertThat(result.nextCursor(), is(nullValue()));
 		var tools = result.tools();
-		assertThat(tools.size(), is(2));
+		assertThat(tools.size(), is(1));
 		var tool = tools.getFirst();
 		assertThat(tool.name(), is(TOOL_NAME));
-		assertThat(tool.description(), is(McpWeatherServerSe.TOOL_DESCRIPTION));
+		assertThat(tool.description(), is(TOOL_DESCRIPTION));
 		var schema = tool.inputSchema();
 		assertThat(schema.type(), is("object"));
 	}
@@ -140,7 +142,7 @@ class AnthropicClientTest {
 		McpSchema.CallToolResult result = client.callTool(
 				new McpSchema.CallToolRequest(TOOL_NAME, Map.of("town", "Praha")));
 
-		assertThat(result.isError(), is(false));
+		assertThat(result.isError(), is(nullValue()));
 		var contents = result.content();
 		assertThat(contents.size(), is(1));
 		var content = contents.getFirst();
@@ -148,10 +150,7 @@ class AnthropicClientTest {
 		assertThat(content, instanceOf(McpSchema.TextContent.class));
 		var text = (McpSchema.TextContent) content;
 		assertThat(text.text(), is("There is a hurricane in Praha"));
-		assertThat(text.priority(), is(2.0));
-		var audience = text.audience();
-		assertThat(audience.size(), is(1));
-		assertThat(audience.getFirst(), is(McpSchema.Role.USER));
+		assertThat(text.priority(), is(nullValue()));
 	}
 
 	@Test

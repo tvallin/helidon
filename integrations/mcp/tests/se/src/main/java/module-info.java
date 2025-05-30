@@ -15,10 +15,9 @@
  */
 module helidon.integrations.mcp.tests.se {
 	requires io.helidon.integrations.mcp.server;
-	requires io.modelcontextprotocol.sdk.mcp;
 	requires io.helidon.webserver;
-	requires io.helidon.http.media.jackson;
 	requires io.helidon.service.registry;
+    requires jakarta.json;
 
-	exports io.helidon.integrations.mcp.tests.se;
+    exports io.helidon.integrations.mcp.tests.se;
 }

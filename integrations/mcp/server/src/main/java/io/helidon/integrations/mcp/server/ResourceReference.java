@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 /**
  * Reference a resource, used by {@link Tool} and {@link Prompt}
  */
@@ -27,6 +29,20 @@ interface ResourceReference extends Content {
      * @return uri
      */
     String uri();
+
+    /**
+     * Set pointer to a {@link Resource}.
+     *
+     * @param resource supplier
+     */
+    void resource(Supplier<Resource> resource);
+
+    /**
+     * Pointer to a {@link Resource}.
+     *
+     * @return resource supplier
+     */
+    Resource resource();
 
     @Override
     default String type() {

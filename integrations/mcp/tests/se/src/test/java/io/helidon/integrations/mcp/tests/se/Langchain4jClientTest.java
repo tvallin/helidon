@@ -34,30 +34,30 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_ARGUMENT_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.PROMPT_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_DESCRIPTION;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_NAME;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.RESOURCE_URI;
-import static io.helidon.integrations.mcp.tests.se.McpWeatherServerSe.TOOL_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_ARGUMENT_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_ARGUMENT_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.PROMPT_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_DESCRIPTION;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_NAME;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.RESOURCE_URI;
+import static io.helidon.integrations.mcp.tests.se.McpWeather.TOOL_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
- * {@link McpWeatherServerSe} tests using Langchain4j client.
+ * {@link McpWeather} tests using Langchain4j client.
  */
-public class Langchain4jClientTest {
+class Langchain4jClientTest {
 
     private static McpClient client;
 
     @BeforeAll
     static void startServer() {
-        McpWeatherServerSe.main(new String[0]);
-        int port = McpWeatherServerSe.server().port();
+        McpWeather.start();
+        int port = McpWeather.port();
         McpTransport transport = new HttpMcpTransport.Builder()
                 .sseUrl("http://localhost:" + port + "/sse")
                 .logRequests(true)
@@ -76,7 +76,7 @@ public class Langchain4jClientTest {
         } catch (Exception e) {
             throw new UncheckedException(e);
         }
-        McpWeatherServerSe.server().stop();
+        McpWeather.stop();
     }
 
     @Test
@@ -87,10 +87,10 @@ public class Langchain4jClientTest {
     @Test
     void testToolList() {
         var result = client.listTools();
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(1));
         var tool = result.getFirst();
         assertThat(tool.name(), is(TOOL_NAME));
-        assertThat(tool.description(), is(McpWeatherServerSe.TOOL_DESCRIPTION));
+        assertThat(tool.description(), is(McpWeather.TOOL_DESCRIPTION));
         var parameters = tool.parameters();
         assertThat(parameters.properties().size(), is(1));
         var required = parameters.required();

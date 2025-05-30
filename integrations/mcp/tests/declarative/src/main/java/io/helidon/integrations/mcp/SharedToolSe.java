@@ -16,7 +16,7 @@
 
 package io.helidon.integrations.mcp;
 
-import io.helidon.integrations.mcp.server.Parameters;
+import io.helidon.integrations.mcp.server.McpParameter;
 import io.helidon.integrations.mcp.server.Tool;
 import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolInfo;
@@ -31,7 +31,7 @@ public class SharedToolSe implements Tool {
     }
 
     @Override
-    public ToolContent process(Parameters parameters) {
+    public ToolContent process(McpParameter parameters) {
         return ToolContent.textContent("Even nicer tool in Helidon SE");
     }
 }

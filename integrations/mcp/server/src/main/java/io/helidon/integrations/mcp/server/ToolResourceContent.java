@@ -16,8 +16,11 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 class ToolResourceContent extends ToolContentBase implements ResourceReference {
     private final String uri;
+    private Supplier<Resource> resource;
 
     public ToolResourceContent(String uri) {
         this.uri = uri;
@@ -26,5 +29,19 @@ class ToolResourceContent extends ToolContentBase implements ResourceReference {
     @Override
     public String uri() {
         return this.uri;
+    }
+
+    @Override
+    public void resource(Supplier<Resource> resource) {
+        this.resource = resource;
+    }
+
+    @Override
+    public Resource resource() {
+        //Use optional ?
+        if (this.resource == null) {
+            throw new McpException("Resource not yet available");
+        }
+        return resource.get();
     }
 }

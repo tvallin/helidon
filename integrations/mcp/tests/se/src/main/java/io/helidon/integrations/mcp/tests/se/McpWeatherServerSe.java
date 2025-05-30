@@ -28,14 +28,13 @@
 
 package io.helidon.integrations.mcp.tests.se;
 
-import java.util.Optional;
-
+import io.helidon.common.parameters.Parameters;
 import io.helidon.integrations.mcp.server.Capability;
 import io.helidon.integrations.mcp.server.McpHttpFeature;
+import io.helidon.integrations.mcp.server.McpParameter;
 import io.helidon.integrations.mcp.server.McpRouting;
 import io.helidon.integrations.mcp.server.McpServer;
 import io.helidon.integrations.mcp.server.McpServerInfo;
-import io.helidon.integrations.mcp.server.Parameters;
 import io.helidon.integrations.mcp.server.Prompt;
 import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptInfo;
@@ -54,11 +53,20 @@ class McpWeatherServerSe {
         WebServer.builder()
                 .routing(routing -> routing.addFeature(
                         McpHttpFeature.builder()
-                                .server(info -> info.name("weather-mcp-server"),
-                                        mcpRouting -> mcpRouting.register(ResourceInfo.builder().build(),
-                                                () -> ResourceContent.textContent("")))))
+                                .server(new McpWeatherServer())
+                                .server(McpWeatherServerSe::serverInfo, McpWeatherServerSe::setup)
+                ))
                 .build()
                 .start();
+    }
+
+    static void serverInfo(McpServerInfo.Builder builder) {
+        builder.name("weather-mcp-server")
+                .version("0.0.1")
+                .capability(Capability.TOOL_LIST_CHANGED);
+    }
+
+    static void setup(McpRouting.Builder routing) {
     }
 
     static class McpWeatherServer implements McpServer {
@@ -74,9 +82,42 @@ class McpWeatherServerSe {
 
         @Override
         public void setup(McpRouting.Builder routing) {
-            routing.register(ResourceInfo.builder().build(), () -> ResourceContent.textContent(""))
-                    .register(ToolInfo.builder().build(), parameters -> ToolContent.textContent(""))
-                    .register(PromptInfo.builder().build(), parameters -> PromptContent.textContent("", Role.USER));
+            routing
+                    .register(ResourceInfo.builder().build(), this::read)
+                    .register(ToolInfo.builder().build(), this::process)
+                    .register(PromptInfo.builder().build(), this::prompt)
+
+                    .tool(tool -> tool.name("").description("").schema(schema -> schema.object("", Object.class)),
+                            parameters -> ToolContent.textContent(""))
+                    .resource(resource -> resource.name("").description("").uri("").mimeType(""),
+                            () -> ResourceContent.textContent(""))
+                    .prompt(prompt -> prompt.name("").description("").argument(arg -> arg.name("").description("").required(false)),
+                            parameters -> PromptContent.textContent("", Role.USER))
+
+                    .tool(tool -> tool.name("")
+                            .description("")
+                            .schema(schema -> schema.object("", Object.class)), this::process)
+                    .resource(resource -> resource.name("")
+                            .description("")
+                            .uri("")
+                            .mimeType(""), this::read)
+                    .prompt(prompt -> prompt.name("")
+                            .description("")
+                            .argument(arg -> arg.name("")
+                                    .description("")
+                                    .required(false)), this::prompt);
+        }
+
+        ToolContent process(McpParameter parameters) {
+            return ToolContent.textContent("");
+        }
+
+        PromptContent prompt(McpParameter parameters) {
+            return PromptContent.textContent("", Role.USER);
+        }
+
+        ResourceContent read() {
+            return ResourceContent.textContent("");
         }
     }
 
@@ -94,10 +135,23 @@ class McpWeatherServerSe {
                     .build();
         }
 
+        //TODO - get town without the town object, town as parameters
+        //TODO - prepare code example with JSON-P like approach <==
+        //TODO - prepare code example "Tomas" approach
         @Override
-        public ToolContent process(Parameters parameters) {
+        public ToolContent process(McpParameter parameters) {
 
-            Optional<Town> town = parameters.object("town", Town.class);
+//            OptionalValue<Town> town = parameters.first("town").as(Town.class);
+//
+//            Parameters town = parameters.first("town").as(Parameters.class).get();
+//
+//            String name = town.first("name").as(String.class).get();
+//
+//            double latitude = town.first("latitude").as(Double.class).get();
+//
+//            double longitude = town.first("longitude").as(Double.class).get();
+//
+//            Town paris = new Town(name, latitude, longitude);
 
             ToolContent text = ToolContent.textContent("data");
             ToolContent resource = ToolContent.resourceContent("uri");
@@ -111,6 +165,12 @@ class McpWeatherServerSe {
             String name;
             double latitude;
             double longitude;
+
+            Town(String name, double latitude, double longitude) {
+                this.name = name;
+                this.latitude = latitude;
+                this.longitude = longitude;
+            }
         }
     }
 
@@ -123,13 +183,13 @@ class McpWeatherServerSe {
                     .description("Get the weather in a specific town")
                     .argument(argument -> argument
                             .name("town")
-                            .description( "The name of the town")
+                            .description("The name of the town")
                             .required(false))
                     .build();
         }
 
         @Override
-        public PromptContent prompt(Parameters parameters) {
+        public PromptContent prompt(McpParameter parameters) {
 
             PromptContent resource = PromptContent.resourceContent("uri", Role.ASSISTANT);
             PromptContent image = PromptContent.imageContent("data", "image/png", Role.ASSISTANT);

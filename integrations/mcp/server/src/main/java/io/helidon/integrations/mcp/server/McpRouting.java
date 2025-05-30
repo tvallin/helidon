@@ -57,25 +57,39 @@ public interface McpRouting {
         List<Prompt> prompts = new ArrayList<>();
         List<Resource> resources = new ArrayList<>();
 
-        public Builder register(ToolInfo info, Function<Parameters, ToolContent> process) {
+        public Builder register(ToolInfo info, Function<McpParameter, ToolContent> process) {
             tools.add(Tool.create(info, process));
             return this;
         }
 
-        public Builder register(Consumer<ToolInfo.Builder> info, Function<Parameters, ToolContent> process) {
+        public Builder tool(Consumer<ToolInfo.Builder> info, Function<McpParameter, ToolContent> process) {
             ToolInfo.Builder builder = ToolInfo.builder();
             info.accept(builder);
             tools.add(Tool.create(builder.build(), process));
             return this;
         }
 
-        public Builder register(PromptInfo info, Function<Parameters, PromptContent> prompt) {
+        public Builder register(PromptInfo info, Function<McpParameter, PromptContent> prompt) {
             this.prompts.add(Prompt.create(info, prompt));
+            return this;
+        }
+
+        public Builder prompt(Consumer<PromptInfo.Builder> info, Function<McpParameter, PromptContent> prompt) {
+            PromptInfo.Builder builder = PromptInfo.builder();
+            info.accept(builder);
+            this.prompts.add(Prompt.create(builder.build(), prompt));
             return this;
         }
 
         public Builder register(ResourceInfo info, Supplier<ResourceContent> read) {
             this.resources.add(Resource.create(info, read));
+            return this;
+        }
+
+        public Builder resource(Consumer<ResourceInfo.Builder> info, Supplier<ResourceContent> read) {
+            ResourceInfo.Builder builder = ResourceInfo.builder();
+            info.accept(builder);
+            this.resources.add(Resource.create(builder.build(), read));
             return this;
         }
 

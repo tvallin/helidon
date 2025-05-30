@@ -49,13 +49,6 @@ public interface PromptInfo {
      */
     Set<PromptArgument> arguments();
 
-    /**
-     * Serialize to json.
-     *
-     * @return json
-     */
-    JsonObject json();
-
     static Builder builder() {
         return new Builder();
     }
@@ -97,19 +90,6 @@ public interface PromptInfo {
                 @Override
                 public Set<PromptArgument> arguments() {
                     return arguments;
-                }
-
-                @Override
-                public JsonObject json() {
-                    JsonArrayBuilder array = Json.createArrayBuilder();
-                    arguments.stream()
-                            .map(PromptArgument::json)
-                            .forEach(array::add);
-                    return Json.createObjectBuilder()
-                            .add("name", name)
-                            .add("description", description)
-                            .add("arguments", array)
-                            .build();
                 }
             };
         }

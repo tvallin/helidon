@@ -51,7 +51,7 @@ public interface McpServerInfo {
     class Builder implements Supplier<McpServerInfo> {
         private String name;
         private String version;
-        private Set<Capability> capabilities;
+        private Set<Capability> capabilities = Set.of();
 
         public Builder name(String name) {
             this.name = name;

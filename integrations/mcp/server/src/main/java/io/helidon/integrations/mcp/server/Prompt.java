@@ -35,9 +35,9 @@ public interface Prompt {
      * @param parameters client parameters
      * @return prompt as {@link String}
      */
-    PromptContent prompt(Parameters parameters);
+    PromptContent prompt(McpParameter parameters);
 
-    static Prompt create(PromptInfo info, Function<Parameters, PromptContent> prompt) {
+    static Prompt create(PromptInfo info, Function<McpParameter, PromptContent> prompt) {
         return new Prompt() {
 
             @Override
@@ -46,7 +46,7 @@ public interface Prompt {
             }
 
             @Override
-            public PromptContent prompt(Parameters parameters) {
+            public PromptContent prompt(McpParameter parameters) {
                 return prompt.apply(parameters);
             }
         };

@@ -35,9 +35,9 @@ public interface Tool {
      * @param parameters client parameters
      * @return tool execution result as a {@link String}
      */
-    ToolContent process(Parameters parameters);
+    ToolContent process(McpParameter parameters);
 
-    static Tool create(ToolInfo info, Function<Parameters, ToolContent> process) {
+    static Tool create(ToolInfo info, Function<McpParameter, ToolContent> process) {
         return new Tool() {
 
             @Override
@@ -46,7 +46,7 @@ public interface Tool {
             }
 
             @Override
-            public ToolContent process(Parameters parameters) {
+            public ToolContent process(McpParameter parameters) {
                 return process.apply(parameters);
             }
         };

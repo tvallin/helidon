@@ -31,6 +31,8 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import io.helidon.webserver.sse.SseSink;
 
+import jakarta.json.JsonObject;
+
 @Service.Singleton
 public class McpHttpFeature implements HttpFeature {
 
@@ -42,14 +44,6 @@ public class McpHttpFeature implements HttpFeature {
     @Service.Inject
     public McpHttpFeature(McpServer server) {
         this.server = new McpServerImpl(server);
-    }
-
-    public McpHttpFeature(McpServer... server) {
-        this.server = null;
-    }
-
-    public static McpHttpFeature create(McpServer... servers) {
-        return new McpHttpFeature(servers);
     }
 
     public static McpHttpFeature.Builder builder() {
@@ -71,7 +65,7 @@ public class McpHttpFeature implements HttpFeature {
 
     private void sse(ServerRequest request, ServerResponse response) {
         String sessionId = UUID.randomUUID().toString();
-        McpSession session = McpSession.create(server.handlers());
+        McpSession session = new McpSession(server.handlers());
         sessions.put(sessionId, session);
 
         try (SseSink sink = response.sink(SseSink.TYPE)) {
@@ -86,34 +80,6 @@ public class McpHttpFeature implements HttpFeature {
         }
     }
 
-    private void message(JsonRpc request, JsonRpc response) {
-
-        request.param("address").as(Address.class);
-
-        response.param();
-
-        var schema = """
-                {
-                  "type" : "object",
-                  "id" : "urn:jsonschema:address",
-                  "properties" : {
-                    "street" : {
-                      "type" : "string"
-                    },
-                    "number" : {
-                      "type" : "number"
-                    }
-                  }
-                }
-                """;
-    }
-
-    static class Address {
-
-        int number;
-        String street;
-    }
-
     private void message(ServerRequest request, ServerResponse response) {
         String sessionId = request.query().get("sessionId");
 
@@ -124,12 +90,11 @@ public class McpHttpFeature implements HttpFeature {
             return;
         }
 
-        String jsonRpc = request.content().as(String.class);
-        McpJsonRPC.JSONRPCMessage message = McpJsonRPC.deserializeJsonRpcMessage(jsonRpc);
+        JsonObject jsonRpc = request.content().as(JsonObject.class);
         if (LOGGER.isLoggable(System.Logger.Level.DEBUG)) {
-            LOGGER.log(System.Logger.Level.DEBUG, "Message received : %s", message.toString());
+            LOGGER.log(System.Logger.Level.DEBUG, "Message received : %s", jsonRpc.toString());
         }
-        session.send(message);
+        session.send(jsonRpc);
         response.status(Status.OK_200);
         response.send();
     }
