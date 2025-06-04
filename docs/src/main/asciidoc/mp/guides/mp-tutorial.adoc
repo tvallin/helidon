@@ -169,7 +169,7 @@ below:
 include::{sourcedir}/mp/guides/MpTutorialSnippets.java[tag=snippet_1, indent=0]
 ----
 
-<1> This class is annotated with `Path` which sets the path for this resource
+<1> This class is annotated with `Completion` which sets the path for this resource
  as `/greet`.
 <2> The `RequestScoped` annotation defines that this bean is
  request scoped.  The request scope is active only for the duration of
@@ -420,7 +420,7 @@ include::{sourcedir}/mp/guides/MpTutorialSnippets.java[tag=snippet_6, indent=0]
 ----
 
 <1> The first of these two methods implements a new HTTP GET service
- that returns JSON, and it has a path parameter.  The `Path` annotation
+ that returns JSON, and it has a path parameter.  The `Completion` annotation
  defines the next part of the path to be a parameter named `name`.
  In the method arguments the `PathParam("name")` annotation on
  `String name` has the effect of passing the parameter from the

@@ -212,4 +212,18 @@ public final class Mcp {
 		 */
 		String value();
 	}
+
+	/**
+	 * Annotation to define a completion for {@link Prompt} name and {@link Resource} uri.
+	 */
+	@Target(METHOD)
+	@Retention(RUNTIME)
+	public @interface Completion {
+		/**
+		 * Resource URI or Prompt name.
+		 *
+		 * @return uri or prompt name
+		 */
+		String value() default "";
+	}
 }

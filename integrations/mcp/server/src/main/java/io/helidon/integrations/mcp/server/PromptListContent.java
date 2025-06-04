@@ -16,22 +16,35 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolImageContent extends ToolContentBase implements ImageContent {
-    private final String data;
-    private final String mimeType;
+import java.util.LinkedList;
+import java.util.List;
 
-    ToolImageContent(String data, String mimeType) {
-        this.data = data;
-        this.mimeType = mimeType;
+class PromptListContent implements PromptContent {
+
+    List<PromptContent> prompts = new LinkedList<>();
+
+    PromptListContent(PromptContent content) {
+        prompts.add(content);
+    }
+
+    PromptListContent(PromptContent content, PromptContent content1) {
+        prompts.add(content);
+        prompts.add(content1);
+    }
+
+    PromptListContent(PromptContent content, PromptContent content1, PromptContent content2) {
+        prompts.add(content);
+        prompts.add(content1);
+        prompts.add(content2);
     }
 
     @Override
-    public String data() {
-        return data;
+    public Role role() {
+        return null;
     }
 
     @Override
-    public String mimeType() {
-        return mimeType;
+    public Content content() {
+        return null;
     }
 }

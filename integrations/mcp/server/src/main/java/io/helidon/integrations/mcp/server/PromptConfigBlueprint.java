@@ -16,12 +16,38 @@
 
 package io.helidon.integrations.mcp.server;
 
-abstract class ToolContentBase implements ToolContent {
-    private ToolContent content;
+import java.util.Set;
 
-    @Override
-    public ToolContent chain(ToolContent content) {
-        this.content = content;
-        return this.content;
-    }
+import io.helidon.builder.api.Prototype;
+
+//@Prototype.Blueprint
+interface PromptConfigBlueprint {
+    /**
+     * Prompt name.
+     *
+     * @return name
+     */
+    String name();
+
+    /**
+     * Prompt description.
+     *
+     * @return description
+     */
+    String description();
+
+    /**
+     * A {@link Set} of prompt argument.
+     *
+     * @return {@link Set} of argument
+     */
+    Set<PromptArgument> arguments();
+
+    /**
+     * Create prompt based on parameters.
+     *
+     * @param parameters client parameters
+     * @return prompt as {@link String}
+     */
+    PromptContent prompt(McpParameters parameters);
 }

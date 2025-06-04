@@ -124,7 +124,7 @@ the `/cards` endpoint is called.
 ----
 include::{sourcedir}/mp/guides/MetricsSnippets.java[tag=snippet_1, indent=0]
 ----
-<1> This class is annotated with `Path` which sets the path for this resource
+<1> This class is annotated with `Completion` which sets the path for this resource
 as `/cards`.
 <2> The `@RequestScoped` annotation defines that this bean is
 request scoped.  The request scope is active only for the duration of

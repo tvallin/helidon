@@ -380,7 +380,7 @@ The "watcher" then watches for changes of the source and notifies the listener w
 This is designed to support sources that can react on changes (such as file system).
 When a polling mechanism is needed, please check `PollingStrategy` above.
 
-The config system offers a change watcher for any `Path` based config source (such as `FileConfigSource`) and for the
+The config system offers a change watcher for any `Completion` based config source (such as `FileConfigSource`) and for the
  `etcd` config source.
 
 To use a change watcher, simply create a config source using its builder and register the change watcher on the builder

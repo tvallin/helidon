@@ -27,6 +27,7 @@ import java.util.Set;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 final class McpServerImpl {
 
@@ -40,7 +41,8 @@ final class McpServerImpl {
 	public McpServerImpl(McpServer server) {
 		McpRouting.Builder routing = McpRouting.builder();
 		Set<Capability> capabilities = server.info().capabilities();
-
+		server.setup(routing);
+		this.routing = routing.build();
 		this.info = server.info();
 		this.protocolVersions.add(PROTOCOLE_VERSION);
 
@@ -72,21 +74,13 @@ final class McpServerImpl {
 			handlers.put(McpJsonRPC.METHOD_LOGGING_SET_LEVEL, logging());
 		}
 
-		server.setup(routing);
-		this.routing = routing.build();
+		if (capabilities.contains(Capability.COMPLETION)) {
+			handlers.put(McpJsonRPC.METHOD_COMPLETION_COMPLETE, this::completion);
+		}
 	}
 
 	Map<String, JsonRPCHandler> handlers() {
 		return this.handlers;
-	}
-
-	//TODO - How to maintain list of client subscription ?
-	private JsonRPCHandler resourceUnsubscribe() {
-		return null;
-	}
-
-	private JsonRPCHandler resourceSubscribe() {
-		return null;
 	}
 
 	JsonRPCHandler ping() {
@@ -98,8 +92,7 @@ final class McpServerImpl {
 		return cursor -> {
 			JsonArrayBuilder builder = Json.createArrayBuilder();
 			this.routing.tools().stream()
-					.map(Tool::info)
-					.map(McpJsonRPC::json)
+					.map(Jsonable::json)
 					.forEach(builder::add);
 			return Json.createObjectBuilder()
 					.add("tools", builder.build())
@@ -110,10 +103,11 @@ final class McpServerImpl {
 	JsonRPCHandler toolsCall() {
 		return params -> {
 			Optional<Tool> tool = this.routing.tools().stream()
-					.filter(t -> params.getString("name").equals(t.info().name()))
+					.filter(t -> params.getString("name").equals(t.name()))
 					.findAny();
-			McpParameter parameters = new McpParameter(params.getJsonObject("arguments"));
-            return tool.map(value -> McpJsonRPC.json(value.process(parameters)))
+			McpParameters parameters = new McpParameters(params.getJsonObject("arguments"));
+            return tool.map(value -> value.process(parameters))
+					.map(Jsonable::json)
 					.map(result -> Json.createObjectBuilder()
 							.add("content", Json.createArrayBuilder()
 									.add(result))
@@ -126,8 +120,7 @@ final class McpServerImpl {
 		return params -> {
 			JsonArrayBuilder builder = Json.createArrayBuilder();
 			this.routing.resources().stream()
-					.map(Resource::info)
-					.map(McpJsonRPC::json)
+					.map(Jsonable::json)
 					.forEach(builder::add);
 			return Json.createObjectBuilder()
 					.add("resources", builder.build())
@@ -139,11 +132,12 @@ final class McpServerImpl {
 		return params -> {
 			String resourceUri = params.getString("uri");
 			Optional<Resource> resource = this.routing.resources().stream()
-					.filter(it -> Objects.equals(it.info().uri(), resourceUri))
+					.filter(it -> Objects.equals(it.uri(), resourceUri))
 					.findFirst();
 
-			return resource.map(value -> Json.createObjectBuilder(McpJsonRPC.json(value.read()))
-					.add("uri", resourceUri))
+			//TODO - improve this !
+			return resource.map(value -> value.read().json()
+							.add("uri", resourceUri))
 					.map(result -> Json.createObjectBuilder()
 							.add("contents", Json.createArrayBuilder()
 									.add(result))
@@ -155,9 +149,9 @@ final class McpServerImpl {
 	JsonRPCHandler resourceTemplateList() {
 		return param -> {
 			List<JsonObject> templates = this.routing.resources().stream()
-					.map(Resource::info)
 					.filter(this::isTemplate)
-					.map(McpJsonRPC::json)
+					.map(Jsonable::json)
+					.map(JsonObjectBuilder::build)
 					.toList();
 			return Json.createObjectBuilder()
 					.add("resourceTemplates", Json.createArrayBuilder(templates))
@@ -169,8 +163,7 @@ final class McpServerImpl {
 		return object -> {
 			JsonArrayBuilder builder = Json.createArrayBuilder();
 			this.routing.prompts().stream()
-					.map(Prompt::info)
-					.map(McpJsonRPC::json)
+					.map(Jsonable::json)
 					.forEach(builder::add);
 			return Json.createObjectBuilder()
 					.add("prompts", builder.build())
@@ -181,17 +174,61 @@ final class McpServerImpl {
 	JsonRPCHandler promptsGet() {
 		return params -> {
 			var prompt = this.routing.prompts().stream()
-					.filter(p -> Objects.equals(p.info().name(), params.getString("name")))
+					.filter(p -> Objects.equals(p.name(), params.getString("name")))
 					.findFirst();
 
-			McpParameter parameters = new McpParameter(params.getJsonObject("arguments"));
+			McpParameters parameters = new McpParameters(params.getJsonObject("arguments"));
 			return prompt.map(value -> Json.createObjectBuilder()
-							.add("description", value.info().description())
+							.add("description", value.description())
 							.add("messages", Json.createArrayBuilder()
-									.add(McpJsonRPC.json(value.prompt(parameters))))
+									.add(value.prompt(parameters).json()))
 							.build())
 					.orElse(null);
 		};
+	}
+
+	private JsonObject completion(JsonObject parameter) {
+		JsonObject reference = parameter.getJsonObject("ref");
+		Optional<String> search = parseCompletionName(reference);
+		if (search.isEmpty()) {
+			return Json.createObjectBuilder()
+					.add("error", Json.createObjectBuilder()
+							.add("code", McpJsonRPC.INVALID_REQUEST)
+							.add("message", "Completion reference not found"))
+					.build();
+		}
+		String name = search.get();
+		Optional<Completion> completion = routing.completions().stream()
+				.filter(it -> it.info().value().equals(name))
+				.findFirst();
+		McpParameters parameters = new McpParameters(parameter.getJsonObject("argument"));
+		return completion.map(it -> it.complete(parameters))
+				.map(result -> Json.createObjectBuilder()
+						.add("completion", Json.createObjectBuilder()
+								.add("values", Json.createArrayBuilder(result.values()))
+								.add("total", result.total())
+								.add("hasMore", result.hasMore()))
+						.build())
+				.orElse(null);
+	}
+
+	private Optional<String> parseCompletionName(JsonObject completion) {
+		if (completion.containsKey("name")) {
+			return Optional.of(completion.getString("name"));
+		}
+		if (completion.containsKey("uri")) {
+			return Optional.of(completion.getString("uri"));
+		}
+		return Optional.empty();
+	}
+
+	//TODO - How to maintain list of client subscription ?
+	private JsonRPCHandler resourceUnsubscribe() {
+		return null;
+	}
+
+	private JsonRPCHandler resourceSubscribe() {
+		return null;
 	}
 
 	//Todo - Change the logging level in the sessions
@@ -213,14 +250,14 @@ final class McpServerImpl {
 							.add("resources", Json.createObjectBuilder()
 									.add("listChanged", !info.capabilities().contains(Capability.RESOURCE_LIST_CHANGED))
 									.add("subscribe", !info.capabilities().contains(Capability.RESOURCE_SUBSCRIBE))))
-					.add("serverInfo", McpJsonRPC.json(info))
+					.add("serverInfo", info.json())
 					.add("instructions", "")
 					.build();
 		};
 	}
 
-	boolean isTemplate(ResourceInfo info) {
-		String uri = info.uri();
+	boolean isTemplate(Resource resource) {
+		String uri = resource.uri();
 		return uri.contains("{") && uri.contains("}");
 	}
 

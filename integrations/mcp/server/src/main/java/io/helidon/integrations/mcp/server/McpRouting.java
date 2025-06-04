@@ -17,7 +17,6 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,6 +47,13 @@ public interface McpRouting {
      */
     List<Resource> resources();
 
+    /**
+     * List of {@link Completion}.
+     *
+     * @return completions
+     */
+    List<Completion> completions();
+
     static Builder builder() {
         return new Builder();
     }
@@ -56,55 +62,33 @@ public interface McpRouting {
         List<Tool> tools = new ArrayList<>();
         List<Prompt> prompts = new ArrayList<>();
         List<Resource> resources = new ArrayList<>();
+        List<Completion> completions = new ArrayList<>();
 
-        public Builder register(ToolInfo info, Function<McpParameter, ToolContent> process) {
-            tools.add(Tool.create(info, process));
-            return this;
-        }
-
-        public Builder tool(Consumer<ToolInfo.Builder> info, Function<McpParameter, ToolContent> process) {
+        public Builder tool(Consumer<ToolInfo.Builder> info, Function<McpParameters, ToolContent> process) {
             ToolInfo.Builder builder = ToolInfo.builder();
             info.accept(builder);
-            tools.add(Tool.create(builder.build(), process));
+//            tools.add(Tool.create(builder.build(), process));
             return this;
         }
 
-        public Builder register(PromptInfo info, Function<McpParameter, PromptContent> prompt) {
-            this.prompts.add(Prompt.create(info, prompt));
-            return this;
-        }
-
-        public Builder prompt(Consumer<PromptInfo.Builder> info, Function<McpParameter, PromptContent> prompt) {
+        public Builder prompt(Consumer<PromptInfo.Builder> info, Function<McpParameters, PromptContent> prompt) {
             PromptInfo.Builder builder = PromptInfo.builder();
             info.accept(builder);
-            this.prompts.add(Prompt.create(builder.build(), prompt));
-            return this;
-        }
-
-        public Builder register(ResourceInfo info, Supplier<ResourceContent> read) {
-            this.resources.add(Resource.create(info, read));
+//            this.prompts.add(Prompt.create(builder.build(), prompt));
             return this;
         }
 
         public Builder resource(Consumer<ResourceInfo.Builder> info, Supplier<ResourceContent> read) {
             ResourceInfo.Builder builder = ResourceInfo.builder();
             info.accept(builder);
-            this.resources.add(Resource.create(builder.build(), read));
+//            this.resources.add(Resource.create(builder.build(), read));
             return this;
         }
 
-        public Builder register(Tool... tools) {
-            this.tools.addAll(List.of(tools));
-            return this;
-        }
-
-        public Builder register(Resource... resource) {
-            this.resources.addAll(Arrays.asList(resource));
-            return this;
-        }
-
-        public Builder register(Prompt... prompt) {
-            this.prompts.addAll(Arrays.asList(prompt));
+        public Builder completion(Consumer<CompletionInfo.Builder> info, Function<McpParameters, CompletionContent> complete) {
+            CompletionInfo.Builder builder = CompletionInfo.builder();
+            info.accept(builder);
+//            this.completions.add(Completion.create(builder.build(), complete));
             return this;
         }
 
@@ -124,6 +108,11 @@ public interface McpRouting {
                 @Override
                 public List<Resource> resources() {
                     return resources;
+                }
+
+                @Override
+                public List<Completion> completions() {
+                    return completions;
                 }
             };
         }

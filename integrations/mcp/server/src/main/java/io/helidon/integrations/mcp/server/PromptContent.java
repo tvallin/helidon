@@ -19,7 +19,7 @@ package io.helidon.integrations.mcp.server;
 /**
  * Prompt content.
  */
-public interface PromptContent {
+public interface PromptContent extends Jsonable {
     /**
      * Prompt role.
      *
@@ -34,23 +34,4 @@ public interface PromptContent {
      */
     Content content();
 
-    /**
-     * Chain prompt content.
-     *
-     * @param content nested content
-     * @return nested content
-     */
-    PromptContent chain(PromptContent content);
-
-    static PromptContent textContent(String prompt, Role role) {
-        return new PromptTextContent(prompt, role);
-    }
-
-    static PromptContent imageContent(String data, String mimeType, Role role) {
-        return new PromptImageContent(data, mimeType, role);
-    }
-
-    static PromptContent resourceContent(String uri, Role role) {
-        return new PromptResourceContent(uri, role);
-    }
 }

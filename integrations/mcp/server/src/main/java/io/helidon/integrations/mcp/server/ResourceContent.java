@@ -16,10 +16,12 @@
 
 package io.helidon.integrations.mcp.server;
 
+import io.helidon.common.media.type.MediaType;
+
 /**
  * Resource content.
  */
-public interface ResourceContent extends Content {
+public interface ResourceContent extends ToolContent {
     /**
      * Resource content.
      *
@@ -31,27 +33,10 @@ public interface ResourceContent extends Content {
      *
      * @return mime type
      */
-    String mimeType();
-
-    /**
-     * Chain prompt content.
-     *
-     * @param content nested content
-     * @return nested content
-     */
-    ResourceContent chain(ResourceContent content);
+    MediaType mimeType();
 
     @Override
     default String type() {
         return "resource";
     }
-
-    static ResourceContent textContent(String text) {
-        return new ResourceTextContent(text);
-    }
-
-    static ResourceContent binaryContent(String data, String mimeType) {
-        return new ResourceBinaryContent(data, mimeType);
-    }
-
 }

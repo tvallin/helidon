@@ -16,34 +16,31 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.media.type.MediaType;
+import java.util.List;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
+/**
+ * Completion result content.
+ */
+public interface CompletionContent {
 
-class ResourceBinaryContent implements ResourceContent {
-    MediaType type;
-    String data;
+    /**
+     * List of completion values.
+     *
+     * @return values
+     */
+    List<String> values();
 
-    ResourceBinaryContent(MediaType type, String data) {
-        this.type = type;
-        this.data = data;
-    }
+    /**
+     * Total number of values.
+     *
+     * @return total
+     */
+    int total();
 
-    @Override
-    public String data() {
-        return data;
-    }
-
-    @Override
-    public MediaType mimeType() {
-        return type;
-    }
-
-    @Override
-    public JsonObjectBuilder json() {
-        return Json.createObjectBuilder()
-                .add("mimeType", type.text())
-                .add("blob", data);
-    }
+    /**
+     * Wether there is more values.
+     *
+     * @return {code true} if there is more values, {code false} otherwise
+     */
+    boolean hasMore();
 }

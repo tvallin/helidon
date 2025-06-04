@@ -21,11 +21,12 @@ import java.util.function.Supplier;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 /**
  * MCP tool information.
  */
-public interface ToolInfo {
+public interface ToolInfo extends Jsonable {
     /**
      * Tool name.
      *
@@ -73,6 +74,13 @@ public interface ToolInfo {
             return this;
         }
 
+        public Builder schema(String schema) {
+            this.schema = JsonSchema.builder()
+                    .schema(schema)
+                    .build();
+            return this;
+        }
+
         public ToolInfo build() {
             return new ToolInfo() {
 
@@ -89,6 +97,19 @@ public interface ToolInfo {
                 @Override
                 public JsonSchema schema() {
                     return schema;
+                }
+
+                @Override
+                public JsonObjectBuilder json() {
+                    JsonObjectBuilder builder = Json.createObjectBuilder()
+                            .add("name", name)
+                            .add("description", description);
+                    if (schema.schema() != null) {
+                        builder.add("inputSchema", schema.schema());
+                        return builder;
+                    }
+                    builder.add("inputSchema", schema.json());
+                    return builder;
                 }
             };
         }

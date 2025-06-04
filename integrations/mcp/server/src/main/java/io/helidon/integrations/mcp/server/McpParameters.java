@@ -16,34 +16,23 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.media.type.MediaType;
+import java.util.Optional;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
-class ResourceBinaryContent implements ResourceContent {
-    MediaType type;
-    String data;
+/**
+ * Mcp parameters provided to {@link Tool} and {@link Prompt}.
+ */
+public class McpParameters {
+    private final JsonObject root;
 
-    ResourceBinaryContent(MediaType type, String data) {
-        this.type = type;
-        this.data = data;
+    McpParameters(JsonObject root) {
+        this.root = root;
     }
 
-    @Override
-    public String data() {
-        return data;
+    public Optional<JsonValue> jsonValue(String name) {
+       return Optional.ofNullable(root.get(name));
     }
 
-    @Override
-    public MediaType mimeType() {
-        return type;
-    }
-
-    @Override
-    public JsonObjectBuilder json() {
-        return Json.createObjectBuilder()
-                .add("mimeType", type.text())
-                .add("blob", data);
-    }
 }

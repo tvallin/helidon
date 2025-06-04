@@ -21,13 +21,13 @@ import io.helidon.common.media.type.MediaType;
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 
-class ResourceBinaryContent implements ResourceContent {
-    MediaType type;
-    String data;
+class ImageContentImpl implements ImageContent {
+    private final String data;
+    private final MediaType type;
 
-    ResourceBinaryContent(MediaType type, String data) {
-        this.type = type;
+    ImageContentImpl(String data, MediaType type) {
         this.data = data;
+        this.type = type;
     }
 
     @Override
@@ -36,14 +36,15 @@ class ResourceBinaryContent implements ResourceContent {
     }
 
     @Override
-    public MediaType mimeType() {
+    public MediaType mediaType() {
         return type;
     }
 
     @Override
     public JsonObjectBuilder json() {
         return Json.createObjectBuilder()
-                .add("mimeType", type.text())
-                .add("blob", data);
+                .add("type", type())
+                .add("data", data)
+                .add("mimeType", type.text());
     }
 }

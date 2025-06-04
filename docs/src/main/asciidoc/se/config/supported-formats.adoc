@@ -348,7 +348,7 @@ meta-configuration from a git config source set the following properties for the
 * `type` to `git` or `class` to `io.helidon.config.git.GitConfigSourceBuilder`
 * `path` (type `String`) - Relative path to the configuration file in repository.
 * `uri` (type `URI`) - URI to the git repository.
-* `directory` (type `Path`) - Directory with a cloned repository, by default
+* `directory` (type `Completion`) - Directory with a cloned repository, by default
  a temporary directory.
 * `branch` (type `String`) - git branch (default is `master`).
 

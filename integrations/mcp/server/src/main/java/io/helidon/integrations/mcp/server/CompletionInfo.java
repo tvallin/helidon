@@ -16,15 +16,36 @@
 
 package io.helidon.integrations.mcp.server;
 
-class ToolTextContent extends ToolContentBase implements TextContent {
-    private final String text;
+/**
+ * Mcp server completion.
+ */
+public interface CompletionInfo {
+    /**
+     * Prompt name or resource uri.
+     *
+     * @return value
+     */
+    String value();
 
-    public ToolTextContent(String text) {
-        this.text = text;
+    static Builder builder() {
+        return new Builder();
     }
 
-    @Override
-    public String text() {
-        return text;
+    class Builder {
+        private String value;
+
+        public Builder uri(String uri) {
+            this.value = uri;
+            return this;
+        }
+
+        public Builder name(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public CompletionInfo build() {
+            return () -> value;
+        }
     }
 }

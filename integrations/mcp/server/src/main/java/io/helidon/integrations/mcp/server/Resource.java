@@ -18,16 +18,39 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Supplier;
 
+import io.helidon.common.media.type.MediaType;
+
 /**
  * MCP resource definition.
  */
-public interface Resource {
+public interface Resource extends Jsonable {
     /**
-     * Resource information.
+     * Resource URI.
      *
-     * @return {@link ResourceInfo}
+     * @return uri
      */
-    ResourceInfo info();
+    String uri();
+
+    /**
+     * Resource name.
+     *
+     * @return name
+     */
+    String name();
+
+    /**
+     * Resource description.
+     *
+     * @return description
+     */
+    String description();
+
+    /**
+     * Resource mime type.
+     *
+     * @return type
+     */
+    MediaType mediaType();
 
     /**
      * Resource reader.
@@ -36,18 +59,45 @@ public interface Resource {
      */
     ResourceContent read();
 
-    static Resource create(ResourceInfo info, Supplier<ResourceContent> read) {
-        return new Resource() {
+    static Resource.Builder builder() {
+        return new Resource.Builder();
+    }
 
-            @Override
-            public ResourceInfo info() {
-                return info;
-            }
+    class Builder implements io.helidon.common.Builder<Resource.Builder, Resource> {
+        String name;
+        String description;
+        MediaType mediaType;
+        String uri;
+        Supplier<ResourceContent> content;
 
-            @Override
-            public ResourceContent read() {
-                return read.get();
-            }
-        };
+        public Builder read(Supplier<ResourceContent> content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder mediaType(MediaType type) {
+            this.mediaType = type;
+            return this;
+        }
+
+        public Builder uri(String uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        @Override
+        public Resource build() {
+            return new ResourceImpl(uri, name, description, mediaType, content);
+        }
     }
 }

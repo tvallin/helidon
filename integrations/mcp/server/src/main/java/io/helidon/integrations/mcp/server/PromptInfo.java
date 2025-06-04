@@ -23,11 +23,12 @@ import java.util.function.Consumer;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 /**
  * MCP Prompt information.
  */
-public interface PromptInfo {
+public interface PromptInfo extends Jsonable {
     /**
      * Prompt name.
      *
@@ -77,6 +78,7 @@ public interface PromptInfo {
 
         public PromptInfo build() {
             return new PromptInfo() {
+
                 @Override
                 public String name() {
                     return name;
@@ -90,6 +92,18 @@ public interface PromptInfo {
                 @Override
                 public Set<PromptArgument> arguments() {
                     return arguments;
+                }
+
+                @Override
+                public JsonObjectBuilder json() {
+                    JsonArrayBuilder array = Json.createArrayBuilder();
+                    arguments.stream()
+                            .map(Jsonable::json)
+                            .forEach(array::add);
+                    return Json.createObjectBuilder()
+                            .add("name", name)
+                            .add("description", description)
+                            .add("arguments", array);
                 }
             };
         }

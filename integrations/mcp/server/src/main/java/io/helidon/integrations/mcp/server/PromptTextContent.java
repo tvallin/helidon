@@ -17,14 +17,12 @@
 package io.helidon.integrations.mcp.server;
 
 class PromptTextContent implements PromptContent {
-
     private final Role role;
     private final TextContent text;
-    private PromptContent content;
 
     PromptTextContent(String text, Role role) {
         this.role = role;
-        this.text = TextContent.create(text);
+        this.text = new TextContentImpl(text);
     }
 
     @Override
@@ -36,11 +34,4 @@ class PromptTextContent implements PromptContent {
     public Content content() {
         return text;
     }
-
-    @Override
-    public PromptContent chain(PromptContent content) {
-        this.content = content;
-        return this.content;
-    }
-
 }

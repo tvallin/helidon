@@ -16,15 +16,17 @@
 
 package io.helidon.integrations.mcp.server;
 
+import io.helidon.common.media.type.MediaType;
+
 class PromptImageContent implements PromptContent {
 
     private final Role role;
     private final ImageContent image;
     private PromptContent content;
 
-    PromptImageContent(String data, String mimeType, Role role) {
+    PromptImageContent(String data, MediaType type, Role role) {
         this.role = role;
-        this.image = ImageContent.create(data, mimeType);
+        this.image = new ImageContentImpl(data, type);
     }
 
     @Override
@@ -37,9 +39,4 @@ class PromptImageContent implements PromptContent {
         return image;
     }
 
-    @Override
-    public PromptContent chain(PromptContent content) {
-        this.content = content;
-        return this.content;
-    }
 }

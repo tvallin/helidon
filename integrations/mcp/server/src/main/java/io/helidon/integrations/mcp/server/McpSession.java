@@ -119,6 +119,13 @@ class McpSession {
 					.build();
 		}
 		var result = handler.handle(request.getJsonObject("params"));
+		if (result.containsKey("error")) {
+			return Json.createObjectBuilder()
+					.add("jsonrpc", request.getString("jsonrpc"))
+					.add("id", request.get("id"))
+					.add("error", Json.createObjectBuilder(result))
+					.build();
+		}
 		return Json.createObjectBuilder()
 				.add("jsonrpc", request.getString("jsonrpc"))
 				.add("id", request.get("id"))

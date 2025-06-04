@@ -25,6 +25,7 @@ module io.helidon.integrations.mcp.server {
 	requires java.logging;
     requires java.sql;
 	requires jakarta.json;
+	requires java.desktop;
 
 	exports io.helidon.integrations.mcp.server;
 }

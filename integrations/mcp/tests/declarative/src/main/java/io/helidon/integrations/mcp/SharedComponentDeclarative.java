@@ -18,25 +18,28 @@ package io.helidon.integrations.mcp;
 
 import io.helidon.integrations.mcp.server.Mcp;
 import io.helidon.integrations.mcp.server.PromptContent;
+import io.helidon.integrations.mcp.server.PromptContents;
 import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.ToolContent;
+import io.helidon.integrations.mcp.server.ToolContents;
 
 class SharedComponentDeclarative {
 
     @Mcp.Tool
     ToolContent tool() {
-        return ToolContent.textContent("I am a nice tool");
+        return ToolContents.textContent("I am a nice tool");
     }
 
     @Mcp.Prompt
     PromptContent prompt() {
-        return PromptContent.textContent("I am a nice prompt", Role.USER);
+        return PromptContents.textContent("I am a nice prompt", Role.USER);
     }
 
     @Mcp.Resource
     @Mcp.URI("resource://nice/resource")
     ResourceContent resource() {
-        return ResourceContent.textContent("I am a nice resource");
+        return ResourceContents.textContent("I am a nice resource");
     }
 }

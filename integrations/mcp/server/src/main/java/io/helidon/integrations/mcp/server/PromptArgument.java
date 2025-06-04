@@ -20,11 +20,12 @@ import java.util.function.Supplier;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 /**
  * Prompt argument information.
  */
-public interface PromptArgument {
+public interface PromptArgument extends Jsonable {
     /**
      * Prompt argument name.
      *
@@ -45,25 +46,6 @@ public interface PromptArgument {
      * @return {@code true} if is required, {@code false} otherwise
      */
     boolean required();
-
-    /**
-     * Serialize to json.
-     *
-     * @return json
-     */
-    JsonObject json();
-
-    static PromptArgument create(String name, String description) {
-        return create(name, description, true);
-    }
-
-    static PromptArgument create(String name, String description, boolean required) {
-        return PromptArgument.builder()
-                .name(name)
-                .description(description)
-                .required(required)
-                .build();
-    }
 
     static Builder builder() {
         return new Builder();
@@ -91,6 +73,7 @@ public interface PromptArgument {
 
         public PromptArgument build() {
             return new PromptArgument() {
+
                 @Override
                 public String name() {
                     return name;
@@ -107,12 +90,11 @@ public interface PromptArgument {
                 }
 
                 @Override
-                public JsonObject json() {
+                public JsonObjectBuilder json() {
                     return Json.createObjectBuilder()
                             .add("name", name)
                             .add("description", description)
-                            .add("required", required)
-                            .build();
+                            .add("required", required);
                 }
             };
         }

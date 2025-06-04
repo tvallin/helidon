@@ -22,9 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import io.helidon.builder.api.Prototype;
+import io.helidon.builder.api.RuntimeType;
 import io.helidon.http.Status;
 import io.helidon.http.sse.SseEvent;
 import io.helidon.service.registry.Service;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.http.ServerRequest;
@@ -33,21 +37,33 @@ import io.helidon.webserver.sse.SseSink;
 
 import jakarta.json.JsonObject;
 
-@Service.Singleton
-public class McpHttpFeature implements HttpFeature {
+@RuntimeType.PrototypedBy(McpHttpFeatureConfig.class)
+public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatureConfig> {
 
     private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
 
+    //TODO - Move the server implementation under here. Routing + ServerImpl must disappear!
     private final McpServerImpl server;
+    private final McpHttpFeatureConfig config;
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
 
-    @Service.Inject
-    public McpHttpFeature(McpServer server) {
-        this.server = new McpServerImpl(server);
+    public McpHttpFeature(McpHttpFeatureConfig config) {
+        server = null;
+        this.config = config;
     }
 
-    public static McpHttpFeature.Builder builder() {
-        return new Builder();
+    static McpHttpFeature create(McpHttpFeatureConfig config) {
+        return new McpHttpFeature(config);
+    }
+
+    static McpHttpFeature create(Consumer<McpHttpFeatureConfig.Builder> consumer) {
+        McpHttpFeatureConfig.Builder builder = McpHttpFeatureConfig.builder();
+        consumer.accept(builder);
+        return builder.build();
+    }
+
+    static McpHttpFeatureConfig.Builder builder() {
+        return McpHttpFeatureConfig.builder();
     }
 
     @Override
@@ -55,6 +71,11 @@ public class McpHttpFeature implements HttpFeature {
         routing.get("/sse", this::sse)
                 .post("/mcp/message", this::message)
                 .post("/disconnect", this::disconnect);
+    }
+
+    @Override
+    public McpHttpFeatureConfig prototype() {
+        return config;
     }
 
     private void disconnect(ServerRequest request, ServerResponse response) {
@@ -98,30 +119,4 @@ public class McpHttpFeature implements HttpFeature {
         response.status(Status.OK_200);
         response.send();
     }
-
-    public static class Builder implements Supplier<McpHttpFeature> {
-        private McpServer server;
-
-        public Builder server(McpServer server) {
-            this.server = server;
-            return this;
-        }
-
-        public Builder server(Consumer<McpServerInfo.Builder> info, Consumer<McpRouting.Builder> routing) {
-            McpServerInfo.Builder builder = McpServerInfo.builder();
-            info.accept(builder);
-            this.server = McpServer.create(builder.build(), routing);
-            return this;
-        }
-
-        public McpHttpFeature build() {
-            return new McpHttpFeature(server);
-        }
-
-        @Override
-        public McpHttpFeature get() {
-            return this.build();
-        }
-    }
-
 }

@@ -16,10 +16,6 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import jakarta.json.Json;
@@ -28,35 +24,24 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 
 /**
- * Tool input schema description.
+ * Json schema.
  */
 public class JsonSchema {
 
-    private final Map<String, Object> schema = new HashMap<>();
-    private final String asString;
     private final JsonObject json;
+    private final String schema;
 
-    private JsonSchema(Builder builder) {
-        schema.put("id", builder.id);
-        schema.put("type", builder.type);
-
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        builder.required.forEach(array::add);
-        schema.put("required", array);
-
-        JsonObjectBuilder properties = Json.createObjectBuilder();
-        builder.properties.forEach(properties::add);
-
-        this.asString = builder.asString;
-        this.json = builder.json;
+    private JsonSchema(JsonObject json, String schema) {
+        this.json = json;
+        this.schema = schema;
     }
 
     JsonObject json() {
         return json;
     }
 
-    String asString() {
-        return asString;
+    String schema() {
+        return schema;
     }
 
     public static Builder builder() {
@@ -64,49 +49,117 @@ public class JsonSchema {
     }
 
     public static class Builder {
-
-        private final String type;
-        private final String id;
-        private final List<String> required;
-        private final Map<String, String> properties;
-        private String asString;
-        private JsonObject json;
+        private final String id = "jsonSchema-" + UUID.randomUUID();
+        private final String type = "object";
+        private final JsonObjectBuilder properties = Json.createObjectBuilder();
+        private final JsonArrayBuilder required = Json.createArrayBuilder();
+        private String schema;
 
         private Builder() {
-            this.id = "jsonSchema-" + UUID.randomUUID();
-            this.type = "object";
-            this.required = new ArrayList<>();
-            this.properties = new HashMap<>();
         }
 
-        public Builder object(String key, Class<?> type, boolean required) {
-            this.properties.put(key, type.toString());
+        public Builder schema(String schema) {
+            this.schema = schema;
+            return this;
+        }
+
+        public Builder addString(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "string"));
             if (required) {
                 this.required.add(key);
             }
             return this;
         }
 
-        public Builder object(String key, Class<?> type) {
-            this.properties.put(key, type.toString());
-            this.required.add(key);
+        public Builder addNumber(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "number"));
+            if (required) {
+                this.required.add(key);
+            }
             return this;
         }
 
-        public Builder json(JsonObject json) {
-            this.json = json;
+        public Builder addBoolean(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "boolean"));
+            if (required) {
+                this.required.add(key);
+            }
             return this;
         }
 
-        public Builder asString(String asString) {
-            this.asString = asString;
+        public Builder addBooleanArray(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "boolean"));
+            if (required) {
+                this.required.add(key);
+            }
+            return this;
+        }
+
+        public Builder addNumberArray(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "number"));
+            if (required) {
+                this.required.add(key);
+            }
+            return this;
+        }
+
+        public Builder addStringArray(String key, boolean required) {
+            properties.add(key, Json.createObjectBuilder()
+                    .add("type", "string"));
+            if (required) {
+                this.required.add(key);
+            }
+            return this;
+        }
+
+        public Builder addString(String key) {
+            addString(key, true);
+            return this;
+        }
+
+        public Builder addNumber(String key) {
+            addNumber(key, true);
+            return this;
+        }
+
+        public Builder addBoolean(String key) {
+            addBoolean(key, true);
+            return this;
+        }
+
+        public Builder addBooleanArray(String key) {
+            addBooleanArray(key, true);
+            return this;
+        }
+
+        public Builder addNumberArray(String key) {
+            addNumberArray(key, true);
+            return this;
+        }
+
+        public Builder addStringArray(String key) {
+            addStringArray(key, true);
             return this;
         }
 
         public JsonSchema build() {
-            return new JsonSchema(this);
+            return new JsonSchema(Json.createObjectBuilder()
+                    .add("id", id)
+                    .add("type", type)
+                    .add("properties", properties)
+                    .add("required", required)
+                    .build(), schema);
         }
-
     }
 
+    public enum Type {
+        STRING,
+        NUMBER,
+        BOOLEAN
+    }
 }

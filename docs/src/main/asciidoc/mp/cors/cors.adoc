@@ -76,7 +76,7 @@ For each resource class in your application:
 
 . Identify the resources and sub-resources--in other words, the paths--declared in the resource class which you want to support CORS.
 . For each of those resources and sub-resources which should support CORS:
-.. Find or create a Java method annotated with `@OPTIONS` and with the correct `@Path`.
+.. Find or create a Java method annotated with `@OPTIONS` and with the correct `@Completion`.
 .. To that `@OPTIONS` Java method add a Helidon link:{mp-cors-javadoc-base-url}/io/helidon/microprofile/cors/CrossOrigin.html[`@CrossOrigin`] annotation that describes the cross-origin sharing you want for that resource.
 
 [NOTE]
@@ -157,7 +157,7 @@ include::{sourcedir}/mp/cors/CorsSnippets.java[tag=snippet_1, indent=0]
 <1> Existing `GreetResource` resource class with path `/greet`.
 <2> Existing `@GET` method for resource `/greet`.
 <3> Existing `@PUT` method for resource `/greet/greeting`.
-<4> New `@OPTIONS` method for `/greet`. (Just like the `@GET` method `getDefaultMessage`, this `@OPTIONS` method does not have a `@Path` annotation; both "inherit" the class-level `@Path` setting `/greet`.) The `@CrossOrigin` annotation declares default cross-origin sharing which permits sharing via all HTTP methods to all origins.
+<4> New `@OPTIONS` method for `/greet`. (Just like the `@GET` method `getDefaultMessage`, this `@OPTIONS` method does not have a `@Completion` annotation; both "inherit" the class-level `@Completion` setting `/greet`.) The `@CrossOrigin` annotation declares default cross-origin sharing which permits sharing via all HTTP methods to all origins.
 <5> New `@OPTIONS` method for `/greet/greeting`. The `@CrossOrigin` annotation specifies sharing only via the `PUT` HTTP method and only to the two listed origins.
 
 === Adding Configuration

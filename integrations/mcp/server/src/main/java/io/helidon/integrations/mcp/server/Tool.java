@@ -16,18 +16,33 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * MCP tool definition.
  */
-public interface Tool {
+public interface Tool extends Jsonable{
     /**
-     * Tool information.
+     * Tool name.
      *
-     * @return {@link ToolInfo}
+     * @return name
      */
-    ToolInfo info();
+    String name();
+
+    /**
+     * Tool description.
+     *
+     * @return description
+     */
+    String description();
+
+    /**
+     * Tool {@link JsonSchema}.
+     *
+     * @return schema
+     */
+    JsonSchema schema();
 
     /**
      * Tool execution logic with client provided parameters.
@@ -35,20 +50,48 @@ public interface Tool {
      * @param parameters client parameters
      * @return tool execution result as a {@link String}
      */
-    ToolContent process(McpParameter parameters);
+    ToolContent process(McpParameters parameters);
 
-    static Tool create(ToolInfo info, Function<McpParameter, ToolContent> process) {
-        return new Tool() {
+    static Tool.Builder builder() {
+        return new Builder();
+    }
 
-            @Override
-            public ToolInfo info() {
-                return info;
-            }
+    class Builder implements io.helidon.common.Builder<Builder, Tool> {
+        Function<McpParameters, ToolContent> process;
+        private String name;
+        private String description;
+        private JsonSchema schema;
 
-            @Override
-            public ToolContent process(McpParameter parameters) {
-                return process.apply(parameters);
-            }
-        };
+        public Builder process(Function<McpParameters, ToolContent> process) {
+            this.process = process;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder schema(String schema) {
+            this.schema = JsonSchema.builder().schema(schema).build();
+            return this;
+        }
+
+        public Builder schema(Consumer<JsonSchema.Builder> builder) {
+            JsonSchema.Builder schemaBuilder = JsonSchema.builder();
+            builder.accept(schemaBuilder);
+            this.schema = schemaBuilder.build();
+            return this;
+        }
+
+        @Override
+        public Tool build() {
+            return new ToolImpl(name, description, schema, process);
+        }
     }
 }

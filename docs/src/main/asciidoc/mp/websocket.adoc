@@ -116,7 +116,7 @@ include::{sourcedir}/mp/WebsocketSnippets.java[tag=snippet_2, indent=0]
 
 Since `MessageBoardEndpoint` is just a POJO, it uses additional annotations for event handlers such as `@OnMessage`. One advantage of this approach, much like in the JAX-RS API, is that method signatures are not fixed. In the snipped above, the parameters (which could be specified in any order!) include the WebSocket session and the message received that triggered the call.
 
-So what else is needed to run this Helidon MP app? Nothing else other than the supporting classes `MessageQueue` and `UppercaseEncoder`. Helidon MP declares both `@Path` and `@ServerEndpoint` as bean defining annotation, so all that is needed is for CDI discovery to be enabled --typically in your `beans.xml` file.
+So what else is needed to run this Helidon MP app? Nothing else other than the supporting classes `MessageQueue` and `UppercaseEncoder`. Helidon MP declares both `@Completion` and `@ServerEndpoint` as bean defining annotation, so all that is needed is for CDI discovery to be enabled --typically in your `beans.xml` file.
 
 By default, both JAX-RS resources and WebSocket endpoints will be available under the _root path_ `"/"`. This default value can be overridden by providing subclasses/implementations for `jakarta.ws.rs.Application` and `jakarta.websocket.server.ServerApplicationConfig`, respectively. JAX-RS uses `@ApplicationPath` on application subclasses to provide this root path, but since there is no equivalent in the WebSocket API, Helidon MP uses its own annotation `@RoutingPath` on `jakarta.websocket.server.ServerApplicationConfig` implementations.
 

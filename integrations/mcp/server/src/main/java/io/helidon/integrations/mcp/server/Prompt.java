@@ -16,18 +16,35 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
  * MCP Prompt definition.
  */
-public interface Prompt {
+public interface Prompt extends Jsonable {
     /**
-     * Prompt information.
+     * Prompt name.
      *
-     * @return {@link PromptInfo}
+     * @return name
      */
-    PromptInfo info();
+    String name();
+
+    /**
+     * Prompt description.
+     *
+     * @return description
+     */
+    String description();
+
+    /**
+     * A {@link Set} of prompt argument.
+     *
+     * @return {@link Set} of argument
+     */
+    Set<PromptArgument> arguments();
 
     /**
      * Create prompt based on parameters.
@@ -35,20 +52,43 @@ public interface Prompt {
      * @param parameters client parameters
      * @return prompt as {@link String}
      */
-    PromptContent prompt(McpParameter parameters);
+    PromptContent prompt(McpParameters parameters);
 
-    static Prompt create(PromptInfo info, Function<McpParameter, PromptContent> prompt) {
-        return new Prompt() {
+    static Prompt.Builder builder() {
+        return new Prompt.Builder();
+    }
 
-            @Override
-            public PromptInfo info() {
-                return info;
-            }
+    class Builder implements io.helidon.common.Builder<Prompt.Builder, Prompt> {
+        private String name;
+        private String description;
+        private Function<McpParameters, PromptContent> prompt;
+        private final Set<PromptArgument> arguments = new HashSet<>();
 
-            @Override
-            public PromptContent prompt(McpParameter parameters) {
-                return prompt.apply(parameters);
-            }
-        };
+        public Builder prompt(Function<McpParameters, PromptContent> process) {
+            this.prompt = process;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder argument(Consumer<PromptArgument.Builder> builder) {
+            PromptArgument.Builder argumentBuilder = PromptArgument.builder();
+            builder.accept(argumentBuilder);
+            arguments.add(argumentBuilder.build());
+            return this;
+        }
+
+        @Override
+        public Prompt build() {
+            return new PromptImpl(name, description, arguments, prompt);
+        }
     }
 }

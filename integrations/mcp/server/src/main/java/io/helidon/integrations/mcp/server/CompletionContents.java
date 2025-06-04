@@ -16,29 +16,32 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.media.type.MediaType;
+import java.util.List;
 
 /**
- * Image content.
+ * {@link CompletionContent} factory.
  */
-interface ImageContent extends ToolContent {
-    /**
-     * Image content.
-     *
-     * @return content
-     */
-    String data();
-
-    /**
-     * Image mime type.
-     *
-     * @return mime type
-     */
-    MediaType mediaType();
-
-    @Override
-    default String type() {
-        return "image";
+public class CompletionContents {
+    private CompletionContents() {
     }
 
+    /**
+     * Create {@link Resource} completion content.
+     *
+     * @param values completion values
+     * @return completion content
+     */
+    public static CompletionContent createResourceCompletion(String uri, List<String> values) {
+        return new CompletionResource(uri, values);
+    }
+
+    /**
+     * Create {@link Prompt} completion content.
+     *
+     * @param values completion values
+     * @return completion content
+     */
+    public static CompletionContent createPromptCompletion(String name, List<String> values) {
+        return new CompletionPrompt(name, values);
+    }
 }

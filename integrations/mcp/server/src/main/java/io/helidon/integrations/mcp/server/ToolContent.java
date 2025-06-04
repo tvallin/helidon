@@ -19,25 +19,6 @@ package io.helidon.integrations.mcp.server;
 /**
  * Tool content.
  */
-public interface ToolContent {
+public interface ToolContent extends Content, Jsonable {
 
-    /**
-     * Chain prompt content.
-     *
-     * @param content nested content
-     * @return nested content
-     */
-    ToolContent chain(ToolContent content);
-
-    static ToolContent textContent(String text) {
-        return new ToolTextContent(text);
-    }
-
-    static ToolContent imageContent(String data, String mimeType) {
-        return new ToolImageContent(data, mimeType);
-    }
-
-    static ToolContent resourceContent(String uri) {
-        return new ToolResourceContent(uri);
-    }
 }

@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 /**
  * Mcp Server information.
  */
-public interface McpServerInfo {
+public interface McpServerInfo extends Jsonable {
     /**
      * Server name.
      *

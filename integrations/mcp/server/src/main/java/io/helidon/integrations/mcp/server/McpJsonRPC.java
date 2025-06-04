@@ -17,7 +17,6 @@
 package io.helidon.integrations.mcp.server;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 
 class McpJsonRPC {
@@ -71,6 +70,8 @@ class McpJsonRPC {
 
     static final String METHOD_NOTIFICATION_CANCELED = "notifications/cancelled";
 
+    static final String METHOD_COMPLETION_COMPLETE = "completion/complete";
+
     // Roots Methods
     static final String METHOD_ROOTS_LIST = "roots/list";
 
@@ -79,122 +80,12 @@ class McpJsonRPC {
     // Sampling Methods
     static final String METHOD_SAMPLING_CREATE_MESSAGE = "sampling/createMessage";
 
-    static JsonObject json(ToolInfo info) {
-        return Json.createObjectBuilder()
-                .add("name", info.name())
-                .add("description", info.description())
-                .add("inputSchema", info.schema().json())
-                .build();
-    }
+    public static final int RESOURCE_NOT_FOUND = -32002;
+    public static final int INTERNAL_ERROR = -32603;
+    public static final int INVALID_PARAMS = -32602;
+    public static final int METHOD_NOT_FOUND = -32601;
+    public static final int INVALID_REQUEST = -32600;
+    public static final int PARSE_ERROR = -32700;
+    public static final int SECURITY_ERROR = -32001;
 
-    static JsonObject json(ResourceInfo info) {
-        return Json.createObjectBuilder()
-                .add("uri", info.uri())
-                .add("name", info.name())
-                .add("description", info.description())
-                .add("mimeType", info.mimeType())
-                .build();
-    }
-
-    static JsonObject json(PromptInfo info) {
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        info.arguments().stream()
-                .map(io.helidon.integrations.mcp.server.PromptArgument::json)
-                .forEach(array::add);
-        return Json.createObjectBuilder()
-                .add("name", info.name())
-                .add("description", info.description())
-                .add("arguments", array)
-                .build();
-    }
-
-    static JsonObject json(ToolContent content) {
-        if (content instanceof TextContent text) {
-            return json(text);
-        }
-        if (content instanceof ImageContent image) {
-            return json(image);
-        }
-        if (content instanceof ResourceReference resource) {
-            return json(resource);
-        }
-        throw new McpException("Unknown content type: " + content);
-    }
-
-    private static JsonObject json(TextContent content) {
-        return Json.createObjectBuilder()
-                .add("type", content.type())
-                .add("text", content.text())
-                .build();
-    }
-
-    private static JsonObject json(ImageContent content) {
-        return Json.createObjectBuilder()
-                .add("type", content.type())
-                .add("data", content.data())
-                .add("mimeType", content.mimeType())
-                .build();
-    }
-
-    private static JsonObject json(ResourceReference content) {
-        return json(content.resource().info());
-    }
-
-    static JsonObject json(ResourceContent content) {
-        if (content instanceof ResourceTextContent text) {
-            return json(text);
-        }
-        if (content instanceof ResourceBinaryContent binary) {
-            return json(binary);
-        }
-        throw new McpException("Unknown content type: " + content);
-    }
-
-    private static JsonObject json(ResourceTextContent text) {
-        return Json.createObjectBuilder()
-                .add("mimeType", text.mimeType())
-                .add("text", text.data())
-                .build();
-    }
-
-    private static JsonObject json(ResourceBinaryContent binary) {
-        return Json.createObjectBuilder()
-                .add("mimeType", binary.mimeType())
-                .add("blob", binary.data())
-                .build();
-    }
-
-    static JsonObject json(PromptContent prompt) {
-        if (prompt instanceof PromptTextContent text) {
-            return json(text);
-        }
-        if (prompt instanceof PromptImageContent image) {
-            return json(image);
-        }
-        if (prompt instanceof ResourceReference resource) {
-            return json(resource);
-        }
-        throw new McpException("Unknown prompt type: " + prompt);
-    }
-
-    static JsonObject json(PromptTextContent text) {
-        return Json.createObjectBuilder()
-                .add("role", text.role().getName())
-                .add("content", json((TextContent) text.content()))
-                .build();
-    }
-
-    static JsonObject json(PromptImageContent image) {
-        return Json.createObjectBuilder()
-                .add("role", image.role().getName())
-                .add("conten", json((ImageContent) image.content()))
-                .build();
-    }
-
-    static JsonObject json(McpServerInfo info) {
-        return Json.createObjectBuilder()
-                .add("name", info.name())
-                .add("version", info.version())
-                .build();
-    }
 }

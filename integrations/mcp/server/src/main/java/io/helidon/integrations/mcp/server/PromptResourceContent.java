@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 class PromptResourceContent implements PromptContent, ResourceReference {
     private final Role role;
     private final String uri;
-    private PromptContent content;
     private Supplier<Resource> resource;
 
     PromptResourceContent(String uri, Role role) {
@@ -55,13 +54,9 @@ class PromptResourceContent implements PromptContent, ResourceReference {
 
     @Override
     public Content content() {
-        //TODO - Look up resources from server...
-        throw new UnsupportedOperationException("This is only a resource reference");
-    }
-
-    @Override
-    public PromptContent chain(PromptContent content) {
-        this.content = content;
-        return this.content;
+        if (resource == null) {
+            throw new McpException("Resource not yet available");
+        }
+        return resource.get().read();
     }
 }

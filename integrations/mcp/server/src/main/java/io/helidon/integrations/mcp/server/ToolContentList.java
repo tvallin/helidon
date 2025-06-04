@@ -16,34 +16,30 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.media.type.MediaType;
+import java.util.LinkedList;
+import java.util.List;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
+class ToolContentList implements ToolContent {
 
-class ResourceBinaryContent implements ResourceContent {
-    MediaType type;
-    String data;
+    List<ToolContent> contents = new LinkedList<>();
 
-    ResourceBinaryContent(MediaType type, String data) {
-        this.type = type;
-        this.data = data;
+    ToolContentList(ToolContent content) {
+        contents.add(content);
+    }
+
+    public ToolContentList(ToolContent content, ToolContent content1) {
+        contents.add(content);
+        contents.add(content1);
+    }
+
+    public ToolContentList(ToolContent content, ToolContent content1, ToolContent content2) {
+        contents.add(content);
+        contents.add(content1);
+        contents.add(content2);
     }
 
     @Override
-    public String data() {
-        return data;
-    }
-
-    @Override
-    public MediaType mimeType() {
-        return type;
-    }
-
-    @Override
-    public JsonObjectBuilder json() {
-        return Json.createObjectBuilder()
-                .add("mimeType", type.text())
-                .add("blob", data);
+    public String type() {
+        return "list";
     }
 }

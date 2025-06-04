@@ -16,9 +16,11 @@
 
 package io.helidon.integrations.mcp.server;
 
+import io.helidon.common.media.type.MediaTypes;
+
 class ResourceTextContent extends ResourceBinaryContent {
 
     ResourceTextContent(String data) {
-        super("text/plain", data);
+        super(MediaTypes.TEXT_PLAIN, data);
     }
 }

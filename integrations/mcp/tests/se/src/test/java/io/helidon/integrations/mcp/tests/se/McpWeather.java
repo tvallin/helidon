@@ -16,19 +16,17 @@
 
 package io.helidon.integrations.mcp.tests.se;
 
-import io.helidon.integrations.mcp.server.McpHttpFeature;
-import io.helidon.integrations.mcp.server.McpParameter;
-import io.helidon.integrations.mcp.server.McpRouting;
-import io.helidon.integrations.mcp.server.McpServer;
-import io.helidon.integrations.mcp.server.McpServerInfo;
+import io.helidon.common.media.type.MediaTypes;
+import io.helidon.integrations.mcp.server.McpHttpFeatureConfig;
+import io.helidon.integrations.mcp.server.McpParameters;
 import io.helidon.integrations.mcp.server.PromptContent;
+import io.helidon.integrations.mcp.server.PromptContents;
 import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.ToolContent;
+import io.helidon.integrations.mcp.server.ToolContents;
 import io.helidon.webserver.WebServer;
-
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
 
 class McpWeather {
 
@@ -49,14 +47,47 @@ class McpWeather {
     public static final String RESOURCE_URI = "file:///Users/tvallin/Documents/alerts.txt";
     public static final String RESOURCE_DESCRIPTION = "Get the list of all weather alerts";
 
-    static WebServer server;
+    private static WebServer server;
 
     static void start() {
         server = WebServer.builder()
                 .routing(routing -> routing.addFeature(
-                        McpHttpFeature.builder().server(new McpWeatherServer())))
+                        McpHttpFeatureConfig.builder()
+                                .name(SERVER_NAME)
+                                .version(SERVER_VERSION)
+                                .tool(tool -> tool.name(TOOL_NAME)
+                                        .description(TOOL_DESCRIPTION)
+                                        .schema(schema -> schema.addString("town"))
+                                        .process(McpWeather::process))
+
+                                .resource(resource -> resource.name(RESOURCE_NAME)
+                                        .description(RESOURCE_DESCRIPTION)
+                                        .uri(RESOURCE_URI)
+                                        .mediaType(MediaTypes.TEXT_PLAIN)
+                                        .read(McpWeather::read))
+
+                                .prompt(prompt -> prompt.name(PROMPT_NAME)
+                                        .description(PROMPT_DESCRIPTION)
+                                        .argument(arg -> arg.name(PROMPT_ARGUMENT_NAME)
+                                                .description(PROMPT_ARGUMENT_DESCRIPTION)
+                                                .required(true))
+                                        .prompt(McpWeather::prompt))))
                 .build()
                 .start();
+    }
+
+    static ToolContent process(McpParameters parameters) {
+        String town = parameters.first("town").as(String.class).orElse("unknown");
+        return ToolContents.textContent("There is a hurricane in " + town);
+    }
+
+    static PromptContent prompt(McpParameters parameters) {
+        String town = parameters.first("town").as(String.class).orElse("unknown");
+        return PromptContents.textContent("What is the weather like in " + town + " ?", Role.USER);
+    }
+
+    static ResourceContent read() {
+        return ResourceContents.textContent("There are severe weather alerts in Praha");
     }
 
     static int port() {
@@ -65,54 +96,5 @@ class McpWeather {
 
     static void stop() {
         server.stop();
-    }
-
-    static class McpWeatherServer implements McpServer {
-
-        @Override
-        public McpServerInfo info() {
-            return McpServerInfo.builder()
-                    .name(SERVER_NAME)
-                    .version(SERVER_VERSION)
-                    .build();
-        }
-
-        @Override
-        public void setup(McpRouting.Builder routing) {
-            JsonObject json = Json.createObjectBuilder()
-                    .add("type", "object")
-                    .add("id", "urn:jsonschema:weather")
-                    .add("required", Json.createArrayBuilder().add("town"))
-                    .add("properties", Json.createObjectBuilder()
-                            .add("town", Json.createObjectBuilder()
-                                    .add("type", "string")))
-                    .build();
-            routing.tool(tool -> tool.name(TOOL_NAME)
-                            .description(TOOL_DESCRIPTION)
-                            .schema(schema -> schema.json(json)), this::process)
-                    .resource(resource -> resource.name(RESOURCE_NAME)
-                            .description(RESOURCE_DESCRIPTION)
-                            .uri(RESOURCE_URI)
-                            .mimeType(RESOURCE_MIME_TYPE), this::read)
-                    .prompt(prompt -> prompt.name(PROMPT_NAME)
-                            .description(PROMPT_DESCRIPTION)
-                            .argument(arg -> arg.name(PROMPT_ARGUMENT_NAME)
-                                    .description(PROMPT_ARGUMENT_DESCRIPTION)
-                                    .required(true)), this::prompt);
-        }
-
-        ToolContent process(McpParameter parameters) {
-            String town = parameters.getString("town");
-            return ToolContent.textContent("There is a hurricane in " + town);
-        }
-
-        PromptContent prompt(McpParameter parameters) {
-            String town = parameters.getString("town");
-            return PromptContent.textContent("What is the weather like in " + town + " ?", Role.USER);
-        }
-
-        ResourceContent read() {
-            return ResourceContent.textContent("There are severe weather alerts in Praha");
-        }
     }
 }

@@ -18,11 +18,11 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Supplier;
 
-class ToolResourceContent extends ToolContentBase implements ResourceReference {
+class ToolResourceContent implements ToolContent, ResourceReference {
     private final String uri;
     private Supplier<Resource> resource;
 
-    public ToolResourceContent(String uri) {
+    ToolResourceContent(String uri) {
         this.uri = uri;
     }
 

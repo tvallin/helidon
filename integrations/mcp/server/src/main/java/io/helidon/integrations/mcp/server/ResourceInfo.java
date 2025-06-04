@@ -16,13 +16,15 @@
 
 package io.helidon.integrations.mcp.server;
 
+import io.helidon.common.media.type.MediaType;
+
 import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 
 /**
  * MCP resource information.
  */
-public interface ResourceInfo {
+public interface ResourceInfo extends Jsonable {
 
     /**
      * Resource URI.
@@ -50,7 +52,7 @@ public interface ResourceInfo {
      *
      * @return type
      */
-    String mimeType();
+    MediaType mediaType();
 
     static Builder builder() {
         return new Builder();
@@ -59,7 +61,7 @@ public interface ResourceInfo {
     class Builder {
         private String uri;
         private String name;
-        private String mimeType;
+        private MediaType type;
         private String description;
 
         public Builder uri(String uri) {
@@ -72,8 +74,8 @@ public interface ResourceInfo {
             return this;
         }
 
-        public Builder mimeType(String mimeType) {
-            this.mimeType = mimeType;
+        public Builder mediaType(MediaType type) {
+            this.type = type;
             return this;
         }
 
@@ -84,6 +86,7 @@ public interface ResourceInfo {
 
         public ResourceInfo build() {
             return new ResourceInfo() {
+
                 @Override
                 public String uri() {
                     return uri;
@@ -95,13 +98,22 @@ public interface ResourceInfo {
                 }
 
                 @Override
-                public String mimeType() {
-                    return mimeType;
+                public MediaType mediaType() {
+                    return type;
                 }
 
                 @Override
                 public String description() {
                     return description;
+                }
+
+                @Override
+                public JsonObjectBuilder json() {
+                    return Json.createObjectBuilder()
+                            .add("uri", uri)
+                            .add("name", name)
+                            .add("description", description)
+                            .add("mimeType", type.text());
                 }
             };
         }

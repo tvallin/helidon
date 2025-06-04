@@ -61,7 +61,7 @@ set to the default `annotated` value, it will be ignored.
 The discovery phase is carried out as follows (in no particular order):
 
 1. Collect all beans that extend `Application`
-2. Collect all beans annotated with `@Path`
+2. Collect all beans annotated with `@Completion`
 3. Collect all beans annotated with `@Provider`
 
 If no `Application` subclasses are found, create a _synthetic_ `Application` subclass that includes
@@ -71,13 +71,13 @@ If one or more `Application` subclasses are found, call the `getClasses` and `ge
 in each subclass using the collections in steps (2) and (3) only as defaults, i.e. if these methods
 both return empty sets.
 
-NOTE: Helidon treats `@Path` and `@Provider` as bean-defining annotations but, as stated above,
+NOTE: Helidon treats `@Completion` and `@Provider` as bean-defining annotations but, as stated above,
 `Application` subclasses may require additional annotations depending on the discovery mode
 
 == Setting Application Path
 
 The application path, also known as context root, is the base URI used to serve all resource URIs provided
-by `@Path` annotation. This section describes how to set it with an annotation or configuration file.
+by `@Completion` annotation. This section describes how to set it with an annotation or configuration file.
 
 When an `Application` subclass is provided, use the `@ApplicationPath`:
 

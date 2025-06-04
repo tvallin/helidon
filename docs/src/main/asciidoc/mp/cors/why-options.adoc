@@ -43,7 +43,7 @@ a resource.
 Unfortunately, there is no single Java element that is sure to correspond one-to-one with a JAX-RS resource,
 for two reasons.
 
-. JAX-RS allows a resource class to define one or more subresources, denoted by the `@Path` annotation
+. JAX-RS allows a resource class to define one or more subresources, denoted by the `@Completion` annotation
 on methods. So a resource class does not necessarily represent only a single resource.
 . A JAX-RS resource class can contain multiple endpoints for the same resource.
 A common example is two methods, annotated with `@GET` and `@PUT` respectively, that have the same path.

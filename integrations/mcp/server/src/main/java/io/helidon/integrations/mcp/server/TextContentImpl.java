@@ -16,34 +16,15 @@
 
 package io.helidon.integrations.mcp.server;
 
-import io.helidon.common.media.type.MediaType;
+class TextContentImpl implements TextContent {
+    private final String text;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
-
-class ResourceBinaryContent implements ResourceContent {
-    MediaType type;
-    String data;
-
-    ResourceBinaryContent(MediaType type, String data) {
-        this.type = type;
-        this.data = data;
+    public TextContentImpl(String text) {
+        this.text = text;
     }
 
     @Override
-    public String data() {
-        return data;
-    }
-
-    @Override
-    public MediaType mimeType() {
-        return type;
-    }
-
-    @Override
-    public JsonObjectBuilder json() {
-        return Json.createObjectBuilder()
-                .add("mimeType", type.text())
-                .add("blob", data);
+    public String text() {
+        return text;
     }
 }

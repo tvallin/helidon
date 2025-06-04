@@ -16,11 +16,17 @@
 
 package io.helidon.integrations.mcp;
 
+import java.util.List;
+
+import io.helidon.integrations.mcp.server.CompletionContent;
 import io.helidon.integrations.mcp.server.Mcp;
 import io.helidon.integrations.mcp.server.PromptContent;
+import io.helidon.integrations.mcp.server.PromptContents;
 import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.ToolContent;
+import io.helidon.integrations.mcp.server.ToolContents;
 
 import static io.helidon.integrations.mcp.server.Capability.RESOURCE_LIST_CHANGED;
 import static io.helidon.integrations.mcp.server.Capability.TOOL_LIST_CHANGED;
@@ -37,20 +43,24 @@ class McpWeatherServerDeclarative {
     @Mcp.Tool
     @Mcp.Description("Get weather alert from state")
     ToolContent weatherAlert(@Mcp.Param("state's name") String state) {
-        return ToolContent.textContent("Hurricane in " + state);
+        return ToolContents.textContent("Hurricane in " + state);
     }
 
     @Mcp.Prompt
     @Mcp.Description("Get weather alert from state")
     PromptContent weatherInTown(@Mcp.Param("town's name") String town) {
-        return PromptContent.textContent("What is the weather like in {{town}}", Role.USER);
+        return PromptContents.textContent("What is the weather like in {{town}}", Role.USER);
     }
 
     @Mcp.Resource
     @Mcp.URI("resource://api.weather.gov/{path}")
     @Mcp.Description("Get weather alert from state")
     ResourceContent weatherAlerts() {
-        return ResourceContent.textContent("Resource content");
+        return ResourceContents.textContent("Resource content");
     }
 
+    @Mcp.Completion
+    CompletionContent completion(String name, String value) {
+        return CompletionContent.create(List.of());
+    }
 }

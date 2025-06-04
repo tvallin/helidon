@@ -46,6 +46,6 @@ interface ResourceReference extends Content {
 
     @Override
     default String type() {
-        return "resource";
+        return "resource-reference";
     }
 }
