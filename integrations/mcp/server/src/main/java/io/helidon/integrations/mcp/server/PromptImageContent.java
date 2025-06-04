@@ -18,11 +18,13 @@ package io.helidon.integrations.mcp.server;
 
 import io.helidon.common.media.type.MediaType;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
+
 class PromptImageContent implements PromptContent {
 
     private final Role role;
     private final ImageContent image;
-    private PromptContent content;
 
     PromptImageContent(String data, MediaType type, Role role) {
         this.role = role;
@@ -39,4 +41,10 @@ class PromptImageContent implements PromptContent {
         return image;
     }
 
+    @Override
+    public JsonObjectBuilder json() {
+        return Json.createObjectBuilder()
+                .add("role", role.name())
+                .add("content", image.json());
+    }
 }

@@ -16,6 +16,9 @@
 
 package io.helidon.integrations.mcp.server;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
+
 class PromptTextContent implements PromptContent {
     private final Role role;
     private final TextContent text;
@@ -33,5 +36,12 @@ class PromptTextContent implements PromptContent {
     @Override
     public Content content() {
         return text;
+    }
+
+    @Override
+    public JsonObjectBuilder json() {
+        return Json.createObjectBuilder()
+                .add("role", role.name().toLowerCase())
+                .add("content", text.json());
     }
 }

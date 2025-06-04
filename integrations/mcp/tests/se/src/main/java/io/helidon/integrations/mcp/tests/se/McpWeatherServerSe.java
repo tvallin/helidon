@@ -36,7 +36,6 @@ import io.helidon.common.media.type.MediaTypes;
 import io.helidon.integrations.mcp.server.Completion;
 import io.helidon.integrations.mcp.server.CompletionContent;
 import io.helidon.integrations.mcp.server.CompletionContents;
-import io.helidon.integrations.mcp.server.CompletionInfo;
 import io.helidon.integrations.mcp.server.JsonSchema;
 import io.helidon.integrations.mcp.server.McpHttpFeatureConfig;
 import io.helidon.integrations.mcp.server.McpParameters;
@@ -55,11 +54,8 @@ import io.helidon.integrations.mcp.server.ToolContents;
 import io.helidon.webserver.WebServer;
 
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
-//TODO
-// - McpParameters refactoring
-// - JsonSchema testing
-// - interface to map classes to JsonObjects
 class McpWeatherServerSe {
 
     public static void main(String[] args) {
@@ -74,13 +70,13 @@ class McpWeatherServerSe {
                                         .description("description")
                                         .schema(schema -> schema.schema("schema"))
                                         .schema(schema -> schema.addString("schema"))
-                                        .process(McpWeatherServerSe::process))
+                                        .tool(McpWeatherServerSe::process))
 
                                 .addResource(resource -> resource.name("name")
                                         .uri("uri")
                                         .description("description")
                                         .mediaType(MediaTypes.TEXT_PLAIN)
-                                        .read(McpWeatherServerSe::read))
+                                        .ressource(McpWeatherServerSe::read))
 
                                 .addPrompt(prompt -> prompt.name("name")
                                         .description("description")
@@ -92,7 +88,7 @@ class McpWeatherServerSe {
                                 .addCompletion(completion -> completion
                                         .name("name")
                                         .uri("uri")
-                                        .complete(McpWeatherServerSe::complete))
+                                        .completion(McpWeatherServerSe::complete))
 
                                 .addTool(new WeatherTool())
                                 .addResource(new WeatherResource())
@@ -139,33 +135,15 @@ class McpWeatherServerSe {
         @Override
         public ToolContent process(McpParameters parameters) {
 
-            JsonObject optTown = parameters.jsonValue("town").get().asJsonObject();
-
-            JsonObject town = parameters.first("town").as(JsonObject.class).get();
-            String name = town.first("name").as(String.class).get();
-            double latitude = town.first("latitude").as(Double.class).get();
-            double longitude = town.first("longitude").as(Double.class).get();
-            Town paris = new Town(name, latitude, longitude);
+            String town = parameters.jsonValue("town")
+                    .map(JsonValue::toString)
+                    .orElse("unknown");
 
             ToolContent resource = ToolContents.resourceContent("uri");
             ToolContent image = ToolContents.imageContent("data", MediaTypes.create("image/png"));
-            ToolContent text = ToolContents.textContent("The weather is sunny in " + parameters.get("town"));
+            ToolContent text = ToolContents.textContent("The weather is sunny in " + town);
 
             return ToolContents.list(text, image, resource);
-        }
-
-//        @JsonSchema
-        static class Town {
-            String name;
-            double latitude;
-            double longitude;
-            Address address;
-
-            Town(String name, double latitude, double longitude) {
-                this.name = name;
-                this.latitude = latitude;
-                this.longitude = longitude;
-            }
         }
     }
 
@@ -195,7 +173,7 @@ class McpWeatherServerSe {
 
             PromptContent resource = PromptContents.resourceContent("uri", Role.ASSISTANT);
             PromptContent image = PromptContents.imageContent("data", MediaTypes.create("image/png"), Role.ASSISTANT);
-            PromptContent text = PromptContents.textContent("It is sunny in " + parameters.get("town"), Role.USER);
+            PromptContent text = PromptContents.textContent("It is sunny in " + parameters.jsonValue("town").toString(), Role.USER);
 
             return PromptContents.list(text, image, resource);
         }
@@ -231,27 +209,23 @@ class McpWeatherServerSe {
 
             return ResourceContents.list(text, binary);
         }
-
-        @Override
-        public ResourceConfig prototype() {
-            return ResourceConfig.create();
-        }
     }
 
     //TODO - do it ourselves or let the user have some custom one
     static class WeatherCompletion implements Completion {
 
         @Override
-        public CompletionInfo info() {
-            return CompletionInfo.builder()
-                    .name("prompt-weather")
-                    .build();
+        public String uri() {
+            return "uri";
+        }
+
+        @Override
+        public String name() {
+            return "name";
         }
 
         @Override
         public CompletionContent complete(McpParameters parameters) {
-            parameters.get("name");
-            parameters.get("value");
             return CompletionContents.createResourceCompletion("uri", List.of());
         }
     }

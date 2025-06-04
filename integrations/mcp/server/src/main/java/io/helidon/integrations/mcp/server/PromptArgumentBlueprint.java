@@ -18,6 +18,9 @@ package io.helidon.integrations.mcp.server;
 
 import io.helidon.builder.api.Prototype;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
+
 /**
  * Prompt argument information.
  */
@@ -44,4 +47,11 @@ interface PromptArgumentBlueprint extends Jsonable {
      */
     boolean required();
 
+    @Override
+    default JsonObjectBuilder json() {
+        return Json.createObjectBuilder()
+                .add("name", name())
+                .add("description", description())
+                .add("required", required());
+    }
 }

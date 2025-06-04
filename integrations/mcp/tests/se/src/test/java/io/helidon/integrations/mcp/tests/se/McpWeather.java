@@ -60,13 +60,13 @@ class McpWeather {
                                 .addTool(tool -> tool.name(TOOL_NAME)
                                         .description(TOOL_DESCRIPTION)
                                         .schema(schema -> schema.addString("town"))
-                                        .process(McpWeather::process))
+                                        .tool(McpWeather::process))
 
                                 .addResource(resource -> resource.name(RESOURCE_NAME)
                                         .description(RESOURCE_DESCRIPTION)
                                         .uri(RESOURCE_URI)
                                         .mediaType(MediaTypes.TEXT_PLAIN)
-                                        .read(McpWeather::read))
+                                        .ressource(McpWeather::read))
 
                                 .addPrompt(prompt -> prompt.name(PROMPT_NAME)
                                         .description(PROMPT_DESCRIPTION)
@@ -79,12 +79,16 @@ class McpWeather {
     }
 
     static ToolContent process(McpParameters parameters) {
-        String town = parameters.jsonValue("town").map(JsonValue::toString).orElse("unknown");
+        String town = parameters.jsonValue("town")
+                .map(JsonValue::toString)
+                .orElse("unknown");
         return ToolContents.textContent("There is a hurricane in " + town);
     }
 
     static PromptContent prompt(McpParameters parameters) {
-        String town = parameters.jsonValue("town").map(JsonValue::toString).orElse("unknown");
+        String town = parameters.jsonValue("town")
+                .map(JsonValue::toString)
+                .orElse("unknown");
         return PromptContents.textContent("What is the weather like in " + town + " ?", Role.USER);
     }
 

@@ -19,6 +19,10 @@ package io.helidon.integrations.mcp.server;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
+
 class PromptListContent implements PromptContent {
 
     List<PromptContent> prompts = new LinkedList<>();
@@ -46,5 +50,14 @@ class PromptListContent implements PromptContent {
     @Override
     public Content content() {
         return null;
+    }
+
+    @Override
+    public JsonObjectBuilder json() {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (PromptContent prompt : prompts) {
+            builder.add(prompt.json());
+        }
+        return Json.createObjectBuilder().add("messages", builder);
     }
 }

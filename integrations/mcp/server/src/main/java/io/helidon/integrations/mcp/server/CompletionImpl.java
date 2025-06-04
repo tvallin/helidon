@@ -2,18 +2,25 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Function;
 
-public class CompletionImpl implements Completion {
-    private final CompletionInfo info;
+class CompletionImpl implements Completion {
     private final Function<McpParameters, CompletionContent> complete;
+    private final String uri;
+    private final String name;
 
-    public CompletionImpl(CompletionInfo build, Function<McpParameters, CompletionContent> complete) {
-        this.info = build;
+    public CompletionImpl(String uri, String name, Function<McpParameters, CompletionContent> complete) {
+        this.uri = uri;
+        this.name = name;
         this.complete = complete;
     }
 
     @Override
-    public CompletionInfo info() {
-        return info;
+    public String uri() {
+        return uri;
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 
     @Override

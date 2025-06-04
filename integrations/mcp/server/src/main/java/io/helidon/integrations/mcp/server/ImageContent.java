@@ -40,5 +40,4 @@ interface ImageContent extends ToolContent {
     default String type() {
         return "image";
     }
-
 }

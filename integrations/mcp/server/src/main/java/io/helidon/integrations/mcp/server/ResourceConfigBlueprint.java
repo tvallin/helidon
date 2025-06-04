@@ -16,6 +16,8 @@
 
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Supplier;
+
 import io.helidon.builder.api.Prototype;
 import io.helidon.common.media.type.MediaType;
 
@@ -23,7 +25,6 @@ import io.helidon.common.media.type.MediaType;
  * MCP resource definition.
  */
 @Prototype.Blueprint
-@Prototype.CustomMethods(ResourceSupport.class)
 interface ResourceConfigBlueprint extends Prototype.Factory<Resource> {
     /**
      * Resource URI.
@@ -58,6 +59,6 @@ interface ResourceConfigBlueprint extends Prototype.Factory<Resource> {
      *
      * @return resource content as a {@link String}
      */
-    ResourceContent read();
+    Supplier<ResourceContent> ressource();
 
 }

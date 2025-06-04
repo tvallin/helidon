@@ -16,12 +16,9 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
-import io.helidon.builder.api.Option;
 import io.helidon.builder.api.RuntimeType;
 
 /**
@@ -29,6 +26,21 @@ import io.helidon.builder.api.RuntimeType;
  */
 @RuntimeType.PrototypedBy(PromptConfig.class)
 public interface Prompt extends Jsonable, RuntimeType.Api<PromptConfig> {
+
+    static Prompt create(PromptConfig config) {
+        return new PromptImpl(config.name(), config.description(), config.arguments(), config.prompt());
+    }
+
+    static Prompt create(Consumer<PromptConfig.Builder> consumer) {
+        return PromptConfig.builder()
+                .update(consumer)
+                .build();
+    }
+
+    static PromptConfig.Builder builder() {
+        return PromptConfig.builder();
+    }
+
     /**
      * Prompt name.
      *
@@ -61,17 +73,5 @@ public interface Prompt extends Jsonable, RuntimeType.Api<PromptConfig> {
     @Override
     default PromptConfig prototype() {
         return PromptConfig.create();
-    }
-
-    static Prompt create(PromptConfig config) {
-        return config.build();
-    }
-
-    static Prompt create(Consumer<PromptConfig.Builder> consumer) {
-        return PromptConfig.builder().update(consumer).build();
-    }
-
-    static PromptConfig.Builder builder() {
-        return PromptConfig.builder();
     }
 }

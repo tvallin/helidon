@@ -19,7 +19,7 @@ package io.helidon.integrations.mcp.server;
 /**
  * Server capabilities.
  */
-public enum Capability {
+enum Capability {
     /**
      * Notify clients when list of {@link Tool} changes.
      */

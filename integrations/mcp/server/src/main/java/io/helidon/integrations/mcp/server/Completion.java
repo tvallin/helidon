@@ -16,19 +16,42 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
+
+import io.helidon.builder.api.RuntimeType;
 
 /**
  * MCP server completion.
  */
-public interface Completion {
+@RuntimeType.PrototypedBy(CompletionConfig.class)
+public interface Completion extends RuntimeType.Api<CompletionConfig> {
+    static Completion create(CompletionConfig config) {
+        return new CompletionImpl(config.uri(), config.name(), config.completion());
+    }
+
+    static Completion create(Consumer<CompletionConfig.Builder> consumer) {
+        return CompletionConfig.builder()
+                .update(consumer)
+                .build();
+    }
+
+    static CompletionConfig.Builder builder() {
+        return CompletionConfig.builder();
+    }
 
     /**
-     * Completion information.
+     * Resource completion uri.
      *
-     * @return information
+     * @return uri
      */
-    CompletionInfo info();
+    String uri();
+
+    /**
+     * Prompt completion name.
+     *
+     * @return name
+     */
+    String name();
 
     /**
      * Completion content.
@@ -37,32 +60,11 @@ public interface Completion {
      */
     CompletionContent complete(McpParameters parameters);
 
-    static Builder builder() {
-        return new Builder();
-    }
-
-    class Builder implements io.helidon.common.Builder<Builder, Completion> {
-        private final CompletionInfo.Builder info = CompletionInfo.builder();
-        private Function<McpParameters, CompletionContent> complete;
-
-        public Builder complete(Function<McpParameters, CompletionContent> complete) {
-            this.complete = complete;
-            return this;
-        }
-
-        public Builder name(String name) {
-            info.name(name);
-            return this;
-        }
-
-        public Builder uri(String uri) {
-            info.uri(uri);
-            return this;
-        }
-
-        @Override
-        public Completion build() {
-            return new CompletionImpl(info.build(), complete);
-        }
+    default CompletionConfig prototype() {
+        return CompletionConfig.builder()
+                .name(name())
+                .uri(uri())
+                .completion(this::complete)
+                .buildPrototype();
     }
 }

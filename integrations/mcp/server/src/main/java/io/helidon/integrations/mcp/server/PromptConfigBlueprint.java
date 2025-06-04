@@ -17,6 +17,7 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.Set;
+import java.util.function.Function;
 
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
@@ -45,11 +46,5 @@ interface PromptConfigBlueprint extends Prototype.Factory<Prompt> {
     @Option.Singular
     Set<PromptArgument> arguments();
 
-    /**
-     * Create prompt based on parameters.
-     *
-     * @param parameters client parameters
-     * @return prompt as {@link String}
-     */
-    PromptContent prompt(McpParameters parameters);
+    Function<McpParameters, PromptContent> prompt();
 }

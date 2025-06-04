@@ -26,6 +26,19 @@ import io.helidon.common.media.type.MediaType;
  */
 @RuntimeType.PrototypedBy(ResourceConfig.class)
 public interface Resource extends Jsonable, RuntimeType.Api<ResourceConfig> {
+
+    static Resource create(ResourceConfig config) {
+        return new ResourceImpl(config.uri(), config.name(), config.description(), config.mediaType(), config.ressource());
+    }
+
+    static Resource create(Consumer<ResourceConfig.Builder> consumer) {
+        return ResourceConfig.builder().update(consumer).build();
+    }
+
+    static ResourceConfig.Builder builder() {
+        return ResourceConfig.builder();
+    }
+
     /**
      * Resource URI.
      *
@@ -64,17 +77,5 @@ public interface Resource extends Jsonable, RuntimeType.Api<ResourceConfig> {
     @Override
     default ResourceConfig prototype() {
         return ResourceConfig.create();
-    }
-
-    static Resource create(ResourceConfig config) {
-        return config.build();
-    }
-
-    static Resource create(Consumer<ResourceConfig.Builder> consumer) {
-        return ResourceConfig.builder().update(consumer).build();
-    }
-
-    static ResourceConfig.Builder builder() {
-        return ResourceConfig.builder();
     }
 }

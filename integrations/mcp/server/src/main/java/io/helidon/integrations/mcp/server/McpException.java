@@ -20,16 +20,16 @@ import io.helidon.http.sse.SseEvent;
 
 public class McpException extends RuntimeException {
 
-	public McpException(String message) {
-		super(message);
-	}
+    public McpException(String message) {
+        super(message);
+    }
 
-	public McpException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public McpException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	SseEvent.Builder sseEventBuilder() {
-		return SseEvent.builder()
-				.name("Error");
-	}
+    SseEvent.Builder sseEventBuilder() {
+        return SseEvent.builder()
+                .name("Error");
+    }
 }

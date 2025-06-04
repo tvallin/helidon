@@ -18,9 +18,19 @@ package io.helidon.integrations.mcp.server;
 
 import io.helidon.common.media.type.MediaTypes;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
+
 class ResourceTextContent extends ResourceBinaryContent {
 
     ResourceTextContent(String data) {
         super(MediaTypes.TEXT_PLAIN, data);
+    }
+
+    @Override
+    public JsonObjectBuilder json() {
+        return Json.createObjectBuilder()
+                .add("mimeType", type.text())
+                .add("text", data);
     }
 }

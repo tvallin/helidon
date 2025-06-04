@@ -18,17 +18,25 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.function.Supplier;
 
+import io.helidon.common.media.type.MediaType;
+
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 
-class PromptResourceContent implements PromptContent, ResourceReference {
-    private final Role role;
-    private final String uri;
-    private Supplier<Resource> resource;
+class ResourceImpl implements Resource {
 
-    PromptResourceContent(String uri, Role role) {
+    private final String uri;
+    private final String name;
+    private final String description;
+    private final MediaType type;
+    private final Supplier<ResourceContent> content;
+
+    ResourceImpl(String uri, String name, String description, MediaType mediaType, Supplier<ResourceContent> content) {
         this.uri = uri;
-        this.role = role;
+        this.name = name;
+        this.description = description;
+        this.type = mediaType;
+        this.content = content;
     }
 
     @Override
@@ -37,36 +45,31 @@ class PromptResourceContent implements PromptContent, ResourceReference {
     }
 
     @Override
-    public void resource(Supplier<Resource> resource) {
-        this.resource = resource;
+    public String name() {
+        return name;
     }
 
     @Override
-    public Resource resource() {
-        //Use optional ?
-        if (resource == null) {
-            throw new McpException("Resource not yet available");
-        }
-        return resource.get();
+    public String description() {
+        return description;
     }
 
     @Override
-    public Role role() {
-        return role;
+    public MediaType mediaType() {
+        return type;
     }
 
     @Override
-    public Content content() {
-        if (resource == null) {
-            throw new McpException("Resource not yet available");
-        }
-        return resource.get().read();
+    public ResourceContent read() {
+        return content.get();
     }
 
     @Override
     public JsonObjectBuilder json() {
         return Json.createObjectBuilder()
-                .add("role", role.name())
-                .add("content", resource.get().json());
+                .add("uri", uri)
+                .add("name", name)
+                .add("description", description)
+                .add("mimeType", type.text());
     }
 }

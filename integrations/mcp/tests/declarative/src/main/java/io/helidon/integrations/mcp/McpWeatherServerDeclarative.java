@@ -19,6 +19,7 @@ package io.helidon.integrations.mcp;
 import java.util.List;
 
 import io.helidon.integrations.mcp.server.CompletionContent;
+import io.helidon.integrations.mcp.server.CompletionContents;
 import io.helidon.integrations.mcp.server.Mcp;
 import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptContents;
@@ -28,13 +29,8 @@ import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolContents;
 
-import static io.helidon.integrations.mcp.server.Capability.RESOURCE_LIST_CHANGED;
-import static io.helidon.integrations.mcp.server.Capability.TOOL_LIST_CHANGED;
-
 @Mcp.Server("mcp-weather-server")
 @Mcp.Version("0.0.1")
-@Mcp.Capability(TOOL_LIST_CHANGED)
-@Mcp.Capability(RESOURCE_LIST_CHANGED)
 @Mcp.Prompts({ SharedComponentDeclarative.class })
 @Mcp.Resources({ SharedComponentDeclarative.class })
 @Mcp.Tools({ SharedComponentDeclarative.class, SharedToolSe.class })
@@ -60,7 +56,7 @@ class McpWeatherServerDeclarative {
     }
 
     @Mcp.Completion
-    CompletionContent completion(String name, String value) {
-        return CompletionContent.create(List.of());
+    CompletionContent completion() {
+        return CompletionContents.createPromptCompletion("weather-in-town", List.of());
     }
 }

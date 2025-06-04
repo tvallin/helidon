@@ -34,6 +34,9 @@ interface McpHttpFeatureConfigBlueprint extends Prototype.Factory<McpHttpFeature
     @Option.Default("0.0.1")
     String version();
 
+    @Option.DefaultBoolean(true)
+    boolean logging();
+
     @Option.Singular
     List<Tool> tools();
 

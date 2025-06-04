@@ -1,9 +1,11 @@
 package io.helidon.integrations.mcp.server;
 
+import java.util.function.Function;
+
 import io.helidon.builder.api.Prototype;
 
 @Prototype.Blueprint
-interface ToolConfigBlueprint extends Prototype.Factory<Tool>{
+interface ToolConfigBlueprint extends Prototype.Factory<Tool> {
     /**
      * Tool name.
      *
@@ -24,4 +26,11 @@ interface ToolConfigBlueprint extends Prototype.Factory<Tool>{
      * @return schema
      */
     JsonSchema schema();
+
+    /**
+     * Tool execution function.
+     *
+     * @return function
+     */
+    Function<McpParameters, ToolContent> tool();
 }

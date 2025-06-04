@@ -28,6 +28,7 @@ public interface ResourceContent extends ToolContent {
      * @return content
      */
     String data();
+
     /**
      * Resource content mime type.
      *

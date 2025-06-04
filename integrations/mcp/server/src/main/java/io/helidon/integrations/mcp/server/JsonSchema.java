@@ -36,16 +36,16 @@ public class JsonSchema {
         this.schema = schema;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     JsonObject json() {
         return json;
     }
 
     String schema() {
         return schema;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {
@@ -155,11 +155,5 @@ public class JsonSchema {
                     .add("required", required)
                     .build(), schema);
         }
-    }
-
-    public enum Type {
-        STRING,
-        NUMBER,
-        BOOLEAN
     }
 }

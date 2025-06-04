@@ -25,6 +25,21 @@ import io.helidon.builder.api.RuntimeType;
  */
 @RuntimeType.PrototypedBy(ToolConfig.class)
 public interface Tool extends Jsonable, RuntimeType.Api<ToolConfig> {
+
+    static Tool create(ToolConfig config) {
+        return new ToolImpl(config.name(), config.description(), config.schema(), config.tool());
+    }
+
+    static Tool create(Consumer<ToolConfig.Builder> consumer) {
+        return ToolConfig.builder()
+                .update(consumer)
+                .build();
+    }
+
+    static ToolConfig.Builder builder() {
+        return ToolConfig.builder();
+    }
+
     /**
      * Tool name.
      *
@@ -53,18 +68,6 @@ public interface Tool extends Jsonable, RuntimeType.Api<ToolConfig> {
      * @return tool execution result as a {@link String}
      */
     ToolContent process(McpParameters parameters);
-
-    static Tool create(ToolConfig config) {
-        return config.build();
-    }
-
-    static Tool create(Consumer<ToolConfig.Builder> consumer) {
-        return ToolConfig.builder().update(consumer).build();
-    }
-
-    static ToolConfig.Builder builder() {
-        return ToolConfig.builder();
-    }
 
     @Override
     default ToolConfig prototype() {

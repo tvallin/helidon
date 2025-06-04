@@ -21,6 +21,10 @@ import java.util.List;
 
 import io.helidon.common.media.type.MediaType;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
+
 public class ResourceListContent implements ResourceContent {
     List<ResourceContent> resources = new LinkedList<>();
 
@@ -47,5 +51,14 @@ public class ResourceListContent implements ResourceContent {
     @Override
     public MediaType mimeType() {
         return null;
+    }
+
+    @Override
+    public JsonObjectBuilder json() {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (ResourceContent content : resources) {
+            builder.add(content.json());
+        }
+        return Json.createObjectBuilder().add("contents", builder);
     }
 }
