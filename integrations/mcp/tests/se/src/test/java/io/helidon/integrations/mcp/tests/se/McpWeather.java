@@ -28,6 +28,8 @@ import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolContents;
 import io.helidon.webserver.WebServer;
 
+import jakarta.json.JsonValue;
+
 class McpWeather {
 
     public static final String PROTOCOL_VERSION = "2024-11-05";
@@ -55,20 +57,20 @@ class McpWeather {
                         McpHttpFeatureConfig.builder()
                                 .name(SERVER_NAME)
                                 .version(SERVER_VERSION)
-                                .tool(tool -> tool.name(TOOL_NAME)
+                                .addTool(tool -> tool.name(TOOL_NAME)
                                         .description(TOOL_DESCRIPTION)
                                         .schema(schema -> schema.addString("town"))
                                         .process(McpWeather::process))
 
-                                .resource(resource -> resource.name(RESOURCE_NAME)
+                                .addResource(resource -> resource.name(RESOURCE_NAME)
                                         .description(RESOURCE_DESCRIPTION)
                                         .uri(RESOURCE_URI)
                                         .mediaType(MediaTypes.TEXT_PLAIN)
                                         .read(McpWeather::read))
 
-                                .prompt(prompt -> prompt.name(PROMPT_NAME)
+                                .addPrompt(prompt -> prompt.name(PROMPT_NAME)
                                         .description(PROMPT_DESCRIPTION)
-                                        .argument(arg -> arg.name(PROMPT_ARGUMENT_NAME)
+                                        .addArgument(arg -> arg.name(PROMPT_ARGUMENT_NAME)
                                                 .description(PROMPT_ARGUMENT_DESCRIPTION)
                                                 .required(true))
                                         .prompt(McpWeather::prompt))))
@@ -77,12 +79,12 @@ class McpWeather {
     }
 
     static ToolContent process(McpParameters parameters) {
-        String town = parameters.first("town").as(String.class).orElse("unknown");
+        String town = parameters.jsonValue("town").map(JsonValue::toString).orElse("unknown");
         return ToolContents.textContent("There is a hurricane in " + town);
     }
 
     static PromptContent prompt(McpParameters parameters) {
-        String town = parameters.first("town").as(String.class).orElse("unknown");
+        String town = parameters.jsonValue("town").map(JsonValue::toString).orElse("unknown");
         return PromptContents.textContent("What is the weather like in " + town + " ?", Role.USER);
     }
 

@@ -45,6 +45,7 @@ import io.helidon.integrations.mcp.server.PromptArgument;
 import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptContents;
 import io.helidon.integrations.mcp.server.Resource;
+import io.helidon.integrations.mcp.server.ResourceConfig;
 import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.ResourceContent;
 import io.helidon.integrations.mcp.server.Role;
@@ -69,27 +70,26 @@ class McpWeatherServerSe {
                                 .name("weather-mcp-server")
                                 .version("0.0.1")
 
-                                .tool(tool -> tool.name("name")
+                                .addTool(tool -> tool.name("name")
                                         .description("description")
-                                        .schema("schema")
+                                        .schema(schema -> schema.schema("schema"))
                                         .schema(schema -> schema.addString("schema"))
                                         .process(McpWeatherServerSe::process))
 
-                                .resource(resource -> resource.name("name")
+                                .addResource(resource -> resource.name("name")
                                         .uri("uri")
                                         .description("description")
-                                        //TODO call it mediatype
                                         .mediaType(MediaTypes.TEXT_PLAIN)
                                         .read(McpWeatherServerSe::read))
 
-                                .prompt(prompt -> prompt.name("name")
+                                .addPrompt(prompt -> prompt.name("name")
                                         .description("description")
-                                        .argument(argument -> argument.name("arg-name")
+                                        .addArgument(argument -> argument.name("arg-name")
                                                 .description("arg-description")
                                                 .required(true))
                                         .prompt(McpWeatherServerSe::prompt))
 
-                                .completion(completion -> completion
+                                .addCompletion(completion -> completion
                                         .name("name")
                                         .uri("uri")
                                         .complete(McpWeatherServerSe::complete))
@@ -230,6 +230,11 @@ class McpWeatherServerSe {
             ResourceContent binary = ResourceContents.binaryContent("base64-encoded-data", MediaTypes.create("image/png"));
 
             return ResourceContents.list(text, binary);
+        }
+
+        @Override
+        public ResourceConfig prototype() {
+            return ResourceConfig.create();
         }
     }
 

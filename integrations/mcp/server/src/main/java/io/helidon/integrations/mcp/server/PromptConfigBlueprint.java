@@ -18,10 +18,11 @@ package io.helidon.integrations.mcp.server;
 
 import java.util.Set;
 
+import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
-//@Prototype.Blueprint
-interface PromptConfigBlueprint {
+@Prototype.Blueprint
+interface PromptConfigBlueprint extends Prototype.Factory<Prompt> {
     /**
      * Prompt name.
      *
@@ -41,6 +42,7 @@ interface PromptConfigBlueprint {
      *
      * @return {@link Set} of argument
      */
+    @Option.Singular
     Set<PromptArgument> arguments();
 
     /**

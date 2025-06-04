@@ -17,12 +17,14 @@
 package io.helidon.integrations.mcp.server;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
+
+import io.helidon.builder.api.RuntimeType;
 
 /**
  * MCP tool definition.
  */
-public interface Tool extends Jsonable{
+@RuntimeType.PrototypedBy(ToolConfig.class)
+public interface Tool extends Jsonable, RuntimeType.Api<ToolConfig> {
     /**
      * Tool name.
      *
@@ -52,46 +54,20 @@ public interface Tool extends Jsonable{
      */
     ToolContent process(McpParameters parameters);
 
-    static Tool.Builder builder() {
-        return new Builder();
+    static Tool create(ToolConfig config) {
+        return config.build();
     }
 
-    class Builder implements io.helidon.common.Builder<Builder, Tool> {
-        Function<McpParameters, ToolContent> process;
-        private String name;
-        private String description;
-        private JsonSchema schema;
+    static Tool create(Consumer<ToolConfig.Builder> consumer) {
+        return ToolConfig.builder().update(consumer).build();
+    }
 
-        public Builder process(Function<McpParameters, ToolContent> process) {
-            this.process = process;
-            return this;
-        }
+    static ToolConfig.Builder builder() {
+        return ToolConfig.builder();
+    }
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder schema(String schema) {
-            this.schema = JsonSchema.builder().schema(schema).build();
-            return this;
-        }
-
-        public Builder schema(Consumer<JsonSchema.Builder> builder) {
-            JsonSchema.Builder schemaBuilder = JsonSchema.builder();
-            builder.accept(schemaBuilder);
-            this.schema = schemaBuilder.build();
-            return this;
-        }
-
-        @Override
-        public Tool build() {
-            return new ToolImpl(name, description, schema, process);
-        }
+    @Override
+    default ToolConfig prototype() {
+        return ToolConfig.create();
     }
 }

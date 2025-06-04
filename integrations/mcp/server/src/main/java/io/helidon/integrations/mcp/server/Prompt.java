@@ -21,10 +21,14 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import io.helidon.builder.api.Option;
+import io.helidon.builder.api.RuntimeType;
+
 /**
  * MCP Prompt definition.
  */
-public interface Prompt extends Jsonable {
+@RuntimeType.PrototypedBy(PromptConfig.class)
+public interface Prompt extends Jsonable, RuntimeType.Api<PromptConfig> {
     /**
      * Prompt name.
      *
@@ -54,41 +58,20 @@ public interface Prompt extends Jsonable {
      */
     PromptContent prompt(McpParameters parameters);
 
-    static Prompt.Builder builder() {
-        return new Prompt.Builder();
+    @Override
+    default PromptConfig prototype() {
+        return PromptConfig.create();
     }
 
-    class Builder implements io.helidon.common.Builder<Prompt.Builder, Prompt> {
-        private String name;
-        private String description;
-        private Function<McpParameters, PromptContent> prompt;
-        private final Set<PromptArgument> arguments = new HashSet<>();
+    static Prompt create(PromptConfig config) {
+        return config.build();
+    }
 
-        public Builder prompt(Function<McpParameters, PromptContent> process) {
-            this.prompt = process;
-            return this;
-        }
+    static Prompt create(Consumer<PromptConfig.Builder> consumer) {
+        return PromptConfig.builder().update(consumer).build();
+    }
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder argument(Consumer<PromptArgument.Builder> builder) {
-            PromptArgument.Builder argumentBuilder = PromptArgument.builder();
-            builder.accept(argumentBuilder);
-            arguments.add(argumentBuilder.build());
-            return this;
-        }
-
-        @Override
-        public Prompt build() {
-            return new PromptImpl(name, description, arguments, prompt);
-        }
+    static PromptConfig.Builder builder() {
+        return PromptConfig.builder();
     }
 }

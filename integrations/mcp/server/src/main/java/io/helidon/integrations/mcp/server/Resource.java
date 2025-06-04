@@ -16,14 +16,16 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
+import io.helidon.builder.api.RuntimeType;
 import io.helidon.common.media.type.MediaType;
 
 /**
  * MCP resource definition.
  */
-public interface Resource extends Jsonable {
+@RuntimeType.PrototypedBy(ResourceConfig.class)
+public interface Resource extends Jsonable, RuntimeType.Api<ResourceConfig> {
     /**
      * Resource URI.
      *
@@ -59,45 +61,20 @@ public interface Resource extends Jsonable {
      */
     ResourceContent read();
 
-    static Resource.Builder builder() {
-        return new Resource.Builder();
+    @Override
+    default ResourceConfig prototype() {
+        return ResourceConfig.create();
     }
 
-    class Builder implements io.helidon.common.Builder<Resource.Builder, Resource> {
-        String name;
-        String description;
-        MediaType mediaType;
-        String uri;
-        Supplier<ResourceContent> content;
+    static Resource create(ResourceConfig config) {
+        return config.build();
+    }
 
-        public Builder read(Supplier<ResourceContent> content) {
-            this.content = content;
-            return this;
-        }
+    static Resource create(Consumer<ResourceConfig.Builder> consumer) {
+        return ResourceConfig.builder().update(consumer).build();
+    }
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder mediaType(MediaType type) {
-            this.mediaType = type;
-            return this;
-        }
-
-        public Builder uri(String uri) {
-            this.uri = uri;
-            return this;
-        }
-
-        @Override
-        public Resource build() {
-            return new ResourceImpl(uri, name, description, mediaType, content);
-        }
+    static ResourceConfig.Builder builder() {
+        return ResourceConfig.builder();
     }
 }

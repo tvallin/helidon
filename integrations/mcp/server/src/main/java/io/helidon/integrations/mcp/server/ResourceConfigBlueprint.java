@@ -16,33 +16,48 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.List;
-
-import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
+import io.helidon.common.media.type.MediaType;
 
+/**
+ * MCP resource definition.
+ */
 @Prototype.Blueprint
-@Prototype.Configured("mcp")
-interface McpHttpFeatureConfigBlueprint extends Prototype.Factory<McpHttpFeature> {
+@Prototype.CustomMethods(ResourceSupport.class)
+interface ResourceConfigBlueprint extends Prototype.Factory<Resource> {
+    /**
+     * Resource URI.
+     *
+     * @return uri
+     */
+    String uri();
 
-    @Option.Default("/mcp")
-    String path();
-
-    @Option.Default("helidon-mcp-server")
+    /**
+     * Resource name.
+     *
+     * @return name
+     */
     String name();
 
-    @Option.Default("0.0.1")
-    String version();
+    /**
+     * Resource description.
+     *
+     * @return description
+     */
+    String description();
 
-    @Option.Singular
-    List<Tool> tools();
+    /**
+     * Resource mime type.
+     *
+     * @return type
+     */
+    MediaType mediaType();
 
-    @Option.Singular
-    List<Prompt> prompts();
+    /**
+     * Resource reader.
+     *
+     * @return resource content as a {@link String}
+     */
+    ResourceContent read();
 
-    @Option.Singular
-    List<Resource> resources();
-
-    @Option.Singular
-    List<Completion> completions();
 }

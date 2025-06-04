@@ -16,33 +16,32 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.List;
-
-import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
+/**
+ * Prompt argument information.
+ */
 @Prototype.Blueprint
-@Prototype.Configured("mcp")
-interface McpHttpFeatureConfigBlueprint extends Prototype.Factory<McpHttpFeature> {
-
-    @Option.Default("/mcp")
-    String path();
-
-    @Option.Default("helidon-mcp-server")
+interface PromptArgumentBlueprint extends Jsonable {
+    /**
+     * Prompt argument name.
+     *
+     * @return name
+     */
     String name();
 
-    @Option.Default("0.0.1")
-    String version();
+    /**
+     * Prompt argument description.
+     *
+     * @return description
+     */
+    String description();
 
-    @Option.Singular
-    List<Tool> tools();
+    /**
+     * Wether this prompt argument is required.
+     *
+     * @return {@code true} if is required, {@code false} otherwise
+     */
+    boolean required();
 
-    @Option.Singular
-    List<Prompt> prompts();
-
-    @Option.Singular
-    List<Resource> resources();
-
-    @Option.Singular
-    List<Completion> completions();
 }

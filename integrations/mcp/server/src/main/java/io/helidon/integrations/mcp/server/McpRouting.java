@@ -59,62 +59,9 @@ public interface McpRouting {
     }
 
     class Builder {
-        List<Tool> tools = new ArrayList<>();
-        List<Prompt> prompts = new ArrayList<>();
-        List<Resource> resources = new ArrayList<>();
-        List<Completion> completions = new ArrayList<>();
-
-        public Builder tool(Consumer<ToolInfo.Builder> info, Function<McpParameters, ToolContent> process) {
-            ToolInfo.Builder builder = ToolInfo.builder();
-            info.accept(builder);
-//            tools.add(Tool.create(builder.build(), process));
-            return this;
-        }
-
-        public Builder prompt(Consumer<PromptInfo.Builder> info, Function<McpParameters, PromptContent> prompt) {
-            PromptInfo.Builder builder = PromptInfo.builder();
-            info.accept(builder);
-//            this.prompts.add(Prompt.create(builder.build(), prompt));
-            return this;
-        }
-
-        public Builder resource(Consumer<ResourceInfo.Builder> info, Supplier<ResourceContent> read) {
-            ResourceInfo.Builder builder = ResourceInfo.builder();
-            info.accept(builder);
-//            this.resources.add(Resource.create(builder.build(), read));
-            return this;
-        }
-
-        public Builder completion(Consumer<CompletionInfo.Builder> info, Function<McpParameters, CompletionContent> complete) {
-            CompletionInfo.Builder builder = CompletionInfo.builder();
-            info.accept(builder);
-//            this.completions.add(Completion.create(builder.build(), complete));
-            return this;
-        }
 
         public McpRouting build() {
-            return new McpRouting() {
-
-                @Override
-                public List<Tool> tools() {
-                    return tools;
-                }
-
-                @Override
-                public List<Prompt> prompts() {
-                    return prompts;
-                }
-
-                @Override
-                public List<Resource> resources() {
-                    return resources;
-                }
-
-                @Override
-                public List<Completion> completions() {
-                    return completions;
-                }
-            };
+            return null;
         }
     }
 }
