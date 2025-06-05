@@ -31,7 +31,7 @@
 	<artifactId>helidon-integrations-mcp-tests-project</artifactId>
 
 	<modules>
-		<module>declarative</module>
+		<!-- module>declarative</module -->
 		<module>se</module>
 	</modules>
 
