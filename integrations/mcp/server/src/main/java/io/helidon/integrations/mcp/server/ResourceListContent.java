@@ -25,7 +25,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 
-public class ResourceListContent implements ResourceContent {
+class ResourceListContent implements ResourceContent {
     List<ResourceContent> resources = new LinkedList<>();
 
     public ResourceListContent(ResourceContent content) {

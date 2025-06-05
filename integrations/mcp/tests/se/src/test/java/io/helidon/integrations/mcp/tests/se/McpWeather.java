@@ -79,16 +79,12 @@ class McpWeather {
     }
 
     static ToolContent process(McpParameters parameters) {
-        String town = parameters.jsonValue("town")
-                .map(JsonValue::toString)
-                .orElse("unknown");
+        String town = parameters.get("town").asString().orElse("unknown");
         return ToolContents.textContent("There is a hurricane in " + town);
     }
 
     static PromptContent prompt(McpParameters parameters) {
-        String town = parameters.jsonValue("town")
-                .map(JsonValue::toString)
-                .orElse("unknown");
+        String town = parameters.get("town").asString().orElse("unknown");
         return PromptContents.textContent("What is the weather like in " + town + " ?", Role.USER);
     }
 

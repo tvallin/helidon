@@ -179,7 +179,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         Optional<Tool> tool = this.config.tools().stream()
                 .filter(t -> call.getString("name").equals(t.name()))
                 .findAny();
-        McpParameters parameters = new McpParameters(call.getJsonObject("arguments"));
+        McpParameters parameters = new McpParameters(call.getJsonObject("arguments"), "arguments");
         return tool.map(value -> value.process(parameters))
                 .map(Jsonable::json)
                 .map(result -> Json.createObjectBuilder()
@@ -239,7 +239,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                 .filter(p -> Objects.equals(p.name(), params.getString("name")))
                 .findFirst();
 
-        McpParameters parameters = new McpParameters(params.getJsonObject("arguments"));
+        McpParameters parameters = new McpParameters(params.getJsonObject("arguments"), "arguments");
         return prompt.map(value -> Json.createObjectBuilder()
                         .add("description", value.description())
                         .add("messages", Json.createArrayBuilder()
@@ -262,7 +262,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         Optional<Completion> completion = config.completions().stream()
                 .filter(it -> it.name().equals(name))
                 .findFirst();
-        McpParameters parameters = new McpParameters(parameter.getJsonObject("argument"));
+        McpParameters parameters = new McpParameters(parameter.getJsonObject("argument"), "argument");
         return completion.map(it -> it.complete(parameters))
                 .map(result -> Json.createObjectBuilder()
                         .add("completion", Json.createObjectBuilder()

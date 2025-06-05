@@ -44,16 +44,14 @@ import io.helidon.integrations.mcp.server.PromptArgument;
 import io.helidon.integrations.mcp.server.PromptContent;
 import io.helidon.integrations.mcp.server.PromptContents;
 import io.helidon.integrations.mcp.server.Resource;
-import io.helidon.integrations.mcp.server.ResourceConfig;
-import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.ResourceContent;
+import io.helidon.integrations.mcp.server.ResourceContents;
 import io.helidon.integrations.mcp.server.Role;
 import io.helidon.integrations.mcp.server.Tool;
 import io.helidon.integrations.mcp.server.ToolContent;
 import io.helidon.integrations.mcp.server.ToolContents;
 import io.helidon.webserver.WebServer;
 
-import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 
 class McpWeatherServerSe {
@@ -70,20 +68,20 @@ class McpWeatherServerSe {
                                         .description("description")
                                         .schema(schema -> schema.schema("schema"))
                                         .schema(schema -> schema.addString("schema"))
-                                        .tool(McpWeatherServerSe::process))
+                                        .tool(param -> ToolContents.imageContent("base64", MediaTypes.TEXT_PLAIN)))
 
                                 .addResource(resource -> resource.name("name")
                                         .uri("uri")
                                         .description("description")
                                         .mediaType(MediaTypes.TEXT_PLAIN)
-                                        .ressource(McpWeatherServerSe::read))
+                                        .ressource(() -> ResourceContents.textContent("")))
 
                                 .addPrompt(prompt -> prompt.name("name")
                                         .description("description")
                                         .addArgument(argument -> argument.name("arg-name")
                                                 .description("arg-description")
                                                 .required(true))
-                                        .prompt(McpWeatherServerSe::prompt))
+                                        .prompt(param -> PromptContents.textContent("", Role.USER)))
 
                                 .addCompletion(completion -> completion
                                         .name("name")
@@ -98,23 +96,12 @@ class McpWeatherServerSe {
                 .start();
     }
 
-    static ToolContent process(McpParameters parameters) {
-        return ToolContents.imageContent("base64", MediaTypes.TEXT_PLAIN);
-    }
-
-    static PromptContent prompt(McpParameters parameters) {
-        return PromptContents.textContent("", Role.USER);
-    }
-
-    static ResourceContent read() {
-        return ResourceContents.textContent("");
-    }
-
     static CompletionContent complete(McpParameters parameters) {
         return CompletionContents.createResourceCompletion("uri", List.of());
     }
 
-    static class WeatherTool implements Tool {
+    //TODO Separer les composants - Snippet/Gist
+    static final class WeatherTool implements Tool {
         @Override
         public String name() {
             return "tool-weater";
@@ -135,18 +122,34 @@ class McpWeatherServerSe {
         @Override
         public ToolContent process(McpParameters parameters) {
 
-            String town = parameters.jsonValue("town")
-                    .map(JsonValue::toString)
-                    .orElse("unknown");
+            Town paris = parameters.get("town")
+                    .as(param -> new Town(
+                            param.get("name").asString().get(),
+                            param.get("population").asInt().get()))
+                    .get();
 
             ToolContent resource = ToolContents.resourceContent("uri");
             ToolContent image = ToolContents.imageContent("data", MediaTypes.create("image/png"));
-            ToolContent text = ToolContents.textContent("The weather is sunny in " + town);
+            ToolContent text = ToolContents.textContent("The weather is sunny in " + paris);
 
             return ToolContents.list(text, image, resource);
         }
     }
 
+    record Town(String name, int population) {
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public String toString() {
+            return "Town{name='"
+                    + name
+                    + '\''
+                    + ", population="
+                    + population
+                    + '}';
+        }
+    }
+
+    // TODO - Faire des gist pour montrer aux gens l'api
     static class WeatherPrompt implements Prompt {
 
         @Override
@@ -173,7 +176,7 @@ class McpWeatherServerSe {
 
             PromptContent resource = PromptContents.resourceContent("uri", Role.ASSISTANT);
             PromptContent image = PromptContents.imageContent("data", MediaTypes.create("image/png"), Role.ASSISTANT);
-            PromptContent text = PromptContents.textContent("It is sunny in " + parameters.jsonValue("town").toString(), Role.USER);
+            PromptContent text = PromptContents.textContent("It is sunny in " + parameters.get("town").asString(), Role.USER);
 
             return PromptContents.list(text, image, resource);
         }
