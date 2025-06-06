@@ -16,10 +16,10 @@
 
 package io.helidon.integrations.mcp.server;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +34,10 @@ import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
+import io.helidon.webserver.jsonrpc.JsonRpcHandlers;
+import io.helidon.webserver.jsonrpc.JsonRpcRequest;
+import io.helidon.webserver.jsonrpc.JsonRpcResponse;
+import io.helidon.webserver.jsonrpc.JsonRpcRouting;
 import io.helidon.webserver.sse.SseSink;
 
 import jakarta.json.Json;
@@ -43,51 +47,62 @@ import jakarta.json.JsonObjectBuilder;
 
 @RuntimeType.PrototypedBy(McpHttpFeatureConfig.class)
 public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatureConfig> {
-
-    private static final String PROTOCOLE_VERSION = "2024-11-05";
     private static final System.Logger LOGGER = System.getLogger(McpHttpFeature.class.getName());
+
+    private static final String PROTOCOL_VERSION = "2024-11-05";
+    private static final JsonObject PING_PONG = Json.createObjectBuilder()
+            .add("ping", "pong")
+            .build();
 
     private final McpHttpFeatureConfig config;
     private final Set<Capability> capabilities = new HashSet<>();
     private final Map<String, McpSession> sessions = new ConcurrentHashMap<>();
-    private final Map<String, JsonRPCHandler> handlers = new HashMap<>();
+
+    private final JsonRpcHandlers jsonRpcHandlers;
 
     public McpHttpFeature(McpHttpFeatureConfig config) {
         this.config = config;
-        handlers.put(McpJsonRPC.METHOD_PING, this::ping);
-        handlers.put(McpJsonRPC.METHOD_INITIALIZE, this::initialize);
+        JsonRpcHandlers.Builder builder = JsonRpcHandlers.builder();
+
+        builder.method(McpJsonRPC.METHOD_PING, this::pingRpc);
+        builder.method(McpJsonRPC.METHOD_INITIALIZE, this::initializeRpc);
 
         if (!config.tools().isEmpty()) {
             capabilities.add(Capability.TOOL_LIST_CHANGED);
-            handlers.put(McpJsonRPC.METHOD_TOOLS_LIST, this::toolsList);
-            handlers.put(McpJsonRPC.METHOD_TOOLS_CALL, this::toolsCall);
+            builder.method(McpJsonRPC.METHOD_TOOLS_LIST, this::toolsListRpc);
+            builder.method(McpJsonRPC.METHOD_TOOLS_CALL, this::toolsCallRpc);
         }
 
         if (!config.resources().isEmpty()) {
             capabilities.add(Capability.RESOURCE_LIST_CHANGED);
             capabilities.add(Capability.RESOURCE_SUBSCRIBE);
-            handlers.put(McpJsonRPC.METHOD_RESOURCES_LIST, this::resourcesList);
-            handlers.put(McpJsonRPC.METHOD_RESOURCES_READ, this::resourcesRead);
-            handlers.put(McpJsonRPC.METHOD_RESOURCES_TEMPLATES_LIST, this::resourceTemplateList);
-            handlers.put(McpJsonRPC.METHOD_RESOURCES_SUBSCRIBE, this::resourceSubscribe);
-            handlers.put(McpJsonRPC.METHOD_RESOURCES_UNSUBSCRIBE, this::resourceUnsubscribe);
+            builder.method(McpJsonRPC.METHOD_RESOURCES_LIST, this::resourcesListRpc);
+            builder.method(McpJsonRPC.METHOD_RESOURCES_READ, this::resourcesReadRpc);
+            builder.method(McpJsonRPC.METHOD_RESOURCES_TEMPLATES_LIST, this::resourceTemplateListRpc);
+            builder.method(McpJsonRPC.METHOD_RESOURCES_SUBSCRIBE, this::resourceSubscribeRpc);
+            builder.method(McpJsonRPC.METHOD_RESOURCES_UNSUBSCRIBE, this::resourceUnsubscribeRpc);
         }
 
         if (!config.prompts().isEmpty()) {
             capabilities.add(Capability.PROMPT_LIST_CHANGED);
-            handlers.put(McpJsonRPC.METHOD_PROMPT_LIST, this::promptsList);
-            handlers.put(McpJsonRPC.METHOD_PROMPT_GET, this::promptsGet);
+            builder.method(McpJsonRPC.METHOD_PROMPT_LIST, this::promptsListRpc);
+            builder.method(McpJsonRPC.METHOD_PROMPT_GET, this::promptsGetRpc);
         }
 
         if (config.logging()) {
             capabilities.add(Capability.LOGGING);
-            handlers.put(McpJsonRPC.METHOD_LOGGING_SET_LEVEL, this::logging);
+            builder.method(McpJsonRPC.METHOD_LOGGING_SET_LEVEL, this::loggingRpc);
         }
 
         if (!config.completions().isEmpty()) {
             capabilities.add(Capability.COMPLETION);
-            handlers.put(McpJsonRPC.METHOD_COMPLETION_COMPLETE, this::completion);
+            builder.method(McpJsonRPC.METHOD_COMPLETION_COMPLETE, this::completionRpc);
         }
+
+        builder.method(McpJsonRPC.METHOD_NOTIFICATION_INITIALIZED, this::notificationInitRpc);
+        builder.method(McpJsonRPC.METHOD_NOTIFICATION_CANCELED, this::notificationCancelRpc);
+
+        jsonRpcHandlers = builder.build();
     }
 
     static McpHttpFeature create(McpHttpFeatureConfig config) {
@@ -106,8 +121,14 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
 
     @Override
     public void setup(HttpRouting.Builder routing) {
+        // add all the JSON-RPC routes first
+        JsonRpcRouting jsonRpcRouting = JsonRpcRouting.builder()
+                .register("/mcp/message", jsonRpcHandlers)
+                .build();
+        jsonRpcRouting.toHttpRouting(routing);
+
+        // additional HTTP routes for SSE and session disconnect
         routing.get("/sse", this::sse)
-                .post("/mcp/message", this::message)
                 .post("/disconnect", this::disconnect);
     }
 
@@ -119,187 +140,79 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
     private void disconnect(ServerRequest request, ServerResponse response) {
         String sessionId = request.query().get("sessionId");
         McpSession session = sessions.remove(sessionId);
-        session.disonnect();
+        session.disconnect();
     }
 
     private void sse(ServerRequest request, ServerResponse response) {
         String sessionId = UUID.randomUUID().toString();
-        McpSession session = new McpSession(handlers);
+        McpSession session = new McpSession();
         sessions.put(sessionId, session);
 
         try (SseSink sink = response.sink(SseSink.TYPE)) {
             sink.emit(SseEvent.builder()
-                    .name("endpoint")
-                    .data("/mcp/message?sessionId=" + sessionId)
-                    .build());
+                              .name("endpoint")
+                              .data("/mcp/message?sessionId=" + sessionId)
+                              .build());
             session.poll(message -> sink.emit(SseEvent.builder()
-                    .name("message")
-                    .data(message)
-                    .build()));
+                                                      .name("message")
+                                                      .data(message)
+                                                      .build()));
         }
     }
 
-    private void message(ServerRequest request, ServerResponse response) {
-        String sessionId = request.query().get("sessionId");
+    private McpSession findSession(JsonRpcRequest req) {
+        try {
+            String sessionId = req.query().get("sessionId");
+            return sessions.get(sessionId);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
 
-        McpSession session = sessions.get(sessionId);
+    private void notificationInitRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
         if (session == null) {
-            response.status(Status.NOT_FOUND_404);
-            response.send();
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+        session.state(McpSession.State.INITIALIZED);
+    }
+
+    private void notificationCancelRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+        session.disconnect();
+    }
+
+    private void pingRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+        session.enqueue(res.result(PING_PONG).asJsonObject());
+    }
+
+    private void initializeRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
             return;
         }
 
-        JsonObject jsonRpc = request.content().as(JsonObject.class);
-        if (LOGGER.isLoggable(System.Logger.Level.DEBUG)) {
-            LOGGER.log(System.Logger.Level.DEBUG, "Message received : %s", jsonRpc.toString());
+        if (session.state() == McpSession.State.UNINITIALIZED) {
+            session.state(McpSession.State.INITIALIZING);
+            JsonObject clientCapabilities = req.params().get("capabilities").asJsonObject();
+            session.clientCapabilities().set(clientCapabilities);
+            JsonObject clientInfo = req.params().get("clientInfo").asJsonObject();
+            session.clientInfo().set(clientInfo);
         }
-        session.send(jsonRpc);
-        response.status(Status.OK_200);
-        response.send();
-    }
 
-
-    private JsonObject ping(JsonObject ping) {
-        return Json.createObjectBuilder()
-                .add("ping", "pong")
-                .build();
-    }
-
-    private JsonObject toolsList(JsonObject list) {
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        this.config.tools().stream()
-                .map(Jsonable::json)
-                .forEach(builder::add);
-        return Json.createObjectBuilder()
-                .add("tools", builder.build())
-                .build();
-    }
-
-    private JsonObject toolsCall(JsonObject call) {
-        Optional<Tool> tool = this.config.tools().stream()
-                .filter(t -> call.getString("name").equals(t.name()))
-                .findAny();
-        McpParameters parameters = new McpParameters(call.getJsonObject("arguments"), "arguments");
-        return tool.map(value -> value.process(parameters))
-                .map(Jsonable::json)
-                .map(result -> Json.createObjectBuilder()
-                        .add("content", Json.createArrayBuilder()
-                                .add(result))
-                        .build())
-                .orElse(null);
-    }
-
-    private JsonObject resourcesList(JsonObject list) {
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        this.config.resources().stream()
-                .map(Jsonable::json)
-                .forEach(builder::add);
-        return Json.createObjectBuilder()
-                .add("resources", builder.build())
-                .build();
-    }
-
-    private JsonObject resourcesRead(JsonObject read) {
-        String resourceUri = read.getString("uri");
-        Optional<Resource> resource = this.config.resources().stream()
-                .filter(it -> Objects.equals(it.uri(), resourceUri))
-                .findFirst();
-
-        return resource.map(value -> value.read().json())
-                .map(result -> Json.createObjectBuilder()
-                        .add("contents", Json.createArrayBuilder()
-                                .add(result.add("uri", resourceUri)))
-                        .build())
-                .orElse(null);
-    }
-
-    private JsonObject resourceTemplateList(JsonObject list) {
-        List<JsonObject> templates = this.config.resources().stream()
-                .filter(this::isTemplate)
-                .map(Jsonable::json)
-                .map(JsonObjectBuilder::build)
-                .toList();
-        return Json.createObjectBuilder()
-                .add("resourceTemplates", Json.createArrayBuilder(templates))
-                .build();
-    }
-
-    private JsonObject promptsList(JsonObject list) {
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        this.config.prompts().stream()
-                .map(Jsonable::json)
-                .forEach(builder::add);
-        return Json.createObjectBuilder()
-                .add("prompts", builder.build())
-                .build();
-    }
-
-    private JsonObject promptsGet(JsonObject params) {
-        var prompt = this.config.prompts().stream()
-                .filter(p -> Objects.equals(p.name(), params.getString("name")))
-                .findFirst();
-
-        McpParameters parameters = new McpParameters(params.getJsonObject("arguments"), "arguments");
-        return prompt.map(value -> Json.createObjectBuilder()
-                        .add("description", value.description())
-                        .add("messages", Json.createArrayBuilder()
-                                .add(value.prompt(parameters).json()))
-                        .build())
-                .orElse(null);
-    }
-
-    private JsonObject completion(JsonObject parameter) {
-        JsonObject reference = parameter.getJsonObject("ref");
-        Optional<String> search = parseCompletionName(reference);
-        if (search.isEmpty()) {
-            return Json.createObjectBuilder()
-                    .add("error", Json.createObjectBuilder()
-                            .add("code", McpJsonRPC.INVALID_REQUEST)
-                            .add("message", "Completion reference not found"))
-                    .build();
-        }
-        String name = search.get();
-        Optional<Completion> completion = config.completions().stream()
-                .filter(it -> it.name().equals(name))
-                .findFirst();
-        McpParameters parameters = new McpParameters(parameter.getJsonObject("argument"), "argument");
-        return completion.map(it -> it.complete(parameters))
-                .map(result -> Json.createObjectBuilder()
-                        .add("completion", Json.createObjectBuilder()
-                                .add("values", Json.createArrayBuilder(result.values()))
-                                .add("total", result.total())
-                                .add("hasMore", result.hasMore()))
-                        .build())
-                .orElse(null);
-    }
-
-    private Optional<String> parseCompletionName(JsonObject completion) {
-        if (completion.containsKey("name")) {
-            return Optional.of(completion.getString("name"));
-        }
-        if (completion.containsKey("uri")) {
-            return Optional.of(completion.getString("uri"));
-        }
-        return Optional.empty();
-    }
-
-    //TODO - How to maintain list of client subscription ?
-    private JsonObject resourceUnsubscribe(JsonObject unsubscribe) {
-        return null;
-    }
-
-    private JsonObject resourceSubscribe(JsonObject subscribe) {
-        return null;
-    }
-
-    //Todo - Change the logging level in the sessions
-    private JsonObject logging(JsonObject logging) {
-        return Json.createObjectBuilder().build();
-    }
-
-    private JsonObject initialize(JsonObject initialize) {
-        return Json.createObjectBuilder()
-                .add("protocolVersion", PROTOCOLE_VERSION)
+        JsonObject result = Json.createObjectBuilder()
+                .add("protocolVersion", PROTOCOL_VERSION)
                 .add("capabilities", Json.createObjectBuilder()
                         .add("logging", Json.createObjectBuilder())
                         .add("prompts", Json.createObjectBuilder()
@@ -314,19 +227,213 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                         .add("version", config.version()))
                 .add("instructions", "")
                 .build();
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void toolsListRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        config.tools().stream()
+                .map(Jsonable::json)
+                .forEach(builder::add);
+        JsonObject result = Json.createObjectBuilder()
+                .add("tools", builder.build())
+                .build();
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void toolsCallRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonObject call = req.params().asJsonObject();
+        Optional<Tool> tool = this.config.tools().stream()
+                .filter(t -> call.getString("name").equals(t.name()))
+                .findAny();
+        McpParameters parameters = new McpParameters(
+                call.getJsonObject("arguments"), "arguments");
+        JsonObject result = tool.map(value -> value.process(parameters))
+                .map(Jsonable::json)
+                .map(r -> Json.createObjectBuilder()
+                        .add("content", Json.createArrayBuilder()
+                                .add(r))
+                        .build())
+                .orElse(null);
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void resourcesListRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        this.config.resources().stream()
+                .map(Jsonable::json)
+                .forEach(builder::add);
+        JsonObject result =  Json.createObjectBuilder()
+                .add("resources", builder.build())
+                .build();
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void resourcesReadRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonObject read = req.params().asJsonObject();
+        String resourceUri = read.getString("uri");
+        Optional<Resource> resource = this.config.resources().stream()
+                .filter(it -> Objects.equals(it.uri(), resourceUri))
+                .findFirst();
+        JsonObject result = resource.map(value -> value.read().json())
+                .map(r -> Json.createObjectBuilder()
+                        .add("contents", Json.createArrayBuilder()
+                                .add(r.add("uri", resourceUri)))
+                        .build())
+                .orElse(null);
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void resourceSubscribeRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        // TODO
+    }
+
+    private void resourceUnsubscribeRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        // TODO
+    }
+
+    private void resourceTemplateListRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        List<JsonObject> templates = this.config.resources().stream()
+                .filter(this::isTemplate)
+                .map(Jsonable::json)
+                .map(JsonObjectBuilder::build)
+                .toList();
+        JsonObject result = Json.createObjectBuilder()
+                .add("resourceTemplates", Json.createArrayBuilder(templates))
+                .build();
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void promptsListRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        this.config.prompts().stream()
+                .map(Jsonable::json)
+                .forEach(builder::add);
+        JsonObject result =  Json.createObjectBuilder()
+                .add("prompts", builder.build())
+                .build();
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void promptsGetRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonObject params = req.params().asJsonObject();
+        var prompt = this.config.prompts().stream()
+                .filter(p -> Objects.equals(p.name(), params.getString("name")))
+                .findFirst();
+        McpParameters parameters = new McpParameters(params.getJsonObject("arguments"), "arguments");
+        JsonObject result =  prompt.map(value -> Json.createObjectBuilder()
+                        .add("description", value.description())
+                        .add("messages", Json.createArrayBuilder()
+                                .add(value.prompt(parameters).json()))
+                        .build())
+                .orElse(null);
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private void loggingRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        // TODO
+    }
+
+    private void completionRpc(JsonRpcRequest req, JsonRpcResponse res) {
+        McpSession session = findSession(req);
+        if (session == null) {
+            res.status(Status.NOT_FOUND_404).send();
+            return;
+        }
+
+        JsonObject params = req.params().asJsonObject();
+        JsonObject reference = params.getJsonObject("ref");
+        Optional<String> search = parseCompletionName(reference);
+        if (search.isEmpty()) {
+            JsonObject result =  Json.createObjectBuilder()
+                    .add("error", Json.createObjectBuilder()
+                            .add("code", McpJsonRPC.INVALID_REQUEST)
+                            .add("message", "Completion reference not found"))
+                    .build();
+            session.enqueue(res.result(result).asJsonObject());
+            res.send();
+            return;
+        }
+
+        String name = search.get();
+        Optional<Completion> completion = config.completions().stream()
+                .filter(it -> it.name().equals(name))
+                .findFirst();
+        McpParameters parameters = new McpParameters(params.getJsonObject("argument"), "argument");
+        JsonObject result = completion.map(it -> it.complete(parameters))
+                .map(r -> Json.createObjectBuilder()
+                        .add("completion", Json.createObjectBuilder()
+                                .add("values", Json.createArrayBuilder(r.values()))
+                                .add("total", r.total())
+                                .add("hasMore", r.hasMore()))
+                        .build())
+                .orElse(null);
+
+        session.enqueue(res.result(result).asJsonObject());
+    }
+
+    private Optional<String> parseCompletionName(JsonObject completion) {
+        if (completion.containsKey("name")) {
+            return Optional.of(completion.getString("name"));
+        }
+        if (completion.containsKey("uri")) {
+            return Optional.of(completion.getString("uri"));
+        }
+        return Optional.empty();
     }
 
     boolean isTemplate(Resource resource) {
         String uri = resource.uri();
         return uri.contains("{") && uri.contains("}");
-    }
-
-    interface JsonRPCHandler {
-        /**
-         * Handles a request from the client.
-         *
-         * @param params the parameters of the request.
-         */
-        JsonObject handle(JsonObject params);
     }
 }
