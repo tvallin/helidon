@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import io.helidon.common.UncheckedException;
+import io.helidon.http.Status;
+import io.helidon.webserver.jsonrpc.JsonRpcResponse;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -83,7 +85,7 @@ class McpSession {
     }
 
     // TODO: Response to server notifications?
-    private void handleResponse(JsonObject response) {
+    void handleResponse(JsonObject response) {
         pendingResponses.remove(response.getString("id"));
     }
 
@@ -109,9 +111,9 @@ class McpSession {
         return clientCapabilities;
     }
 
-    void enqueue(JsonObject message) {
+    void enqueue(JsonRpcResponse res) {
         try {
-            queue.put(message);
+            queue.put(res.status(Status.ACCEPTED_202).asJsonObject());
         } catch (InterruptedException e) {
             throw new UncheckedException(e);
         }

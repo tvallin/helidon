@@ -102,6 +102,8 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         builder.method(McpJsonRPC.METHOD_NOTIFICATION_INITIALIZED, this::notificationInitRpc);
         builder.method(McpJsonRPC.METHOD_NOTIFICATION_CANCELED, this::notificationCancelRpc);
 
+        builder.error(this::handleErrorRequest);
+
         jsonRpcHandlers = builder.build();
     }
 
@@ -169,6 +171,30 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         }
     }
 
+    /**
+     * If we receive what looks like a response on the error handler,
+     * pass it to the session.
+     *
+     * @param req the HTTP request
+     * @param object the invalid JSON-RPC request
+     * @return whether error was handled or not
+     */
+    private boolean handleErrorRequest(ServerRequest req, JsonObject object) {
+        try {
+            if (object.containsKey("result") || object.containsKey("error")) {
+                String sessionId = req.query().get("sessionId");
+                McpSession session = sessions.get(sessionId);
+                if (session != null) {
+                    session.handleResponse(object);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            // falls through
+        }
+        return false;
+    }
+
     private void notificationInitRpc(JsonRpcRequest req, JsonRpcResponse res) {
         McpSession session = findSession(req);
         if (session == null) {
@@ -193,7 +219,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
             res.status(Status.NOT_FOUND_404).send();
             return;
         }
-        session.enqueue(res.result(PING_PONG).asJsonObject());
+        session.enqueue(res.result(PING_PONG));
     }
 
     private void initializeRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -228,7 +254,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                 .add("instructions", "")
                 .build();
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void toolsListRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -246,7 +272,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                 .add("tools", builder.build())
                 .build();
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void toolsCallRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -270,7 +296,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                         .build())
                 .orElse(null);
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void resourcesListRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -284,11 +310,11 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         this.config.resources().stream()
                 .map(Jsonable::json)
                 .forEach(builder::add);
-        JsonObject result =  Json.createObjectBuilder()
+        JsonObject result = Json.createObjectBuilder()
                 .add("resources", builder.build())
                 .build();
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void resourcesReadRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -310,7 +336,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                         .build())
                 .orElse(null);
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void resourceSubscribeRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -337,7 +363,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                 .add("resourceTemplates", Json.createArrayBuilder(templates))
                 .build();
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void promptsListRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -351,11 +377,11 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         this.config.prompts().stream()
                 .map(Jsonable::json)
                 .forEach(builder::add);
-        JsonObject result =  Json.createObjectBuilder()
+        JsonObject result = Json.createObjectBuilder()
                 .add("prompts", builder.build())
                 .build();
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void promptsGetRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -370,14 +396,14 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                 .filter(p -> Objects.equals(p.name(), params.getString("name")))
                 .findFirst();
         McpParameters parameters = new McpParameters(params.getJsonObject("arguments"), "arguments");
-        JsonObject result =  prompt.map(value -> Json.createObjectBuilder()
+        JsonObject result = prompt.map(value -> Json.createObjectBuilder()
                         .add("description", value.description())
                         .add("messages", Json.createArrayBuilder()
                                 .add(value.prompt(parameters).json()))
                         .build())
                 .orElse(null);
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private void loggingRpc(JsonRpcRequest req, JsonRpcResponse res) {
@@ -395,12 +421,12 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
         JsonObject reference = params.getJsonObject("ref");
         Optional<String> search = parseCompletionName(reference);
         if (search.isEmpty()) {
-            JsonObject result =  Json.createObjectBuilder()
+            JsonObject result = Json.createObjectBuilder()
                     .add("error", Json.createObjectBuilder()
                             .add("code", McpJsonRPC.INVALID_REQUEST)
                             .add("message", "Completion reference not found"))
                     .build();
-            session.enqueue(res.result(result).asJsonObject());
+            session.enqueue(res.result(result));
             res.send();
             return;
         }
@@ -419,7 +445,7 @@ public class McpHttpFeature implements HttpFeature, RuntimeType.Api<McpHttpFeatu
                         .build())
                 .orElse(null);
 
-        session.enqueue(res.result(result).asJsonObject());
+        session.enqueue(res.result(result));
     }
 
     private Optional<String> parseCompletionName(JsonObject completion) {
