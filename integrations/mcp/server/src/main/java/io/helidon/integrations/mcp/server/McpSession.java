@@ -59,22 +59,6 @@ class McpSession {
         }
     }
 
-    // TODO: Not used but we need to resolve notification response handling
-    void send(JsonObject event) {
-        try {
-            if (event.containsKey("method") && event.containsKey("id")) {
-                // event = handleRequest(event);
-            } else if (event.containsKey("method") && !event.containsKey("id")) {
-                // handleNotification(event);
-            } else if (event.containsKey("result") || event.containsKey("error")) {
-                handleResponse(event);
-            }
-            queue.put(event);
-        } catch (InterruptedException e) {
-            throw new UncheckedException(e);
-        }
-    }
-
     void disconnect() {
         LOGGER.log(System.Logger.Level.INFO, "Disconnecting session");
         if (active.compareAndSet(true, false)) {

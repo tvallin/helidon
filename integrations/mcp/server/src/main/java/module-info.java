@@ -22,6 +22,7 @@ module io.helidon.integrations.mcp.server {
 	requires io.helidon.service.registry;
 	requires io.helidon.common;
 	requires io.helidon.common.resumable;
+	requires io.helidon.jsonrpc.core;
 	requires java.logging;
     requires java.sql;
 	requires jakarta.json;
