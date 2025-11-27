@@ -21,6 +21,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="https://helidon.io/archetype/2.0 https://helidon.io/xsd/archetype-2.0.xsd">
 
-    <exec src="nodes/jackson/output.xml" if="${media.json-lib} contains 'jackson'"/>
-    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} contains 'jsonb'"/>
+    <exec src="nodes/jackson/output.xml" if="${media.json-lib} == 'jackson'"/>
+    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} == 'jsonb'"/>
 </archetype-script>

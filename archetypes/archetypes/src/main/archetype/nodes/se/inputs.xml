@@ -25,8 +25,7 @@
             <enum id="app-type"
                   name="Select an Application Type"
                   default="quickstart"
-                  optional="true"
-                  global="true">
+                  optional="true">
                 <option value="quickstart"
                         name="Quickstart"
                         description="Sample Helidon project that includes multiple REST operations">

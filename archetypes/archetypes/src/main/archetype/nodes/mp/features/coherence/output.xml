@@ -27,8 +27,8 @@
         <templates transformations="basedir,hbs,packaged" engine="mustache">
             <directory>files</directory>
             <includes>
-                <include>src/main/java/__pkg__/CoherenceResource.java.hbs</include>
                 <include>src/main/java/__pkg__/Person.java.hbs</include>
+                <include>src/main/java/__pkg__/CoherenceResource.java.hbs</include>
                 <include>src/test/java/__pkg__/CoherenceResourceTest.java.hbs</include>
             </includes>
         </templates>

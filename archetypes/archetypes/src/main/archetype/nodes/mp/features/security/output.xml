@@ -24,11 +24,11 @@
         <boolean path="requires-io-helidon-security">true</boolean>
     </variables>
 
-    <exec src="nodes/oidc/output.xml" if="${security.atn} contains ['oidc']"/>
-    <exec src="nodes/jwt/output.xml" if="${security.atn} contains ['jwt']"/>
-    <exec src="nodes/google/output.xml" if="${security.atn} contains ['google']"/>
+    <exec src="nodes/oidc/output.xml" if="${security.atn} contains 'oidc'"/>
+    <exec src="nodes/jwt/output.xml" if="${security.atn} contains 'jwt'"/>
+    <exec src="nodes/google/output.xml" if="${security.atn} contains 'google'"/>
     <exec src="nodes/http-signature/output.xml" if="${security.atn} contains 'http-signature'"/>
-    <exec src="nodes/abac/output.xml" if="${security.atz} contains ['abac']"/>
+    <exec src="nodes/abac/output.xml" if="${security.atz} contains 'abac'"/>
 
     <output>
         <templates engine="mustache" transformations="basedir,hbs">

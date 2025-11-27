@@ -9,11 +9,12 @@ import io.helidon.webserver.http.ServerResponse;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 
 /**
-* Coherence HTTP service.
-*/
+ * Coherence HTTP service.
+ */
 class CoherenceService implements HttpService {
 
     private static final System.Logger LOGGER = System.getLogger(CoherenceService.class.getName());
@@ -59,7 +60,8 @@ class CoherenceService implements HttpService {
     private void sleep() {
         try {
             Thread.sleep(2_000L);
-        } catch (InterruptedException ignored) {
+        } catch (InterruptedException e) {
+            LOGGER.log(DEBUG, "Sleep interrupted", e);
         }
     }
 }

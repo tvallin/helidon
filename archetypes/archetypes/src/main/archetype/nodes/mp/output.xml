@@ -100,9 +100,6 @@
                     <value key="groupId">io.helidon.microprofile.metrics</value>
                     <value key="artifactId">helidon-microprofile-metrics</value>
                 </map>
-            </list>
-            <value key="parent-artifactId">helidon-mp</value>
-            <list key="dependencies">
                 <map>
                     <value key="groupId">io.helidon.logging</value>
                     <value key="artifactId">helidon-logging-jul</value>

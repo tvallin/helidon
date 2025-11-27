@@ -28,8 +28,10 @@ import {{.}};
  * The application main class.
  */
 public class Main {
-
 {{#main-class-fields}}
+{{#first}}
+
+{{/first}}
 {{.}}
 {{/main-class-fields}}
 
@@ -45,8 +47,10 @@ public class Main {
         // initialize global config from default configuration
         Config config = Config.create();
         Config.global(config);
-
 {{#Main-main}}
+{{#first}}
+
+{{/first}}
 {{.}}
 {{/Main-main}}
 
@@ -58,8 +62,10 @@ public class Main {
                 .routing(Main::routing)
                 .build()
                 .start();
-
 {{#Main-after-server}}
+{{#first}}
+
+{{/first}}
 {{.}}
 {{/Main-after-server}}
 
