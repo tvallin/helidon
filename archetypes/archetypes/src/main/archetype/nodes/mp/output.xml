@@ -54,8 +54,8 @@
     <exec src="features/native-image/output.xml" if="${docker.native-image}"/>
     <exec src="features/jpms/output.xml" if="${jpms}"/>
 
-    <exec src="nodes/database/output.xml" if="${app-type} == 'database'"/>
     <exec src="nodes/oci/output.xml" if="${app-type} == 'oci'"/>
+    <exec src="nodes/database/output.xml" if="${app-type} == 'database'"/>
     <exec src="nodes/quickstart/output.xml" if="${app-type} == 'quickstart'"/>
 
     <output if="${app-type} != 'oci'">
