@@ -40,38 +40,39 @@
                         <include>.gitignore.hbs</include>
                     </includes>
                 </templates>
+                <template source="files/pom.xml.hbs" target="pom.xml" engine="mustache"/>
                 <model>
                     <value key="dot-helidon-schema-version">1.1.0</value>
                     <!-- Set the parent pom of the pom aggregator -->
-                    <map key="parent-parent">
-                        <value key="groupId">io.helidon.applications</value>
-                        <value key="artifactId">helidon-applications</value>
-                        <value key="version">${helidon-version}</value>
-                    </map>
-                    <list key="parent-pom-properties">
-                        <map>
-                            <value key="key">version.lib.jackson.databind.nullable</value>
-                            <value key="value">0.2.3</value>
-                        </map>
-                        <map>
-                            <value key="key">version.plugin.jandex</value>
-                            <value key="value">3.1.2</value>
-                        </map>
-                        <map>
-                            <value key="key">version.plugin.openapi</value>
-                            <value key="value">6.2.1</value>
-                        </map>
-                    </list>
-                    <list key="parent-dependencies-management">
-                        <map>
-                            <value key="groupId">org.openapitools</value>
-                            <value key="artifactId">jackson-databind-nullable</value>
-                            <value key="version" template="mustache">${version.lib.jackson.databind.nullable}</value>
-                        </map>
-                    </list>
-                    <list key="parent-plugin-management">
-                        <value file="files/plugin-management.xml" template="mustache"/>
-                    </list>
+<!--                    <map key="parent-parent">-->
+<!--                        <value key="groupId">io.helidon.applications</value>-->
+<!--                        <value key="artifactId">helidon-applications</value>-->
+<!--                        <value key="version">${helidon-version}</value>-->
+<!--                    </map>-->
+<!--                    <list key="parent-pom-properties">-->
+<!--                        <map>-->
+<!--                            <value key="key">version.lib.jackson.databind.nullable</value>-->
+<!--                            <value key="value">0.2.3</value>-->
+<!--                        </map>-->
+<!--                        <map>-->
+<!--                            <value key="key">version.plugin.jandex</value>-->
+<!--                            <value key="value">3.1.2</value>-->
+<!--                        </map>-->
+<!--                        <map>-->
+<!--                            <value key="key">version.plugin.openapi</value>-->
+<!--                            <value key="value">6.2.1</value>-->
+<!--                        </map>-->
+<!--                    </list>-->
+<!--                    <list key="parent-dependencies-management">-->
+<!--                        <map>-->
+<!--                            <value key="groupId">org.openapitools</value>-->
+<!--                            <value key="artifactId">jackson-databind-nullable</value>-->
+<!--                            <value key="version" template="mustache">${version.lib.jackson.databind.nullable}</value>-->
+<!--                        </map>-->
+<!--                    </list>-->
+<!--                    <list key="parent-plugin-management">-->
+<!--                        <value file="files/plugin-management.xml" template="mustache"/>-->
+<!--                    </list>-->
                 </model>
             </output>
         </method>
@@ -97,6 +98,8 @@
                         <include>server/src/main/resources/META-INF/microprofile-config-test.properties</include>
                         <include>server/src/main/resources/application.yaml</include>
                         <include>server/src/test/resources/META-INF/microprofile-config.properties</include>
+                        <include>server/src/*/java/**/*.java.hbs</include>
+                        <include>server/pom.xml.hbs</include>
                     </includes>
                 </templates>
                 <model>

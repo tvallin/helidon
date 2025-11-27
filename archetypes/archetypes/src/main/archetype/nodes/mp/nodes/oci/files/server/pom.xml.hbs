@@ -61,12 +61,12 @@
                     </execution>
                 </executions>
             </plugin>
-            {{#maven-plugins}}
-                {{.}}
-            {{/maven-plugins}}
+{{#maven-plugins}}
+{{.}}
+{{/maven-plugins}}
         </plugins>
     </build>
-    {{#maven-profiles}}
-        {{.}}
-    {{/maven-profiles}}
+{{#maven-profiles}}
+{{.}}
+{{/maven-profiles}}
 </project>
