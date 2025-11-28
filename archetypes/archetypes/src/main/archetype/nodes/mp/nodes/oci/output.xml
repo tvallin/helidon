@@ -43,66 +43,55 @@
                 <template source="files/pom.xml.hbs" target="pom.xml" engine="mustache"/>
                 <model>
                     <value key="dot-helidon-schema-version">1.1.0</value>
-                    <!-- Set the parent pom of the pom aggregator -->
-<!--                    <map key="parent-parent">-->
-<!--                        <value key="groupId">io.helidon.applications</value>-->
-<!--                        <value key="artifactId">helidon-applications</value>-->
-<!--                        <value key="version">${helidon-version}</value>-->
-<!--                    </map>-->
-<!--                    <list key="parent-pom-properties">-->
-<!--                        <map>-->
-<!--                            <value key="key">version.lib.jackson.databind.nullable</value>-->
-<!--                            <value key="value">0.2.3</value>-->
-<!--                        </map>-->
-<!--                        <map>-->
-<!--                            <value key="key">version.plugin.jandex</value>-->
-<!--                            <value key="value">3.1.2</value>-->
-<!--                        </map>-->
-<!--                        <map>-->
-<!--                            <value key="key">version.plugin.openapi</value>-->
-<!--                            <value key="value">6.2.1</value>-->
-<!--                        </map>-->
-<!--                    </list>-->
-<!--                    <list key="parent-dependencies-management">-->
-<!--                        <map>-->
-<!--                            <value key="groupId">org.openapitools</value>-->
-<!--                            <value key="artifactId">jackson-databind-nullable</value>-->
-<!--                            <value key="version" template="mustache">${version.lib.jackson.databind.nullable}</value>-->
-<!--                        </map>-->
-<!--                    </list>-->
-<!--                    <list key="parent-plugin-management">-->
-<!--                        <value file="files/plugin-management.xml" template="mustache"/>-->
-<!--                    </list>-->
                 </model>
             </output>
         </method>
         <method name="client">
             <output>
-                <templates engine="mustache" transformations="basedir,hbs">
+                <transformation id="basedir-client">
+                    <replace regex="^(?![^}]+(?:[\\/]|$))(.*)$" replacement="client/$1"/>
+                </transformation>
+                <templates engine="mustache" transformations="basedir-client,hbs">
                     <directory>files</directory>
                     <includes>
                         <include>client/pom.xml.hbs</include>
                         <include>client/README.md.hbs</include>
                     </includes>
                 </templates>
+                <model>
+                    <list key="module-names">
+                        <map>
+                            <value key="module-names">client</value>
+                        </map>
+                    </list>
+                </model>
             </output>
         </method>
         <method name="server">
             <output>
-                <templates engine="mustache" transformations="basedir,hbs,packaged">
+                <transformation id="basedir-server">
+                    <replace regex="^(?![^}]+(?:[\\/]|$))(.*)$" replacement="server/$1"/>
+                </transformation>
+                <templates engine="mustache" transformations="basedir-server,hbs,packaged">
                     <directory>files</directory>
                     <includes>
+                        <include>server/src/main/resources/application.yaml</include>
+                        <include>server/src/main/resources/logging.properties</include>
                         <include>server/src/main/resources/META-INF/beans.xml</include>
                         <include>server/src/main/resources/META-INF/microprofile-config.properties</include>
                         <include>server/src/main/resources/META-INF/microprofile-config-prod.properties</include>
                         <include>server/src/main/resources/META-INF/microprofile-config-test.properties</include>
-                        <include>server/src/main/resources/application.yaml</include>
                         <include>server/src/test/resources/META-INF/microprofile-config.properties</include>
                         <include>server/src/*/java/**/*.java.hbs</include>
                         <include>server/pom.xml.hbs</include>
                     </includes>
                 </templates>
                 <model>
+                    <list key="module-names">
+                        <map>
+                            <value key="module-names">server</value>
+                        </map>
+                    </list>
                     <list key="pom-properties">
                         <map>
                             <value key="key">mainClass</value>
@@ -180,6 +169,11 @@
                             <value key="scope">runtime</value>
                         </map>
                         <map>
+                            <value key="groupId">io.helidon.logging</value>
+                            <value key="artifactId">helidon-logging-jul</value>
+                            <value key="scope">runtime</value>
+                        </map>
+                        <map>
                             <value key="groupId">io.smallrye</value>
                             <value key="artifactId">jandex</value>
                             <value key="scope">runtime</value>
@@ -216,11 +210,14 @@
         </method>
         <method name="spec">
             <output>
-                <files>
-                    <directory>spec</directory>
+                <transformation id="basedir-spec">
+                    <replace regex="^(?![^}]+(?:[\\/]|$))(.*)$" replacement="spec/$1"/>
+                </transformation>
+                <files transformations="basedir-spec">
+                    <directory>files</directory>
                     <includes>
-                        <include>api.yaml</include>
-                        <include>README.md</include>
+                        <include>spec/api.yaml</include>
+                        <include>spec/README.md</include>
                     </includes>
                 </files>
             </output>
@@ -233,19 +230,6 @@
     <call method="server"/>
     <call method="spec"/>
     <output>
-        <files transformations="basedir">
-            <directory>files</directory>
-            <includes>
-                <include>src/main/resources/META-INF/beans.xml</include>
-            </includes>
-        </files>
-        <files transformations="basedir">
-            <directory>files</directory>
-            <includes>
-                <include>server/src/main/resources</include>
-                <include>spec</include>
-            </includes>
-        </files>
         <model>
             <value key="parent-artifactId">${artifactId}-parent</value>
             <value key="client-artifactId">${artifactId}-client</value>
