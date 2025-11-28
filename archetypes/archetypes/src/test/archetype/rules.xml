@@ -17,9 +17,6 @@
 
 -->
 <rules>
-    <rule if="${app-type} != 'oci'">
-        <exclude if="${app-type} != 'oci'"/>
-    </rule>
     <rule if="${app-type} == 'quickstart'">
         <!-- Enforce the preset for quickstart using rule -->
         <exclude if="${media} != ['json']"/>
@@ -76,6 +73,16 @@
         <exclude if="${jpms}"/>
         <exclude if="!(${db})"/>
         <exclude if="${multi-module}"/>
+
+        <!-- do not combine auto-ddl and jackson -->
+        <rule if="${db.auto-ddl}">
+            <exclude if="${media.json-lib} == 'jackson'"/>
+        </rule>
+
+        <!-- do not combine hikaricp and jackson -->
+        <rule if="${db.cp} == 'hikaricp'">
+            <exclude if="${media.json-lib} == 'jackson'"/>
+        </rule>
     </rule>
     <rule if="${app-type} == 'custom'">
 

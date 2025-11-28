@@ -25,9 +25,9 @@
         <text path="media.json-lib" if="!(${media} contains 'json')"/>
     </variables>
 
-    <exec src="nodes/jackson/output.xml" if="${media.json-lib} != 'jackson'"/>
-    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} != 'jsonb'"/>
-    <exec src="nodes/jsonp/output.xml" if="${media.json-lib} != 'jsonp'"/>
+    <exec src="nodes/jackson/output.xml" if="${media.json-lib} == 'jackson'"/>
+    <exec src="nodes/jsonb/output.xml" if="${media.json-lib} == 'jsonb'"/>
+    <exec src="nodes/jsonp/output.xml" if="${media.json-lib} == 'jsonp'"/>
     <exec src="nodes/multipart/output.xml" if="${media} contains 'multipart'"/>
 
     <output>
