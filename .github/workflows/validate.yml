@@ -263,15 +263,14 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        group: [ r1, r2, r3, r4, r5, r6 ]
+        group: [ r1, r2, r3, r4, r5 ]
         packaging: [ jar ]
         include:
           - { group: r1, start: 1, end: 25 }
           - { group: r2, start: 26, end: 50 }
           - { group: r3, start: 51, end: 75 }
           - { group: r4, start: 76, end: 100 }
-          - { group: r5, start: 101, end: 126 }
-          - { group: r6, start: 127, end: -1 }
+          - { group: r5, start: 101, end: -1 }
           - { packaging: jar }
     runs-on: ubuntu-22.04
     name: archetypes/${{ matrix.group }}-${{ matrix.packaging }}
