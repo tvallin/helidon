@@ -332,4 +332,8 @@ jobs:
           ref: ${{ inputs.ref }}
       - name: Send slack notification
         shell: bash
-        run: etc/scripts/slackctl.sh --token ${{ secrets.SLACK_BOT_TOKEN }} "Notification message from Helidon pipeline!"
+        run: |
+          etc/scripts/slackctl.sh \
+          --app="github-enterprise-server" \
+          --token=${{ secrets.SLACK_BOT_TOKEN }} \
+          "Notification message from Helidon pipeline!"
