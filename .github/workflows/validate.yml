@@ -338,5 +338,5 @@ jobs:
         run: |
           etc/scripts/slackctl.sh \
           --app="github-enterprise-server" \
-          --token=${{ secrets.SLACK_BOT_TOKEN }} \
+          --token="${{ secrets.SLACK_BOT_TOKEN }}" \
           "Notification message from Helidon pipeline!"
