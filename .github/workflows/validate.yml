@@ -31,6 +31,7 @@ on:
 env:
   SLACK_CHANNEL: "helidon-tests-failures"
   SLACK_WORKSPACE: proddev-paas-fmw
+  SLACK_MESSAGE_TEXT: "Notification message from Helidon pipeline!"
   MVN_VERSION: 3.9.9
   JAVA_VERSION: 21
   GRAALVM_VERSION: 21.0.3
