@@ -27,6 +27,8 @@ env:
     -Dmaven.wagon.http.retryHandler.count=3
     -Djdk.toolchain.version=${JAVA_VERSION}
     -Dcache.enabled=true
+  SLACK_CHANNEL: "helidon-tests-failures"
+  SLACK_WORKSPACE: proddev-paas-fmw
 
 jobs:
   build:
@@ -77,3 +79,14 @@ jobs:
               -DmoduleSet=${{ matrix.moduleSet }} \
               -Dsurefire.reportNameSuffix=${{ matrix.platform }} \
               verify
+  slack-notification:
+    needs: [ build, tests ]
+    if: ${{ (needs.build.result == 'failure' || needs.tests.result == 'failure') }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Send slack notification
+        shell: bash
+        run: etc/scripts/slackctl.sh --token ${{ secrets.SLACK_BOT_TOKEN }} "Helidon nightly build or tests failure"
